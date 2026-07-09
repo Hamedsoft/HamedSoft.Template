@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <Folder Include="Persistence\ApplicationDbContext\" />
+    <Folder Include="Repositories\" />
+    <Folder Include="Persistence\Configurations\" />
+    <Folder Include="Persistence\Migrations\" />
+    <Folder Include="Identity\" />
+    <Folder Include="Services\" />
+  </ItemGroup>
+
+</Project>

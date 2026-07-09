@@ -1,0 +1,9 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <Folder Include="Features\Identity\Login\" />
+    <Folder Include="Features\Identity\Logout\" />
+    <Folder Include="Features\Identity\Register\" />
+  </ItemGroup>
+
+</Project>

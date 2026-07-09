@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <Folder Include="Common\" />
+    <Folder Include="Entities\" />
+    <Folder Include="Events\" />
+    <Folder Include="Interfaces\" />
+    <Folder Include="Exceptions\" />
+    <Folder Include="ValueObjects\" />
+  </ItemGroup>
+
+</Project>

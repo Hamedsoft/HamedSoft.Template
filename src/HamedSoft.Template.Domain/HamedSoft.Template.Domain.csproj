@@ -1,0 +1,10 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <Folder Include="Identity\Entities\" />
+    <Folder Include="Identity\Events\" />
+    <Folder Include="Identity\Repositories\" />
+    <Folder Include="Identity\ValueObjects\" />
+  </ItemGroup>
+
+</Project>
