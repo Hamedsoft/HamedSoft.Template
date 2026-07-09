@@ -1,15 +1,17 @@
-﻿namespace HamedSoft.Template.SharedKernel.Entities;
+﻿using HamedSoft.Template.SharedKernel.Events;
+
+namespace HamedSoft.Template.SharedKernel.Entities;
 
 public abstract class AggregateRoot : Entity
 {
-    private readonly List<object> _domainEvents = new();
+    private readonly List<IDomainEvent> _domainEvents = new();
 
 
-    public IReadOnlyCollection<object> DomainEvents
+    public IReadOnlyCollection<IDomainEvent> DomainEvents
         => _domainEvents.AsReadOnly();
 
 
-    protected void AddDomainEvent(object domainEvent)
+    protected void AddDomainEvent(IDomainEvent domainEvent)
     {
         _domainEvents.Add(domainEvent);
     }

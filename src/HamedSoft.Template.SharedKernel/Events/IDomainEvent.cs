@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace HamedSoft.Template.SharedKernel.Events;
 
-namespace HamedSoft.Template.SharedKernel.Events
+public interface IDomainEvent
 {
-    internal interface IDomainEvent
-    {
-    }
+    DateTime OccurredOn { get; }
 }
