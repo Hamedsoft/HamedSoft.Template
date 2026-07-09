@@ -1,5 +1,3 @@
-using System.Diagnostics;
-using HamedSoft.Template.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HamedSoft.Template.Web.Controllers
@@ -16,17 +14,6 @@ namespace HamedSoft.Template.Web.Controllers
         public IActionResult Index()
         {
             return View();
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

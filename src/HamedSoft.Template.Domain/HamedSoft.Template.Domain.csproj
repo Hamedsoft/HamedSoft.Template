@@ -1,10 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <ItemGroup>
-    <Folder Include="Identity\Entities\" />
-    <Folder Include="Identity\Events\" />
-    <Folder Include="Identity\Repositories\" />
-    <Folder Include="Identity\ValueObjects\" />
-  </ItemGroup>
+	<PropertyGroup>
+		<RootNamespace>HamedSoft.Template.Domain</RootNamespace>
+	</PropertyGroup>
+	
+	<ItemGroup>
+		<ProjectReference Include="..\HamedSoft.Template.SharedKernel\HamedSoft.Template.SharedKernel.csproj" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<Folder Include="Identity\Entities\" />
+		<Folder Include="Identity\Events\" />
+		<Folder Include="Identity\Repositories\" />
+		<Folder Include="Identity\ValueObjects\" />
+	</ItemGroup>
 
 </Project>

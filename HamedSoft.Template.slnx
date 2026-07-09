@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/Solution Items/">
     <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
     <File Path="global.json" />
   </Folder>
   <Project Path="src/HamedSoft.Template.Application/HamedSoft.Template.Application.csproj" Id="ef516f22-55a9-473f-889a-8d81372ae085" />

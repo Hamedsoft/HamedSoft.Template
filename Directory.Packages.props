@@ -1,0 +1,28 @@
+<Project>
+
+	<PropertyGroup>
+		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+	</PropertyGroup>
+
+	<ItemGroup>
+
+		<!-- Entity Framework -->
+		<PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.22" />
+		<PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.22" />
+		<PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.22" />
+		<PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.22" />
+
+		<!-- Identity -->
+		<PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.22" />
+
+		<!-- FluentValidation -->
+		<PackageVersion Include="FluentValidation" Version="11.11.0" />
+
+		<!-- DependencyInjection -->
+		<PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
+
+		<!-- Logging -->
+		<PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2" />
+	</ItemGroup>
+
+</Project>

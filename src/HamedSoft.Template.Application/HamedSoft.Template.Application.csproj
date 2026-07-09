@@ -1,9 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <ItemGroup>
-    <Folder Include="Features\Identity\Login\" />
-    <Folder Include="Features\Identity\Logout\" />
-    <Folder Include="Features\Identity\Register\" />
-  </ItemGroup>
+	<PropertyGroup>
+		<RootNamespace>HamedSoft.Template.Application</RootNamespace>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\HamedSoft.Template.Domain\HamedSoft.Template.Domain.csproj" />
+		<ProjectReference Include="..\HamedSoft.Template.SharedKernel\HamedSoft.Template.SharedKernel.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="FluentValidation" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+
+		<Folder Include="Features\Identity\Login\" />
+		<Folder Include="Features\Identity\Logout\" />
+		<Folder Include="Features\Identity\Register\" />
+	</ItemGroup>
 
 </Project>
