@@ -20,14 +20,13 @@
 		</PackageReference>
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
+	</ItemGroup>
 
-		
-		<Folder Include="Persistence\ApplicationDbContext\" />
-		<Folder Include="Repositories\" />
-		<Folder Include="Persistence\Configurations\" />
-		<Folder Include="Persistence\Migrations\" />
-		<Folder Include="Identity\" />
-		<Folder Include="Services\" />
+	<ItemGroup>
+	  <Folder Include="Repositories\" />
+	  <Folder Include="Persistence\Configurations\" />
+	  <Folder Include="Persistence\Migrations\" />
 	</ItemGroup>
 
 </Project>

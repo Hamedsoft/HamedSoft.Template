@@ -15,13 +15,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HamedSoft.Template.Infrastr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HamedSoft.Template.Web", "src\HamedSoft.Template.Web\HamedSoft.Template.Web.csproj", "{E4E43746-24E3-4BFB-A015-729E684ABCBE}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+		Directory.Packages.props = Directory.Packages.props
+		global.json = global.json
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{B2D4C121-9BEE-4A54-928C-62E60D6D64C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -44,6 +48,9 @@ Global
 		{E4E43746-24E3-4BFB-A015-729E684ABCBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E4E43746-24E3-4BFB-A015-729E684ABCBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E4E43746-24E3-4BFB-A015-729E684ABCBE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B2D4C121-9BEE-4A54-928C-62E60D6D64C2} = {6E52975C-E850-4A60-A2EF-DC6DFA188A97}

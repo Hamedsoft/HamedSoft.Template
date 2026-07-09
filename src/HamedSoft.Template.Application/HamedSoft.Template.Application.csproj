@@ -13,10 +13,10 @@
 		<PackageReference Include="FluentValidation" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+	</ItemGroup>
 
-		<Folder Include="Features\Identity\Login\" />
-		<Folder Include="Features\Identity\Logout\" />
-		<Folder Include="Features\Identity\Register\" />
+	<ItemGroup>
+	  <Folder Include="Features\" />
 	</ItemGroup>
 
 </Project>
