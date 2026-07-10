@@ -16,8 +16,7 @@ public abstract class AuditableEntity : Entity
 
     public bool IsDeleted { get; private set; }
 
-    public byte[] RowVersion { get; private set; } = [];
-
+    public byte[] RowVersion { get; private set; } = default!;
 
     public void SetCreated(DateTimeOffset date, Guid? userId)
     {

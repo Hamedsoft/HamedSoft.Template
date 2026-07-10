@@ -33,7 +33,7 @@ public static class DependencyInjection
             var softDeleteInterceptor = serviceProvider.GetRequiredService<SoftDeleteInterceptor>();
 
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
-            options.AddInterceptors(auditInterceptor, softDeleteInterceptor);
+            options.AddInterceptors(softDeleteInterceptor, auditInterceptor);
         });
 
 
