@@ -1,6 +1,8 @@
-﻿namespace HamedSoft.Template.Infrastructure.Identity.Models;
+﻿using HamedSoft.Template.SharedKernel.Entities;
 
-public class RolePermission
+namespace HamedSoft.Template.Infrastructure.Identity.Models;
+
+public class RolePermission : AuditableEntity
 {
     public Guid RoleId { get; private set; }
 
