@@ -15,4 +15,10 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Features\Authentication\Login\" />
+	  <Folder Include="Features\Authentication\Logout\" />
+	  <Folder Include="Features\Authentication\Register\" />
+	</ItemGroup>
+
 </Project>

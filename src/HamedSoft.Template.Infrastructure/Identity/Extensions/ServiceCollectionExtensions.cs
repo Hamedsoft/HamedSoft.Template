@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace HamedSoft.Template.Infrastructure.Identity.Extensions;
 
-public static class IdentityExtensions
+public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddIdentityServices(
         this IServiceCollection services)
