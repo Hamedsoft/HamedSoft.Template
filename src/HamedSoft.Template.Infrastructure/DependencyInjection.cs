@@ -3,6 +3,7 @@ using HamedSoft.Template.Application.Abstractions.Common;
 using HamedSoft.Template.Infrastructure.Common;
 using HamedSoft.Template.Infrastructure.Identity;
 using HamedSoft.Template.Infrastructure.Persistence;
+using HamedSoft.Template.Infrastructure.Persistence.Interceptors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,10 +22,17 @@ public static class DependencyInjection
 
         services.AddSingleton<IDateTimeProvider, SystemDateTimeProvider>();
 
-        services.AddDbContext<ApplicationDbContext>(options =>
+        services.AddScoped<AuditableEntityInterceptor>();
+        
+        services.AddScoped<SoftDeleteInterceptor>();
+        
+        services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =>
         {
-            options.UseSqlServer(
-                configuration.GetConnectionString("DefaultConnection"));
+            var auditInterceptor = serviceProvider.GetRequiredService<AuditableEntityInterceptor>();
+            var softDeleteInterceptor = serviceProvider.GetRequiredService<SoftDeleteInterceptor>();
+
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+            options.AddInterceptors(auditInterceptor, softDeleteInterceptor);
         });
 
 
