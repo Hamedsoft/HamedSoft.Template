@@ -4,5 +4,5 @@ namespace HamedSoft.Template.Infrastructure.Identity;
 
 public class ApplicationRole : IdentityRole<Guid>
 {
-    public ICollection<RolePermission> Permissions { get; set; } = new List<RolePermission>();
+    public ICollection<RolePermission> Permissions { get; private set; } = new List<RolePermission>();
 }

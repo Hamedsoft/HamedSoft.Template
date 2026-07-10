@@ -15,7 +15,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
 
 
     public DbSet<UserProfile> UserProfiles => Set<UserProfile>();
-
+    public DbSet<Permission> Permissions => Set<Permission>();
+    public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

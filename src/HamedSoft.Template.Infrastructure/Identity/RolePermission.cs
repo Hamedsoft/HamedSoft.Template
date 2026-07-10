@@ -2,11 +2,21 @@
 
 public class RolePermission
 {
-    public Guid RoleId { get; set; }
+    public Guid RoleId { get; private set; }
 
-    public ApplicationRole Role { get; set; } = default!;
+    public ApplicationRole Role { get; private set; } = default!;
 
-    public Guid PermissionId { get; set; }
+    public Guid PermissionId { get; private set; }
 
-    public Permission Permission { get; set; } = default!;
+    public Permission Permission { get; private set; } = default!;
+
+    private RolePermission()
+    {
+    }
+
+    public RolePermission(Guid roleId, Guid permissionId)
+    {
+        RoleId = roleId;
+        PermissionId = permissionId;
+    }
 }
