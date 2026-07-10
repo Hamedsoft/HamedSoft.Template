@@ -1,4 +1,4 @@
-﻿namespace HamedSoft.Template.Infrastructure.Identity;
+﻿namespace HamedSoft.Template.Infrastructure.Identity.Models;
 
 public class RolePermission
 {

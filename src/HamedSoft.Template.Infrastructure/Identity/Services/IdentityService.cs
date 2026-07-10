@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HamedSoft.Template.Infrastructure.Identity
+namespace HamedSoft.Template.Infrastructure.Identity.Services
 {
     internal class IdentityService
     {

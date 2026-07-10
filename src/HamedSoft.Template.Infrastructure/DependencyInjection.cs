@@ -1,7 +1,8 @@
 ﻿using HamedSoft.Template.Application.Abstractions.Authentication;
 using HamedSoft.Template.Application.Abstractions.Common;
 using HamedSoft.Template.Infrastructure.Common;
-using HamedSoft.Template.Infrastructure.Identity;
+using HamedSoft.Template.Infrastructure.Identity.Extensions;
+using HamedSoft.Template.Infrastructure.Identity.Services;
 using HamedSoft.Template.Infrastructure.Persistence;
 using HamedSoft.Template.Infrastructure.Persistence.Interceptors;
 using Microsoft.EntityFrameworkCore;

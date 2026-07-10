@@ -1,8 +1,9 @@
-﻿using HamedSoft.Template.Infrastructure.Persistence;
+﻿using HamedSoft.Template.Infrastructure.Identity.Models;
+using HamedSoft.Template.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace HamedSoft.Template.Infrastructure.Identity;
+namespace HamedSoft.Template.Infrastructure.Identity.Extensions;
 
 public static class IdentityExtensions
 {

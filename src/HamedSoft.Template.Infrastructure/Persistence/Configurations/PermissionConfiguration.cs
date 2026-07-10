@@ -1,4 +1,4 @@
-﻿using HamedSoft.Template.Infrastructure.Identity;
+﻿using HamedSoft.Template.Infrastructure.Identity.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

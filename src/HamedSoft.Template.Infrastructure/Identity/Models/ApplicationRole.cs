@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace HamedSoft.Template.Infrastructure.Identity;
+namespace HamedSoft.Template.Infrastructure.Identity.Models;
 
 public class ApplicationRole : IdentityRole<Guid>
 {

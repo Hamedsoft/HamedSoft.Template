@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 using HamedSoft.Template.Domain.Users;
-using HamedSoft.Template.Infrastructure.Identity;
+using HamedSoft.Template.Infrastructure.Identity.Models;
 using HamedSoft.Template.SharedKernel.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
