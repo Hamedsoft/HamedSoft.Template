@@ -11,12 +11,15 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     {
     }
 
+
     public DbSet<UserProfile> UserProfiles => Set<UserProfile>();
+
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
 
-        builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+        builder.ApplyConfigurationsFromAssembly(
+            typeof(ApplicationDbContext).Assembly);
     }
 }
