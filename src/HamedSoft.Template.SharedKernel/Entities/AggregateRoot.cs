@@ -4,10 +4,9 @@ namespace HamedSoft.Template.SharedKernel.Entities;
 
 public abstract class AggregateRoot : AuditableEntity
 {
-    private readonly List<IDomainEvent> _domainEvents = new();
+    private readonly List<IDomainEvent> _domainEvents = [];
 
-    public IReadOnlyCollection<IDomainEvent> DomainEvents
-        => _domainEvents.AsReadOnly();
+    public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents;
 
     protected void AddDomainEvent(IDomainEvent domainEvent)
     {

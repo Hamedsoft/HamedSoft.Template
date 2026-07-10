@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace HamedSoft.Template.Infrastructure.Persistence.Configurations;
 
-public class UserConfiguration : IEntityTypeConfiguration<User>
+public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
 {
-    public void Configure(EntityTypeBuilder<User> builder)
+    public void Configure(EntityTypeBuilder<UserProfile> builder)
     {
-        builder.ToTable("Users");
+        builder.ToTable("UserProfiles");
 
         builder.HasKey(x => x.Id);
 
@@ -19,5 +19,8 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(x => x.LastName)
             .HasMaxLength(100)
             .IsRequired();
+
+        builder.Property(x => x.RowVersion)
+            .IsRowVersion();
     }
 }
