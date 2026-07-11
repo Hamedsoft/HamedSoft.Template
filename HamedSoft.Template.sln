@@ -20,6 +20,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Directory.Build.props = Directory.Build.props
 		Directory.Packages.props = Directory.Packages.props
 		global.json = global.json
+		NuGet.config = NuGet.config
 	EndProjectSection
 EndProject
 Global
@@ -58,5 +59,8 @@ Global
 		{C4345560-A420-4805-95B1-8A34B511022B} = {6E52975C-E850-4A60-A2EF-DC6DFA188A97}
 		{1F03DD65-11AA-421F-BF0A-C58D215DC36B} = {6E52975C-E850-4A60-A2EF-DC6DFA188A97}
 		{E4E43746-24E3-4BFB-A015-729E684ABCBE} = {6E52975C-E850-4A60-A2EF-DC6DFA188A97}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {51DF7B97-B176-49B4-B106-62D4E74EC6E5}
 	EndGlobalSection
 EndGlobal
