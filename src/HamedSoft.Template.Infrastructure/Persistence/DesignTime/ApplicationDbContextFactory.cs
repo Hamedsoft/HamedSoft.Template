@@ -20,7 +20,9 @@ public class ApplicationDbContextFactory
             .Build();
 
 
-        var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
+        var optionsBuilder =
+            new DbContextOptionsBuilder<ApplicationDbContext>();
+
 
         optionsBuilder.UseSqlServer(
             configuration.GetConnectionString("DefaultConnection"));
