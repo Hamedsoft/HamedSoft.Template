@@ -2,6 +2,7 @@
 
 	<PropertyGroup>
 		<RootNamespace>HamedSoft.Template.Web</RootNamespace>
+		<DefaultItemExcludes>$(DefaultItemExcludes);**\bin\**;**\obj\**</DefaultItemExcludes>
 	</PropertyGroup>
 
 	<ItemGroup>
