@@ -29,6 +29,6 @@ public class RolePermissionConfiguration
         builder.HasOne(x => x.Permission)
             .WithMany(x => x.Roles)
             .HasForeignKey(x => x.PermissionId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

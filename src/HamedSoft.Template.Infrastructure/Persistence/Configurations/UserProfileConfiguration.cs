@@ -19,5 +19,8 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
         builder.Property(x => x.LastName)
             .HasMaxLength(100)
             .IsRequired();
+
+        builder.HasIndex(x => x.UserId)
+            .IsUnique();
     }
 }

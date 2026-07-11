@@ -2,7 +2,7 @@
 
 namespace HamedSoft.Template.Infrastructure.Identity.Models;
 
-public class RolePermission : AuditableEntity
+public class RolePermission
 {
     public Guid RoleId { get; private set; }
 
