@@ -2,7 +2,7 @@
 
 namespace HamedSoft.Template.Infrastructure.Identity.Models;
 
-public class Permission : AuditableEntity
+public class Permission : Entity
 {
     public string Name { get; private set; } = default!;
 
