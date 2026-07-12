@@ -3,8 +3,5 @@ namespace HamedSoft.Template.Application.Contracts.Authentication;
 
 public interface IAuthenticationService
 {
-    Task<Result<LoginResult>> LoginAsync(
-        string username,
-        string password,
-        CancellationToken cancellationToken = default);
+    Task<Result<LoginResult>> LoginAsync(string identifier, string password, CancellationToken cancellationToken = default);
 }

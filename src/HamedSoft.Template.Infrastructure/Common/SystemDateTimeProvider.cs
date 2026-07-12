@@ -1,6 +1,6 @@
 ﻿using HamedSoft.Template.Application.Abstractions.Common;
 
-namespace HamedSoft.Template.Infrastructure.Services;
+namespace HamedSoft.Template.Infrastructure.Common;
 
 public sealed class SystemDateTimeProvider : IDateTimeProvider
 {

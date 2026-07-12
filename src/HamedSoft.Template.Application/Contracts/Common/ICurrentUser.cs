@@ -1,4 +1,4 @@
-﻿namespace HamedSoft.Template.Application.Contracts.Authentication;
+﻿namespace HamedSoft.Template.Application.Contracts.Common;
 
 public interface ICurrentUser
 {

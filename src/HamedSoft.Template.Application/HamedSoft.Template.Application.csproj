@@ -16,9 +16,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Features\Authentication\Login\" />
-	  <Folder Include="Features\Authentication\Logout\" />
-	  <Folder Include="Features\Authentication\Register\" />
+	  <Folder Include="Features\Auth\Logout\" />
+	  <Folder Include="Features\Auth\Register\" />
 	  <Folder Include="Behaviors\" />
 	</ItemGroup>
 

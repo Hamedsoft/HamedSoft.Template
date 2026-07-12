@@ -1,8 +1,8 @@
 ﻿using HamedSoft.Template.SharedKernel.Entities;
-using HamedSoft.Template.Application.Contracts.Authentication;
 using HamedSoft.Template.Application.Abstractions.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using HamedSoft.Template.Application.Contracts.Common;
 
 namespace HamedSoft.Template.Infrastructure.Persistence.Interceptors;
 

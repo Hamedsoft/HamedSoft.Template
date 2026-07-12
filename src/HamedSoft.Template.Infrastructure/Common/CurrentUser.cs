@@ -1,8 +1,8 @@
 ﻿using System.Security.Claims;
-using HamedSoft.Template.Application.Contracts.Authentication;
+using HamedSoft.Template.Application.Contracts.Common;
 using Microsoft.AspNetCore.Http;
 
-namespace HamedSoft.Template.Infrastructure.Services;
+namespace HamedSoft.Template.Infrastructure.Common;
 
 public sealed class CurrentUser : ICurrentUser
 {
