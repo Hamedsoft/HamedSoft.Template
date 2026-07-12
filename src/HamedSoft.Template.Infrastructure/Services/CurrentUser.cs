@@ -1,5 +1,5 @@
 ﻿using System.Security.Claims;
-using HamedSoft.Template.Application.Abstractions.Authentication;
+using HamedSoft.Template.Application.Contracts.Authentication;
 using Microsoft.AspNetCore.Http;
 
 namespace HamedSoft.Template.Infrastructure.Services;

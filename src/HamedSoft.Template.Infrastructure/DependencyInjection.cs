@@ -1,4 +1,4 @@
-﻿using HamedSoft.Template.Application.Abstractions.Authentication;
+﻿using HamedSoft.Template.Application.Contracts.Authentication;
 using HamedSoft.Template.Application.Abstractions.Common;
 using HamedSoft.Template.Infrastructure.Identity.Extensions;
 using HamedSoft.Template.Infrastructure.Persistence;

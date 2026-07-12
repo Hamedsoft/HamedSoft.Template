@@ -1,5 +1,5 @@
 ﻿using HamedSoft.Template.SharedKernel.Entities;
-using HamedSoft.Template.Application.Abstractions.Authentication;
+using HamedSoft.Template.Application.Contracts.Authentication;
 using HamedSoft.Template.Application.Abstractions.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
