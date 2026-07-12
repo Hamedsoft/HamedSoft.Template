@@ -2,7 +2,7 @@
 using HamedSoft.Template.Application.Abstractions.Authentication;
 using Microsoft.AspNetCore.Http;
 
-namespace HamedSoft.Template.Infrastructure.Identity.Services;
+namespace HamedSoft.Template.Infrastructure.Services;
 
 public sealed class CurrentUser : ICurrentUser
 {

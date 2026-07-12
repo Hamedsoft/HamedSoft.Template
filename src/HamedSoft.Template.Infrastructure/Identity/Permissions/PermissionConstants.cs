@@ -2,13 +2,27 @@
 
 public static class PermissionConstants
 {
-    public const string UsersView = "Users.View";
+    public static class Users
+    {
+        public const string View = "Users.View";
+        public const string Create = "Users.Create";
+        public const string Edit = "Users.Edit";
+        public const string Delete = "Users.Delete";
+    }
 
-    public const string UsersCreate = "Users.Create";
 
-    public const string UsersEdit = "Users.Edit";
+    public static class Roles
+    {
+        public const string View = "Roles.View";
+        public const string Create = "Roles.Create";
+        public const string Edit = "Roles.Edit";
+        public const string Delete = "Roles.Delete";
+    }
 
-    public const string UsersDelete = "Users.Delete";
 
-    public const string RolesManage = "Roles.Manage";
+    public static class Settings
+    {
+        public const string View = "Settings.View";
+        public const string Edit = "Settings.Edit";
+    }
 }

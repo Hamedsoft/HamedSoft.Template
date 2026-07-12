@@ -1,5 +1,5 @@
 using HamedSoft.Template.Infrastructure;
-using HamedSoft.Template.Infrastructure.Identity.Seed;
+using HamedSoft.Template.Infrastructure.Persistence.Seed;
 
 var builder = WebApplication.CreateBuilder(args);
 

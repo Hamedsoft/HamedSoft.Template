@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using HamedSoft.Template.Infrastructure.Identity.Models;
 
-namespace HamedSoft.Template.Infrastructure.Identity.Seed;
+namespace HamedSoft.Template.Infrastructure.Persistence.Seed;
 
 public static class IdentitySeeder
 {

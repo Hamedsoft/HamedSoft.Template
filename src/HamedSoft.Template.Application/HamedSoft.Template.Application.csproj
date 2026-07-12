@@ -19,6 +19,7 @@
 	  <Folder Include="Features\Authentication\Login\" />
 	  <Folder Include="Features\Authentication\Logout\" />
 	  <Folder Include="Features\Authentication\Register\" />
+	  <Folder Include="Behaviors\" />
 	</ItemGroup>
 
 </Project>

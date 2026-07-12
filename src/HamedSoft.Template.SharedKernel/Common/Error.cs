@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HamedSoft.Template.Infrastructure.Identity.Services
+namespace HamedSoft.Template.SharedKernel.Common
 {
-    internal class IdentityService
+    internal class Error
     {
     }
 }
