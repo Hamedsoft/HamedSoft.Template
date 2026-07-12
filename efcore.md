@@ -23,3 +23,14 @@
 
 	Execute:
 		dotnet ef migrations remove --project .\src\HamedSoft.Template.Infrastructure
+
+## List Migrations
+
+	Execute:
+		dotnet ef migrations list --project .\src\HamedSoft.Template.Infrastructure
+
+## Generate SQL Script
+
+	Execute:
+		dotnet ef migrations script --project .\src\HamedSoft.Template.Infrastructure
+
