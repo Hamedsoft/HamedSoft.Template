@@ -20,7 +20,7 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
             .HasMaxLength(100)
             .IsRequired();
 
-        builder.HasIndex(x => x.UserId)
+        builder.HasIndex(x => x.Id)
             .IsUnique();
     }
 }
