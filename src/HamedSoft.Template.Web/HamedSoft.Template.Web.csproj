@@ -9,7 +9,9 @@
 		<ProjectReference Include="..\HamedSoft.Template.Application\HamedSoft.Template.Application.csproj" />
 		<ProjectReference Include="..\HamedSoft.Template.Infrastructure\HamedSoft.Template.Infrastructure.csproj" />
 	</ItemGroup>
-
+	<ItemGroup>
+		<PackageReference Include="MediatR" />
+	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="Extensions\" />
 	  <Folder Include="Filters\" />
