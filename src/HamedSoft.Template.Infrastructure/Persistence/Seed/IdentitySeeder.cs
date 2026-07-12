@@ -14,11 +14,18 @@ public static class IdentitySeeder
 
         var permissions = new[]
         {
-            PermissionConstants.UsersView,
-            PermissionConstants.UsersCreate,
-            PermissionConstants.UsersEdit,
-            PermissionConstants.UsersDelete,
-            PermissionConstants.RolesManage
+            PermissionConstants.Users.View,
+            PermissionConstants.Users.Create,
+            PermissionConstants.Users.Edit,
+            PermissionConstants.Users.Delete,
+
+            PermissionConstants.Roles.View,
+            PermissionConstants.Roles.Create,
+            PermissionConstants.Roles.Delete,
+            PermissionConstants.Roles.View,
+
+            PermissionConstants.Settings.View,
+            PermissionConstants.Settings.Edit
         };
 
         foreach (var permissionName in permissions)
