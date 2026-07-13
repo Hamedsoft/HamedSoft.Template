@@ -1,5 +1,4 @@
-﻿using System.Reflection.Metadata;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace HamedSoft.Template.Application;
 public static class DependencyInjection

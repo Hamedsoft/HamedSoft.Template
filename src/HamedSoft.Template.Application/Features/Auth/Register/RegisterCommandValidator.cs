@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HamedSoft.Template.Application.Features.Auth.Login
+namespace HamedSoft.Template.Application.Features.Auth.Register
 {
-    internal class LoginHandler
+    internal class RegisterCommandValidator
     {
     }
 }
