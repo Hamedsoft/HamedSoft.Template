@@ -21,39 +21,30 @@ public sealed class IdentityService : IAuthenticationService
         _roleManager = roleManager;
     }
 
-    public async Task<Result<AuthenticatedUser>> LoginAsync(
-        string userName,
-        string password,
-        CancellationToken cancellationToken = default)
+    public async Task<Result<AuthenticatedUser>> LoginAsync(string userName, string password, CancellationToken cancellationToken = default)
     {
         var user = await _userManager.FindByNameAsync(userName);
 
         if (user is null)
             return Result<AuthenticatedUser>.Failure("نام کاربری یا رمز عبور اشتباه است.");
 
-        var signInResult = await _signInManager.CheckPasswordSignInAsync(
-            user,
-            password,
-            lockoutOnFailure: true);
+        var signInResult = await _signInManager.CheckPasswordSignInAsync(user, password, lockoutOnFailure: true);
 
         if (!signInResult.Succeeded)
             return Result<AuthenticatedUser>.Failure("نام کاربری یا رمز عبور اشتباه است.");
 
         var roles = await _userManager.GetRolesAsync(user);
 
-        return Result<AuthenticatedUser>.Success(
-            new AuthenticatedUser(
-                user.Id,
-                user.UserName ?? string.Empty,
-                user.UserName ?? string.Empty,
-                roles.ToArray()));
+        return Result<AuthenticatedUser>.Success(new AuthenticatedUser(user.Id, user.UserName ?? string.Empty, user.UserName ?? string.Empty, roles.ToArray()));
     }
 
-    public Task<Result<RegisteredUser>> RegisterAsync(
-        string userName,
-        string password,
-        CancellationToken cancellationToken = default)
+    public Task<Result<RegisteredUser>> RegisterAsync(string userName, string password, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
+    }
+
+    public async Task LogoutAsync(CancellationToken cancellationToken = default)
+    {
+        await _signInManager.SignOutAsync();
     }
 }

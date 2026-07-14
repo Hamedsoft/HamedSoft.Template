@@ -5,12 +5,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Remove="Features\Commands\Auth\Logout\**" />
-	  <EmbeddedResource Remove="Features\Commands\Auth\Logout\**" />
-	  <None Remove="Features\Commands\Auth\Logout\**" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<ProjectReference Include="..\HamedSoft.Template.Domain\HamedSoft.Template.Domain.csproj" />
 		<ProjectReference Include="..\HamedSoft.Template.SharedKernel\HamedSoft.Template.SharedKernel.csproj" />
 	</ItemGroup>
@@ -21,10 +15,6 @@
 		<PackageReference Include="MediatR" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Features\Commands\Register\" />
 	</ItemGroup>
 
 </Project>
