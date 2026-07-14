@@ -2,7 +2,7 @@
 using HamedSoft.Template.Application.Messaging;
 using HamedSoft.Template.SharedKernel.Common;
 
-namespace HamedSoft.Template.Application.Features.Commands.Auth.Login;
+namespace HamedSoft.Template.Application.Features.Commands.Auth.Register;
 
 public sealed class RegisterHandler : ICommandHandler<RegisterCommand, Result<RegisterResult>>
 {
@@ -16,9 +16,14 @@ public sealed class RegisterHandler : ICommandHandler<RegisterCommand, Result<Re
 
     public async Task<Result<RegisterResult>> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
-        return _authenticationService.RegisterAsync(
-            request.UserName,
-            request.Password,
-            cancellationToken);
+        var result = await _authenticationService.RegisterAsync(request.UserName, request.Password, cancellationToken);
+
+        if (!result.Succeeded)
+            return Result<RegisterResult>.Failure(result.Error!);
+
+        var user = result.Value!;
+
+        return Result<RegisterResult>.Success(
+            new RegisterResult(user.UserId));
     }
 }

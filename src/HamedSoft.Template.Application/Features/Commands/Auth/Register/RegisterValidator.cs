@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace HamedSoft.Template.Application.Features.Commands.Auth.Login;
+namespace HamedSoft.Template.Application.Features.Commands.Auth.Register;
 
 public sealed class RegisterValidator : AbstractValidator<RegisterCommand>
 {
