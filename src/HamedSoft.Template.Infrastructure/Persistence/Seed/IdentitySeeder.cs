@@ -1,5 +1,4 @@
-﻿using HamedSoft.Template.Infrastructure.Persistence;
-using HamedSoft.Template.Infrastructure.Identity.Permissions;
+﻿using HamedSoft.Template.Infrastructure.Identity.Permissions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using HamedSoft.Template.Infrastructure.Identity.Models;

@@ -1,6 +1,4 @@
-﻿using HamedSoft.Template.SharedKernel.Entities;
-
-namespace HamedSoft.Template.Infrastructure.Identity.Models;
+﻿namespace HamedSoft.Template.Infrastructure.Identity.Models;
 
 public class RolePermission
 {

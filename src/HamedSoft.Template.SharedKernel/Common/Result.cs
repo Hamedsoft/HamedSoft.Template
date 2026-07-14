@@ -1,23 +1,37 @@
 ﻿namespace HamedSoft.Template.SharedKernel.Common;
 
-public class Result<T>
+public class Result
 {
     public bool Succeeded { get; }
-    public T? Value { get; }
+
     public string? Error { get; }
 
-    private Result(bool succeeded, T? value, string? error)
+    protected Result(bool succeeded, string? error)
     {
         Succeeded = succeeded;
-        Value = value;
         Error = error;
     }
 
+    public static Result Success()
+        => new(true, null);
+
+    public static Result Failure(
+        string error)
+        => new(false, error);
+}
+
+public sealed class Result<T> : Result
+{
+    public T? Value { get; }
+
+    private Result(bool succeeded, T? value, string? error) : base(succeeded, error)
+    {
+        Value = value;
+    }
 
     public static Result<T> Success(T value)
         => new(true, value, null);
 
-
-    public static Result<T> Failure(string error)
+    public new static Result<T> Failure(string error)
         => new(false, default, error);
 }

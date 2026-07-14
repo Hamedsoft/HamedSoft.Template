@@ -1,5 +1,5 @@
 ﻿using System.Linq.Expressions;
-using HamedSoft.Template.Domain.Users;
+using HamedSoft.Template.Domain.UserProfiles;
 using HamedSoft.Template.Infrastructure.Identity.Models;
 using HamedSoft.Template.SharedKernel.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;

@@ -12,6 +12,14 @@ public sealed class RegisterValidator : AbstractValidator<RegisterCommand>
 
         RuleFor(x => x.Password)
             .NotEmpty()
-            .MaximumLength(200);
+            .MinimumLength(6);
+
+        RuleFor(x => x.FirstName)
+            .NotEmpty()
+            .MaximumLength(100);
+
+        RuleFor(x => x.LastName)
+            .NotEmpty()
+            .MaximumLength(100);
     }
 }

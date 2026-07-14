@@ -1,4 +1,4 @@
-﻿using HamedSoft.Template.Domain.Users;
+﻿using HamedSoft.Template.Domain.UserProfiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

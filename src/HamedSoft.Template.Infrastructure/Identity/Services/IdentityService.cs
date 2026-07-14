@@ -1,4 +1,5 @@
 ﻿using HamedSoft.Template.Application.Contracts.Authentication;
+using HamedSoft.Template.Domain.SharedKernel.ValueObjects;
 using HamedSoft.Template.Infrastructure.Identity.Models;
 using HamedSoft.Template.SharedKernel.Common;
 using Microsoft.AspNetCore.Identity;
@@ -43,8 +44,27 @@ public sealed class IdentityService : IAuthenticationService
         throw new NotImplementedException();
     }
 
-    public async Task LogoutAsync(CancellationToken cancellationToken = default)
+    public async Task<Result> LogoutAsync(CancellationToken cancellationToken = default)
     {
         await _signInManager.SignOutAsync();
+
+        return Result.Success();
+    }
+    public async Task<Result> ChangePasswordAsync(UserId userId, string currentPassword, string newPassword, CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.FindByIdAsync(userId.Value.ToString());
+
+        if (user is null)
+            return Result.Failure("کاربر یافت نشد.");
+
+        var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+
+        if (!result.Succeeded)
+        {
+            var error = string.Join(Environment.NewLine, result.Errors.Select(x => x.Description));
+            return Result.Failure(error);
+        }
+
+        return Result.Success();
     }
 }

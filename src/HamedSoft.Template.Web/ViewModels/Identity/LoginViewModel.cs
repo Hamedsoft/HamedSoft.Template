@@ -1,6 +1,5 @@
-﻿namespace HamedSoft.Template.Web.ViewModels.Identity
+﻿namespace HamedSoft.Template.Web.ViewModels.Identity;
+
+public class LoginViewModel
 {
-    public class LoginViewModel
-    {
-    }
 }

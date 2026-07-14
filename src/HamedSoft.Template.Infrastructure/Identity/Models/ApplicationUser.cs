@@ -1,4 +1,4 @@
-﻿using HamedSoft.Template.Domain.Users;
+﻿using HamedSoft.Template.Domain.UserProfiles;
 using Microsoft.AspNetCore.Identity;
 
 namespace HamedSoft.Template.Infrastructure.Identity.Models;
