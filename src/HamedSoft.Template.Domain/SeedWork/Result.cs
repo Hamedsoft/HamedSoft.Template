@@ -1,4 +1,4 @@
-﻿namespace HamedSoft.Template.SharedKernel.Common;
+﻿namespace HamedSoft.Template.Domain.SeedWork;
 
 public class Result
 {
@@ -19,7 +19,6 @@ public class Result
         string error)
         => new(false, error);
 }
-
 public sealed class Result<T> : Result
 {
     public T? Value { get; }

@@ -1,14 +1,12 @@
 ﻿namespace HamedSoft.Template.Domain.SeedWork;
 
-public abstract class AggregateRoot<TId> : Entity<TId>
+public abstract class AggregateRoot<TId> : AuditableEntity<TId>
     where TId : notnull
 {
     private readonly List<IDomainEvent> _domainEvents = [];
-
     protected AggregateRoot()
     {
     }
-
     protected AggregateRoot(TId id)
         : base(id)
     {

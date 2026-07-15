@@ -1,5 +1,5 @@
 ﻿using HamedSoft.Template.Application.Messaging;
-using HamedSoft.Template.SharedKernel.Common;
+using HamedSoft.Template.Domain.SeedWork;
 
 namespace HamedSoft.Template.Application.Features.Commands.Auth.ChangePassword;
 

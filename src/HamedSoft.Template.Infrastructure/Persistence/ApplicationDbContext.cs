@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
+using HamedSoft.Template.Domain.SeedWork;
 using HamedSoft.Template.Domain.UserProfiles;
 using HamedSoft.Template.Infrastructure.Identity.Models;
-using HamedSoft.Template.SharedKernel.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,10 +26,10 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
 
         foreach (var entityType in builder.Model.GetEntityTypes())
         {
-            if (typeof(AuditableEntity).IsAssignableFrom(entityType.ClrType))
+            if (typeof(AuditableEntity<Guid>).IsAssignableFrom(entityType.ClrType))
             {
                 builder.Entity(entityType.ClrType).HasQueryFilter(CreateIsDeletedFilter(entityType.ClrType));
-                builder.Entity(entityType.ClrType).Property(nameof(AuditableEntity.RowVersion)).IsRowVersion();
+                builder.Entity(entityType.ClrType).Property(nameof(AuditableEntity<Guid>.RowVersion)).IsRowVersion();
             }
         }
     }
@@ -37,7 +37,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     {
         var parameter = Expression.Parameter(entityType, "e");
 
-        var property = Expression.Property(parameter, nameof(AuditableEntity.IsDeleted));
+        var property = Expression.Property(parameter, nameof(AuditableEntity<Guid>.IsDeleted));
 
         var falseConstant = Expression.Constant(false);
 

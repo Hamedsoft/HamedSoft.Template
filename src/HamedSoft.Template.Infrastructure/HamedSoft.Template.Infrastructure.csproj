@@ -3,11 +3,16 @@
 	<PropertyGroup>
 		<RootNamespace>HamedSoft.Template.Infrastructure</RootNamespace>
 	</PropertyGroup>
+	
+	<ItemGroup>
+	  <Compile Remove="Repositories\**" />
+	  <EmbeddedResource Remove="Repositories\**" />
+	  <None Remove="Repositories\**" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\HamedSoft.Template.Application\HamedSoft.Template.Application.csproj" />
 		<ProjectReference Include="..\HamedSoft.Template.Domain\HamedSoft.Template.Domain.csproj" />
-		<ProjectReference Include="..\HamedSoft.Template.SharedKernel\HamedSoft.Template.SharedKernel.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -23,10 +28,6 @@
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Repositories\" />
 	</ItemGroup>
 
 </Project>

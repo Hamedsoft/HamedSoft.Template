@@ -1,8 +1,8 @@
-﻿using HamedSoft.Template.SharedKernel.Entities;
+﻿using HamedSoft.Template.Domain.SeedWork;
 
 namespace HamedSoft.Template.Infrastructure.Identity.Models;
 
-public class Permission : Entity
+public class Permission : Entity<Guid>
 {
     public string Name { get; private set; } = default!;
 

@@ -6,7 +6,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\HamedSoft.Template.Domain\HamedSoft.Template.Domain.csproj" />
-		<ProjectReference Include="..\HamedSoft.Template.SharedKernel\HamedSoft.Template.SharedKernel.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

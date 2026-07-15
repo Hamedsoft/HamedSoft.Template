@@ -2,8 +2,5 @@
 	<PropertyGroup>
 		<RootNamespace>HamedSoft.Template.SharedKernel</RootNamespace>
 	</PropertyGroup>
-	<ItemGroup>
-	  <Folder Include="Exceptions\" />
-	</ItemGroup>
 
 </Project>

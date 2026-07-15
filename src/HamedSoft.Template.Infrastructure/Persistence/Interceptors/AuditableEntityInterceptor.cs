@@ -1,8 +1,8 @@
 ﻿using HamedSoft.Template.Application.Abstractions.Common;
-using HamedSoft.Template.SharedKernel.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using HamedSoft.Template.Application.Contracts.Common;
+using HamedSoft.Template.Domain.SeedWork;
 
 namespace HamedSoft.Template.Infrastructure.Persistence.Interceptors;
 
@@ -31,7 +31,7 @@ public sealed class AuditableEntityInterceptor
         if (context == null)
             return;
 
-        var entries = context.ChangeTracker.Entries<AuditableEntity>();
+        var entries = context.ChangeTracker.Entries<AuditableEntity<Guid>>();
 
         foreach (var entry in entries)
         {

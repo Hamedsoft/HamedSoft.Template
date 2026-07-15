@@ -1,5 +1,5 @@
-﻿using HamedSoft.Template.Domain.SharedKernel.ValueObjects;
-using HamedSoft.Template.SharedKernel.Common;
+﻿using HamedSoft.Template.Domain.SeedWork;
+using HamedSoft.Template.Domain.SharedKernel.ValueObjects;
 
 namespace HamedSoft.Template.Application.Contracts.Authentication;
 

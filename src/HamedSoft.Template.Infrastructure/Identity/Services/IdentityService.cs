@@ -1,7 +1,7 @@
 ﻿using HamedSoft.Template.Application.Contracts.Authentication;
+using HamedSoft.Template.Domain.SeedWork;
 using HamedSoft.Template.Domain.SharedKernel.ValueObjects;
 using HamedSoft.Template.Infrastructure.Identity.Models;
-using HamedSoft.Template.SharedKernel.Common;
 using Microsoft.AspNetCore.Identity;
 
 namespace HamedSoft.Template.Infrastructure.Identity.Services;

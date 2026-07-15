@@ -1,8 +1,8 @@
 ﻿using HamedSoft.Template.Application.Contracts.Authentication;
 using HamedSoft.Template.Application.Contracts.Common;
 using HamedSoft.Template.Application.Messaging;
+using HamedSoft.Template.Domain.SeedWork;
 using HamedSoft.Template.Domain.SharedKernel.ValueObjects;
-using HamedSoft.Template.SharedKernel.Common;
 
 namespace HamedSoft.Template.Application.Features.Commands.Auth.ChangePassword;
 

@@ -5,8 +5,6 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{6E52975C-E850-4A60-A2EF-DC6DFA188A97}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HamedSoft.Template.SharedKernel", "src\HamedSoft.Template.SharedKernel\HamedSoft.Template.SharedKernel.csproj", "{B2D4C121-9BEE-4A54-928C-62E60D6D64C2}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HamedSoft.Template.Domain", "src\HamedSoft.Template.Domain\HamedSoft.Template.Domain.csproj", "{473DA610-C598-4B27-83CA-AE77B961A11F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HamedSoft.Template.Application", "src\HamedSoft.Template.Application\HamedSoft.Template.Application.csproj", "{C4345560-A420-4805-95B1-8A34B511022B}"
@@ -41,10 +39,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B2D4C121-9BEE-4A54-928C-62E60D6D64C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B2D4C121-9BEE-4A54-928C-62E60D6D64C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B2D4C121-9BEE-4A54-928C-62E60D6D64C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B2D4C121-9BEE-4A54-928C-62E60D6D64C2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{473DA610-C598-4B27-83CA-AE77B961A11F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{473DA610-C598-4B27-83CA-AE77B961A11F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{473DA610-C598-4B27-83CA-AE77B961A11F}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -66,7 +60,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{B2D4C121-9BEE-4A54-928C-62E60D6D64C2} = {6E52975C-E850-4A60-A2EF-DC6DFA188A97}
 		{473DA610-C598-4B27-83CA-AE77B961A11F} = {6E52975C-E850-4A60-A2EF-DC6DFA188A97}
 		{C4345560-A420-4805-95B1-8A34B511022B} = {6E52975C-E850-4A60-A2EF-DC6DFA188A97}
 		{1F03DD65-11AA-421F-BF0A-C58D215DC36B} = {6E52975C-E850-4A60-A2EF-DC6DFA188A97}

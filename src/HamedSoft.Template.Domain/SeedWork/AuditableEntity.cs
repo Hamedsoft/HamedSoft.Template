@@ -1,7 +1,15 @@
-﻿namespace HamedSoft.Template.SharedKernel.Entities;
+﻿namespace HamedSoft.Template.Domain.SeedWork;
 
-public abstract class AuditableEntity : Entity
+public abstract class AuditableEntity<TId> : Entity<TId>
+    where TId : notnull
 {
+    protected AuditableEntity()
+    {
+    }
+    protected AuditableEntity(TId id)
+    : base(id)
+    {
+    }
     public DateTimeOffset CreatedOnUtc { get; private set; }
 
     public Guid? CreatedBy { get; private set; }
@@ -16,7 +24,7 @@ public abstract class AuditableEntity : Entity
 
     public bool IsDeleted { get; private set; }
 
-    public byte[] RowVersion { get; private set; } = default!;
+    public byte[] RowVersion { get; private set; } = [];
 
     public void SetCreated(DateTimeOffset date, Guid? userId)
     {
@@ -24,13 +32,11 @@ public abstract class AuditableEntity : Entity
         CreatedBy = userId;
     }
 
-
     public void SetModified(DateTimeOffset date, Guid? userId)
     {
         LastModifiedOnUtc = date;
         LastModifiedBy = userId;
     }
-
 
     public void SetDeleted(DateTimeOffset date, Guid? userId)
     {

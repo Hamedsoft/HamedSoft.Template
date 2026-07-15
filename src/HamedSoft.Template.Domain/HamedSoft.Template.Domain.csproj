@@ -3,9 +3,5 @@
 	<PropertyGroup>
 		<RootNamespace>HamedSoft.Template.Domain</RootNamespace>
 	</PropertyGroup>
-	
-	<ItemGroup>
-		<ProjectReference Include="..\HamedSoft.Template.SharedKernel\HamedSoft.Template.SharedKernel.csproj" />
-	</ItemGroup>
 
 </Project>

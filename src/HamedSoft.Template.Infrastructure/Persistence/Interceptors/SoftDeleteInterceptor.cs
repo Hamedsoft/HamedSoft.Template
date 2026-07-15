@@ -1,8 +1,8 @@
-﻿using HamedSoft.Template.SharedKernel.Entities;
-using HamedSoft.Template.Application.Abstractions.Common;
+﻿using HamedSoft.Template.Application.Abstractions.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using HamedSoft.Template.Application.Contracts.Common;
+using HamedSoft.Template.Domain.SeedWork;
 
 namespace HamedSoft.Template.Infrastructure.Persistence.Interceptors;
 
@@ -11,7 +11,6 @@ public sealed class SoftDeleteInterceptor
 {
     private readonly ICurrentUser _currentUser;
     private readonly IDateTimeProvider _dateTimeProvider;
-
 
     public SoftDeleteInterceptor(ICurrentUser currentUser, IDateTimeProvider dateTimeProvider)
     {
@@ -30,7 +29,7 @@ public sealed class SoftDeleteInterceptor
         if (context == null)
             return;
 
-        var deletedEntries = context.ChangeTracker.Entries<AuditableEntity>().Where(x => x.State == EntityState.Deleted);
+        var deletedEntries = context.ChangeTracker.Entries<AuditableEntity<Guid>>().Where(x => x.State == EntityState.Deleted);
         foreach (var entry in deletedEntries)
         {
             entry.State = EntityState.Modified;
