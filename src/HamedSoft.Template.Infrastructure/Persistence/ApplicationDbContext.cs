@@ -1,9 +1,11 @@
-﻿using System.Linq.Expressions;
-using HamedSoft.Template.Domain.SeedWork;
+﻿using HamedSoft.Template.Domain.SeedWork;
 using HamedSoft.Template.Domain.UserProfiles;
 using HamedSoft.Template.Infrastructure.Identity.Models;
+using HamedSoft.Template.Infrastructure.Persistence.Extensions;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
+using System.Reflection.Emit;
 
 namespace HamedSoft.Template.Infrastructure.Persistence;
 
@@ -32,6 +34,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
                 builder.Entity(entityType.ClrType).Property(nameof(AuditableEntity<Guid>.RowVersion)).IsRowVersion();
             }
         }
+        builder.ApplyStronglyTypedIdConversions();
     }
     private static LambdaExpression CreateIsDeletedFilter(Type entityType)
     {

@@ -13,7 +13,7 @@ public class ApplicationUserConfiguration
     {
         builder.HasOne(x => x.Profile)
             .WithOne()
-            .HasForeignKey<UserProfile>(x => x.Id)
+            .HasForeignKey<ApplicationUser>(x => x.UserProfileId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

@@ -1,4 +1,5 @@
-﻿using HamedSoft.Template.Domain.UserProfiles;
+﻿using HamedSoft.Template.Domain.SharedKernel.ValueObjects;
+using HamedSoft.Template.Domain.UserProfiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -22,5 +23,7 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
 
         builder.HasIndex(x => x.Id)
             .IsUnique();
+
+
     }
 }
