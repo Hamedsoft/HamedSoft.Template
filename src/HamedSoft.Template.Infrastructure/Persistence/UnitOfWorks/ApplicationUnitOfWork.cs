@@ -11,7 +11,7 @@ internal sealed class ApplicationUnitOfWork : IApplicationUnitOfWork
         _context = context;
     }
 
-    public Task CommitAsync()
+    public Task SaveChangesAsync()
     {
        return _context.SaveChangesAsync();
     }

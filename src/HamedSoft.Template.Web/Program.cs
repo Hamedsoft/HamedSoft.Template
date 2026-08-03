@@ -1,6 +1,7 @@
 using HamedSoft.Template.Application;
 using HamedSoft.Template.Infrastructure;
 using HamedSoft.Template.Infrastructure.Persistence.Seed;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+
+builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme);
 
 var app = builder.Build();
 

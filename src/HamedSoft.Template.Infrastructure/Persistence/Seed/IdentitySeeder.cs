@@ -11,7 +11,7 @@ public static class IdentitySeeder
     {
         await context.Database.MigrateAsync();
 
-        var permissions = new[]
+        var permissions = new HashSet<string>
         {
             PermissionConstants.Users.View,
             PermissionConstants.Users.Create,
@@ -21,7 +21,6 @@ public static class IdentitySeeder
             PermissionConstants.Roles.View,
             PermissionConstants.Roles.Create,
             PermissionConstants.Roles.Delete,
-            PermissionConstants.Roles.View,
 
             PermissionConstants.Settings.View,
             PermissionConstants.Settings.Edit

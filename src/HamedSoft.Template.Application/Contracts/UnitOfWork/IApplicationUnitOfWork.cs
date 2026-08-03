@@ -2,6 +2,6 @@
 
 public interface IApplicationUnitOfWork
 {
-    Task CommitAsync();
+    Task SaveChangesAsync();
 
 }

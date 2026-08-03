@@ -23,11 +23,6 @@ public sealed class LoginHandler : ICommandHandler<LoginCommand, Result<LoginRes
 
         var user = result.Value!;
 
-        return Result<LoginResult>.Success(
-            new LoginResult(
-                user.UserId,
-                user.UserName,
-                user.DisplayName,
-                user.Roles));
+        return Result<LoginResult>.Success(new LoginResult(user.UserId, user.UserName, user.DisplayName, user.Roles, user.Permissions));
     }
 }
