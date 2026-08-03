@@ -13,6 +13,11 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
+        var isAuthenticated = User.Identity?.IsAuthenticated;
+
+        var name = User.Identity?.Name;
+        ViewData["name"] = name;
+        ViewData["isAuthenticated"] = isAuthenticated;
         return View();
     }
 }

@@ -1,8 +1,12 @@
 ﻿using HamedSoft.Template.Application.Features.Commands.Auth.Login;
 using HamedSoft.Template.Application.Features.Commands.Auth.Register;
+using HamedSoft.Template.Web.Security;
 using HamedSoft.Template.Web.ViewModels.Auth;
 using MediatR;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace HamedSoft.Template.Web.Controllers;
 
@@ -63,7 +67,21 @@ public class AccountController : Controller
             return View(model);
         }
 
-        // فعلاً اینجا نگه می‌داریم
+        var claims = new List<Claim>
+        { 
+            new(ClaimTypes.NameIdentifier, result.Value.UserId.ToString()), 
+            new(ClaimTypes.Name, result.Value.UserName)
+        };
+
+        foreach (var permission in result.Value.Permissions)
+        {
+            claims.Add(new Claim(CustomClaimTypes.Permission, permission));
+        }
+
+        var identity = new ClaimsIdentity(claims, IdentityConstants.ApplicationScheme);
+        var principal = new ClaimsPrincipal(identity);
+
+        await HttpContext.SignInAsync(IdentityConstants.ApplicationScheme, principal);
 
         return RedirectToAction("Index", "Home");
     }
