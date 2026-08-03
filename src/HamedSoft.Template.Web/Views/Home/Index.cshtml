@@ -4,7 +4,11 @@
 
 <div class="text-center">
     <h2 class="display-4">خوش آمدید</h2>
-    <h1 class="display-4">کاربر لاگین کرده : @ViewData["isAuthenticated"]</h1>
-    <h1 class="display-4">کاربر وارد شده : @ViewData["name"]</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <p>کاربر لاگین کرده : @ViewData["isAuthenticated"]</p>
+    <p>کاربر وارد شده : @ViewData["name"]</p>
+    @if (User.Identity?.IsAuthenticated == false)
+    {
+        <a asp-action="login" asp-controller="Account" class="btn btn-link">ورود</a>
+        <a asp-action="Register" asp-controller="Account" class="btn btn-link">ثبت نام</a>
+    }
 </div>

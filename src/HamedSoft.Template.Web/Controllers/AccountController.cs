@@ -85,4 +85,11 @@ public class AccountController : Controller
 
         return RedirectToAction("Index", "Home");
     }
+    [HttpPost]
+    public async Task<IActionResult> Logout()
+    {
+        await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
+
+        return RedirectToAction("Login", "Account");
+    }
 }
