@@ -4,6 +4,7 @@ using HamedSoft.Template.Infrastructure.Persistence.Seed;
 using HamedSoft.Template.Web.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using HamedSoft.Template.Infrastructure.Identity.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,8 @@ builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme);
 
 //Authorization
 builder.Services.AddAuthorization(); 
+builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
 builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
 builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
 
