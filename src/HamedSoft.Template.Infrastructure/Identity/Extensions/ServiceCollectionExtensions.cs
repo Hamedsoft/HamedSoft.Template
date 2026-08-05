@@ -1,7 +1,13 @@
-﻿using HamedSoft.Template.Application.Contracts.Services;
+﻿using HamedSoft.Template.Application.Contracts.Authentication;
+using HamedSoft.Template.Application.Contracts.Permissions;
+using HamedSoft.Template.Application.Contracts.Repositories.Reads;
+using HamedSoft.Template.Application.Contracts.Repositories.Writes;
+using HamedSoft.Template.Application.Contracts.Roles;
+using HamedSoft.Template.Application.Contracts.Services;
 using HamedSoft.Template.Infrastructure.Identity.Models;
 using HamedSoft.Template.Infrastructure.Identity.Services;
 using HamedSoft.Template.Infrastructure.Persistence;
+using HamedSoft.Template.Infrastructure.Repositories.Roles;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -24,6 +30,15 @@ public static class ServiceCollectionExtensions
 
         services.AddHttpContextAccessor();
         services.AddScoped<ICurrentUser, CurrentUser>();
+
+        services.AddScoped<IAuthenticationService, IdentityService>();
+        services.AddScoped<IPermissionService, PermissionService>();
+
+        services.AddScoped<IAuthenticationService, IdentityService>();
+        services.AddScoped<IRoleManagementService, RoleManagementService>();
+
+        services.AddScoped<IRoleReadRepository, RoleReadRepository>();
+        services.AddScoped<IRoleWriteRepository, RoleWriteRepository>();
 
         return services;
     }

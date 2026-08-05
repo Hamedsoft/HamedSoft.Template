@@ -1,0 +1,44 @@
+﻿@model IReadOnlyList<HamedSoft.Template.Application.Contracts.Roles.RoleDto>
+
+<h2 class="mb-4">
+    مدیریت نقش‌ها
+</h2>
+
+
+<table class="table table-bordered">
+
+    <thead>
+        <tr>
+            <th>
+                نام نقش
+            </th>
+
+            <th>
+                عملیات
+            </th>
+        </tr>
+    </thead>
+
+
+    <tbody>
+
+        @foreach (var role in Model)
+        {
+            <tr>
+                <td>
+                    @role.RoleName
+                </td>
+
+                <td>
+                    <a class="btn btn-primary"
+                       asp-action="Permissions"
+                       asp-route-id="@role.RoleId">
+                        مدیریت دسترسی
+                    </a>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+
+</table>
