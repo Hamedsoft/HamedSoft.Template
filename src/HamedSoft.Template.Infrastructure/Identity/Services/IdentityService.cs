@@ -87,9 +87,9 @@ public sealed class IdentityService : IAuthenticationService
 
         return Result.Success();
     }
-    public async Task<Result> ChangePasswordAsync(UserId userId, string currentPassword, string newPassword, CancellationToken cancellationToken = default)
+    public async Task<Result> ChangePasswordAsync(Guid userId, string currentPassword, string newPassword, CancellationToken cancellationToken = default)
     {
-        var user = await _userManager.FindByIdAsync(userId.Value.ToString());
+        var user = await _userManager.FindByIdAsync(userId.ToString());
 
         if (user is null)
             return Result.Failure("کاربر یافت نشد.");
@@ -98,10 +98,9 @@ public sealed class IdentityService : IAuthenticationService
 
         if (!result.Succeeded)
         {
-            var error = string.Join(Environment.NewLine, result.Errors.Select(x => x.Description));
+            var error = result.Errors.FirstOrDefault()?.Description ?? "تغییر رمز عبور انجام نشد.";
             return Result.Failure(error);
         }
-
         return Result.Success();
     }
 }

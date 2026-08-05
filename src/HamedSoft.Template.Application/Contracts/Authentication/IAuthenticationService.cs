@@ -11,5 +11,5 @@ public interface IAuthenticationService
 
     Task<Result> LogoutAsync(CancellationToken cancellationToken = default);
 
-    Task<Result> ChangePasswordAsync(UserId userId, string currentPassword, string newPassword, CancellationToken cancellationToken = default);
+    Task<Result> ChangePasswordAsync(Guid userId, string currentPassword, string newPassword, CancellationToken cancellationToken = default);
 }
