@@ -2,6 +2,7 @@
 using HamedSoft.Template.Application.Contracts.Authentication;
 using HamedSoft.Template.Application.Contracts.Repositories.Reads;
 using HamedSoft.Template.Application.Contracts.Repositories.Writes;
+using HamedSoft.Template.Application.Contracts.Roles;
 using HamedSoft.Template.Application.Contracts.UnitOfWork;
 using HamedSoft.Template.Infrastructure.Common;
 using HamedSoft.Template.Infrastructure.Identity.Extensions;
@@ -38,17 +39,18 @@ public static class DependencyInjection
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             options.AddInterceptors(softDeleteInterceptor, auditInterceptor);
         });
-
-
-        services.AddIdentityServices();
         
         services.AddScoped<IAuthenticationService, IdentityService>();
+
+        services.AddScoped<IRoleManagementService, RoleManagementService>();
 
         services.AddScoped<IUserProfileWriteRepository, UserProfileWriteRepository>();
 
         services.AddScoped<IUserProfileReadRepository, UserProfileReadRepository>();
         
         services.AddScoped<IApplicationUnitOfWork, ApplicationUnitOfWork>();
+
+        services.AddIdentityServices(configuration);
 
         return services;
     }

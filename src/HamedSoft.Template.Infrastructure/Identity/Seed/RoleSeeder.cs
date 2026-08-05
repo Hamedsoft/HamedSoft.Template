@@ -49,15 +49,6 @@ internal static class RoleSeeder
             .Except(existingPermissions);
 
 
-        foreach (var permissionId in newPermissions)
-        {
-            context.RolePermissions.Add(
-                new RolePermission(
-                    adminRole.Id,
-                    permissionId));
-        }
-
-
         await context.SaveChangesAsync();
     }
 }

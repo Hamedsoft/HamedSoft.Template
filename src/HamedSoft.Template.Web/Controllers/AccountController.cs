@@ -3,6 +3,7 @@ using HamedSoft.Template.Application.Contracts.Services;
 using HamedSoft.Template.Application.Features.Commands.Auth.ChangePassword;
 using HamedSoft.Template.Application.Features.Commands.Auth.Login;
 using HamedSoft.Template.Application.Features.Commands.Auth.Register;
+using HamedSoft.Template.Application.Security;
 using HamedSoft.Template.Web.Security;
 using HamedSoft.Template.Web.ViewModels.Auth;
 using MediatR;
@@ -59,9 +60,7 @@ public class AccountController : Controller
         if (!ModelState.IsValid)
             return View(model);
 
-        var command = new LoginCommand(
-            model.UserName,
-            model.Password);
+        var command = new LoginCommand(model.UserName, model.Password);
 
         var result = await _mediator.Send(command);
 
@@ -70,7 +69,7 @@ public class AccountController : Controller
             ModelState.AddModelError(string.Empty, result.Error!);
             return View(model);
         }
-        
+
         var loginResult = result.Value!;
 
         var claims = new List<Claim>
@@ -79,15 +78,33 @@ public class AccountController : Controller
             new(ClaimTypes.Name, loginResult.UserName)
         };
 
-        foreach (var permission in loginResult.Permissions)
+
+        if (loginResult.Roles.Contains(SystemRoles.Admin))
         {
-            claims.Add(new Claim(CustomClaimTypes.Permission, permission));
+            claims.Add(new Claim(CustomClaimTypes.Permission, SystemPermissions.All));
+        }
+        else
+        {
+            if (loginResult.Roles.Any(x => x.Equals( SystemRoles.Admin, StringComparison.OrdinalIgnoreCase)))
+            {
+                claims.Add(new Claim( CustomClaimTypes.Permission, SystemPermissions.All));
+            }
+            else
+            {
+                foreach (var permission in loginResult.Permissions)
+                {
+                    claims.Add(new Claim(CustomClaimTypes.Permission, permission));
+                }
+            }
         }
 
+
         var identity = new ClaimsIdentity(claims, IdentityConstants.ApplicationScheme);
+
         var principal = new ClaimsPrincipal(identity);
 
         await HttpContext.SignInAsync(IdentityConstants.ApplicationScheme, principal);
+
 
         return RedirectToAction("Index", "Home");
     }

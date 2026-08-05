@@ -5,17 +5,19 @@ using HamedSoft.Template.Application.Contracts.Repositories.Writes;
 using HamedSoft.Template.Application.Contracts.Roles;
 using HamedSoft.Template.Application.Contracts.Services;
 using HamedSoft.Template.Infrastructure.Identity.Models;
+using HamedSoft.Template.Infrastructure.Identity.Options;
 using HamedSoft.Template.Infrastructure.Identity.Services;
 using HamedSoft.Template.Infrastructure.Persistence;
 using HamedSoft.Template.Infrastructure.Repositories.Roles;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HamedSoft.Template.Infrastructure.Identity.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddIdentityServices(this IServiceCollection services)
+    public static IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
         {
@@ -39,6 +41,8 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<IRoleReadRepository, RoleReadRepository>();
         services.AddScoped<IRoleWriteRepository, RoleWriteRepository>();
+
+        services.Configure<AdminUserOptions>(configuration.GetSection(AdminUserOptions.SectionName));
 
         return services;
     }
