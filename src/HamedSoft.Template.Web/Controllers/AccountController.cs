@@ -1,4 +1,7 @@
-﻿using HamedSoft.Template.Application.Features.Commands.Auth.Login;
+﻿using System.Security.Claims;
+using HamedSoft.Template.Application.Contracts.Services;
+using HamedSoft.Template.Application.Features.Commands.Auth.ChangePassword;
+using HamedSoft.Template.Application.Features.Commands.Auth.Login;
 using HamedSoft.Template.Application.Features.Commands.Auth.Register;
 using HamedSoft.Template.Web.Security;
 using HamedSoft.Template.Web.ViewModels.Auth;
@@ -6,17 +9,18 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace HamedSoft.Template.Web.Controllers;
 
 public class AccountController : Controller
 {
     private readonly IMediator _mediator;
+    private readonly ICurrentUser _currentUser;
 
-    public AccountController(IMediator mediator)
+    public AccountController(IMediator mediator, ICurrentUser currentUser)
     {
         _mediator = mediator;
+        _currentUser = currentUser;
     }
 
     [HttpGet]
@@ -93,5 +97,39 @@ public class AccountController : Controller
         await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
 
         return RedirectToAction("Login", "Account");
+    }
+
+    [HttpGet]
+    public IActionResult ChangePassword()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+    {
+        if (!ModelState.IsValid)
+            return View(model);
+
+        if (_currentUser.UserId is null)
+            return Unauthorized();
+
+        var command = new ChangePasswordCommand(
+            _currentUser.UserId.Value,
+            model.CurrentPassword,
+            model.NewPassword);
+
+        var result = await _mediator.Send(command);
+
+        if (!result.Succeeded)
+        {
+            ModelState.AddModelError(string.Empty, result.Error!);
+            return View(model);
+        }
+
+        TempData["Success"] = "رمز عبور با موفقیت تغییر کرد.";
+
+        return RedirectToAction("Index", "Home");
     }
 }
