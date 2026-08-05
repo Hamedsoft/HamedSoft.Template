@@ -41,12 +41,17 @@ public sealed class IdentityService : IAuthenticationService
             return Result<AuthenticatedUser>.Failure("نام کاربری یا رمز عبور اشتباه است.");
 
         var roles = await _userManager.GetRolesAsync(user);
-        var permissions = await( from role in _context.Roles 
-                                 join rolePermission in _context.RolePermissions on role.Id equals rolePermission.RoleId 
-                                 join permission in _context.Permissions on rolePermission.PermissionId equals permission.Id
-                                 where roles.Contains(role.Name!)
-                                 select permission.Name
-                                ).Distinct().ToListAsync(cancellationToken);
+        var permissions = await (
+    from userRole in _context.UserRoles
+    join rolePermission in _context.RolePermissions
+        on userRole.RoleId equals rolePermission.RoleId
+    join permission in _context.Permissions
+        on rolePermission.PermissionId equals permission.Id
+    where userRole.UserId == user.Id
+    select permission.Name
+)
+.Distinct()
+.ToListAsync(cancellationToken);
         return Result<AuthenticatedUser>.Success(new AuthenticatedUser( user.Id, user.UserName ?? string.Empty, user.UserName ?? string.Empty, roles.ToArray(), permissions));
     }
 

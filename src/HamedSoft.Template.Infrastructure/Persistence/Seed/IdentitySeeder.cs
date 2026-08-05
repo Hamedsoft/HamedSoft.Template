@@ -48,6 +48,44 @@ public static class IdentitySeeder
             await roleManager.CreateAsync(adminRole);
         }
 
+        var adminUser = await context.Users
+    .FirstOrDefaultAsync(x => x.UserName == "admin");
+
+        if (adminUser == null)
+        {
+            adminUser = new ApplicationUser
+            {
+                Id = Guid.NewGuid(),
+                UserName = "admin",
+                NormalizedUserName = "ADMIN"
+            };
+
+            var passwordHasher = new PasswordHasher<ApplicationUser>();
+
+            adminUser.PasswordHash = passwordHasher.HashPassword(
+                adminUser,
+                "Admin@123");
+
+            context.Users.Add(adminUser);
+
+            await context.SaveChangesAsync();
+        }
+
+        var userHasRole = await context.UserRoles
+            .AnyAsync(x =>
+                x.UserId == adminUser.Id &&
+                x.RoleId == adminRole.Id);
+
+        if (!userHasRole)
+        {
+            context.UserRoles.Add(new IdentityUserRole<Guid>
+            {
+                UserId = adminUser.Id,
+                RoleId = adminRole.Id
+            });
+        }
+
+        await context.SaveChangesAsync();
 
         var allPermissions = await context.Permissions.ToListAsync();
 
