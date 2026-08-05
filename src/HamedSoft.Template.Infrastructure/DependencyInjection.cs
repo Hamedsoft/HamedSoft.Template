@@ -1,6 +1,5 @@
 ﻿using HamedSoft.Template.Application.Abstractions.Common;
 using HamedSoft.Template.Application.Contracts.Authentication;
-using HamedSoft.Template.Application.Contracts.Common;
 using HamedSoft.Template.Application.Contracts.Repositories.Reads;
 using HamedSoft.Template.Application.Contracts.Repositories.Writes;
 using HamedSoft.Template.Application.Contracts.UnitOfWork;
@@ -24,8 +23,6 @@ public static class DependencyInjection
         IConfiguration configuration)
     {
         services.AddHttpContextAccessor();
-
-        services.AddScoped<ICurrentUser, CurrentUser>();
 
         services.AddSingleton<IDateTimeProvider, SystemDateTimeProvider>();
 

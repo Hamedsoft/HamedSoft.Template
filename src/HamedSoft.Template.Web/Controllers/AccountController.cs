@@ -66,14 +66,16 @@ public class AccountController : Controller
             ModelState.AddModelError(string.Empty, result.Error!);
             return View(model);
         }
+        
+        var loginResult = result.Value!;
 
         var claims = new List<Claim>
-        { 
-            new(ClaimTypes.NameIdentifier, result.Value.UserId.ToString()), 
-            new(ClaimTypes.Name, result.Value.UserName)
+        {
+            new(ClaimTypes.NameIdentifier, loginResult.UserId.ToString()),
+            new(ClaimTypes.Name, loginResult.UserName)
         };
 
-        foreach (var permission in result.Value.Permissions)
+        foreach (var permission in loginResult.Permissions)
         {
             claims.Add(new Claim(CustomClaimTypes.Permission, permission));
         }

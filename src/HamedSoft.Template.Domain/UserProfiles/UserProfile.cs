@@ -21,8 +21,8 @@ public sealed class UserProfile : AggregateRoot<UserProfileId>
     {
     }
 
-    public string FirstName { get;private set; }
-    public string LastName { get;private set; }
+    public string FirstName { get;private set; } = string.Empty;
+    public string LastName { get;private set; } = string.Empty;
 
     /// <summary>
     /// Creates a new UserProfile aggregate.

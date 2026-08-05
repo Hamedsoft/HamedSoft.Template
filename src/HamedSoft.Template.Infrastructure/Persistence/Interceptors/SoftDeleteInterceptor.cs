@@ -1,8 +1,8 @@
 ﻿using HamedSoft.Template.Application.Abstractions.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using HamedSoft.Template.Application.Contracts.Common;
 using HamedSoft.Template.Domain.SeedWork;
+using HamedSoft.Template.Application.Contracts.Services;
 
 namespace HamedSoft.Template.Infrastructure.Persistence.Interceptors;
 

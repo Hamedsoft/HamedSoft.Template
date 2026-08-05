@@ -1,4 +1,6 @@
-﻿using HamedSoft.Template.Infrastructure.Identity.Models;
+﻿using HamedSoft.Template.Application.Contracts.Services;
+using HamedSoft.Template.Infrastructure.Identity.Models;
+using HamedSoft.Template.Infrastructure.Identity.Services;
 using HamedSoft.Template.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +21,10 @@ public static class ServiceCollectionExtensions
         })
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
+
+        services.AddHttpContextAccessor();
+        services.AddScoped<ICurrentUser, CurrentUser>();
+
         return services;
     }
 }
