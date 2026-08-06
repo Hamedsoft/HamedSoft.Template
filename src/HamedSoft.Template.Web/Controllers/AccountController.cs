@@ -98,7 +98,6 @@ public class AccountController : Controller
             }
         }
 
-
         var identity = new ClaimsIdentity(claims, IdentityConstants.ApplicationScheme);
 
         var principal = new ClaimsPrincipal(identity);

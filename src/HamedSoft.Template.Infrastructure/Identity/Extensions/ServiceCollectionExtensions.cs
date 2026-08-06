@@ -4,6 +4,7 @@ using HamedSoft.Template.Application.Contracts.Repositories.Reads;
 using HamedSoft.Template.Application.Contracts.Repositories.Writes;
 using HamedSoft.Template.Application.Contracts.Roles;
 using HamedSoft.Template.Application.Contracts.Services;
+using HamedSoft.Template.Application.Contracts.Users;
 using HamedSoft.Template.Infrastructure.Identity.Models;
 using HamedSoft.Template.Infrastructure.Identity.Options;
 using HamedSoft.Template.Infrastructure.Identity.Services;
@@ -43,6 +44,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IRoleWriteRepository, RoleWriteRepository>();
 
         services.Configure<AdminUserOptions>(configuration.GetSection(AdminUserOptions.SectionName));
+
+        services.AddScoped<IUserManagementService, UserManagementService>();
 
         return services;
     }
