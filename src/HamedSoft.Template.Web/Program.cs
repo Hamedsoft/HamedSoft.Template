@@ -1,10 +1,11 @@
 using HamedSoft.Template.Application;
 using HamedSoft.Template.Infrastructure;
+using HamedSoft.Template.Infrastructure.Identity.Extensions;
+using HamedSoft.Template.Infrastructure.Identity.Permissions;
 using HamedSoft.Template.Infrastructure.Persistence.Seed;
 using HamedSoft.Template.Web.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using HamedSoft.Template.Infrastructure.Identity.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +26,13 @@ builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler
 var app = builder.Build();
 
 await app.Services.SeedIdentityAsync();
+using (var scope = app.Services.CreateScope())
+{
+    var synchronizer = scope.ServiceProvider
+        .GetRequiredService<PermissionSynchronizer>();
+
+    await synchronizer.SyncAsync();
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

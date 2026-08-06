@@ -7,6 +7,7 @@ using HamedSoft.Template.Application.Contracts.Services;
 using HamedSoft.Template.Application.Contracts.Users;
 using HamedSoft.Template.Infrastructure.Identity.Models;
 using HamedSoft.Template.Infrastructure.Identity.Options;
+using HamedSoft.Template.Infrastructure.Identity.Permissions;
 using HamedSoft.Template.Infrastructure.Identity.Services;
 using HamedSoft.Template.Infrastructure.Persistence;
 using HamedSoft.Template.Infrastructure.Repositories.Roles;
@@ -47,6 +48,9 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<IUserManagementService, UserManagementService>();
 
+        services.AddScoped<IPermissionDiscoveryService, PermissionDiscoveryService>();
+
+        services.AddScoped<PermissionSynchronizer>();
         return services;
     }
 }

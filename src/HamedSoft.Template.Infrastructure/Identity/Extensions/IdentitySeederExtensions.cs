@@ -1,5 +1,6 @@
 ﻿using HamedSoft.Template.Infrastructure.Identity.Models;
 using HamedSoft.Template.Infrastructure.Identity.Options;
+using HamedSoft.Template.Infrastructure.Identity.Permissions;
 using HamedSoft.Template.Infrastructure.Identity.Seed;
 using HamedSoft.Template.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
@@ -15,7 +16,6 @@ public static class IdentitySeederExtensions
     {
         using var scope = services.CreateScope();
 
-
         var context = scope.ServiceProvider
             .GetRequiredService<ApplicationDbContext>();
 
@@ -24,9 +24,6 @@ public static class IdentitySeederExtensions
 
         var userManager = scope.ServiceProvider
             .GetRequiredService<UserManager<ApplicationUser>>();
-
-
-        await PermissionSeeder.SeedAsync(context);
 
 
         await RoleSeeder.SeedAsync(
@@ -41,5 +38,15 @@ public static class IdentitySeederExtensions
         await AdminUserSeeder.SeedAsync(
             userManager,
             options);
+
+
+        var permissionSynchronizer = scope.ServiceProvider
+            .GetRequiredService<PermissionSynchronizer>();
+
+
+        await permissionSynchronizer.SyncAsync();
+
+        await AdminRolePermissionSeeder.SeedAsync(context);
     }
+
 }

@@ -24,4 +24,8 @@ public static class PermissionConstants
 
         public const string Delete = "Users.Delete";
     }
+    public static class PermissionsManagement
+    {
+        public const string View = "Permissions.View";
+    }
 }
