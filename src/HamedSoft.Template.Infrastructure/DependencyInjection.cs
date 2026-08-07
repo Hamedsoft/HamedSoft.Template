@@ -7,6 +7,7 @@ using HamedSoft.Template.Application.Contracts.UnitOfWork;
 using HamedSoft.Template.Infrastructure.Common;
 using HamedSoft.Template.Infrastructure.Identity.Extensions;
 using HamedSoft.Template.Infrastructure.Identity.Services;
+using HamedSoft.Template.Infrastructure.Initialization;
 using HamedSoft.Template.Infrastructure.Persistence;
 using HamedSoft.Template.Infrastructure.Persistence.Interceptors;
 using HamedSoft.Template.Infrastructure.Persistence.Repositories.UserProfiles;
@@ -51,6 +52,13 @@ public static class DependencyInjection
         services.AddScoped<IApplicationUnitOfWork, ApplicationUnitOfWork>();
 
         services.AddIdentityServices(configuration);
+
+        services.AddScoped<IInitializer, RoleInitializer>();
+        services.AddScoped<IInitializer, PermissionInitializer>();
+        services.AddScoped<IInitializer, AdminPermissionInitializer>();
+        services.AddScoped<IInitializer, AdminUserInitializer>();
+
+        services.AddScoped<InfrastructureInitializer>();
 
         return services;
     }
