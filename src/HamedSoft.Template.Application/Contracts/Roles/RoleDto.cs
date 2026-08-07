@@ -2,5 +2,4 @@
 
 public sealed record RoleDto(
     Guid RoleId,
-    string RoleName,
-    IReadOnlyList<RolePermissionDto> Permissions);
+    string RoleName);

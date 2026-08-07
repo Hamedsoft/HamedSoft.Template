@@ -5,5 +5,5 @@ namespace HamedSoft.Template.Application.Features.Commands.Users.AssignRoles;
 
 public sealed record AssignRolesCommand(
     Guid UserId,
-    IReadOnlyCollection<string> RoleNames)
-    : ICommand<Result>;
+    IReadOnlyCollection<Guid> RoleIds
+) : ICommand<Result>;

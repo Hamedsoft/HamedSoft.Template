@@ -7,12 +7,14 @@ public interface IUserManagementService
     Task<Result<IReadOnlyList<UserListItem>>> GetAllAsync(
         CancellationToken cancellationToken = default);
 
+
     Task<Result<UserRolesDto>> GetRolesAsync(
         Guid userId,
         CancellationToken cancellationToken = default);
 
+
     Task<Result> AssignRolesAsync(
         Guid userId,
-        IReadOnlyCollection<string> roleNames,
+        IReadOnlyCollection<Guid> roleIds,
         CancellationToken cancellationToken = default);
 }

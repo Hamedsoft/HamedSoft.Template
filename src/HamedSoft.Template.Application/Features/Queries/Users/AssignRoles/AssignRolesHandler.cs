@@ -20,8 +20,8 @@ public sealed class AssignRolesHandler
         CancellationToken cancellationToken)
     {
         return await _userManagementService.AssignRolesAsync(
-            request.UserId,
-            request.RoleNames,
-            cancellationToken);
+    request.UserId,
+    request.RoleIds,
+    cancellationToken);
     }
 }

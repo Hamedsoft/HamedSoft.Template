@@ -1,4 +1,5 @@
-﻿using HamedSoft.Template.Application.Contracts.Users;
+﻿using HamedSoft.Template.Application.Common.Models;
+using HamedSoft.Template.Application.Contracts.Users;
 using HamedSoft.Template.Domain.SeedWork;
 using HamedSoft.Template.Infrastructure.Identity.Models;
 using Microsoft.AspNetCore.Identity;
@@ -45,11 +46,13 @@ public sealed class UserManagementService : IUserManagementService
     }
 
     public async Task<Result<UserRolesDto>> GetRolesAsync(
-        Guid userId,
-        CancellationToken cancellationToken = default)
+    Guid userId,
+    CancellationToken cancellationToken = default)
     {
         var user = await _userManager.Users
-            .FirstOrDefaultAsync(x => x.Id == userId, cancellationToken);
+            .FirstOrDefaultAsync(
+                x => x.Id == userId,
+                cancellationToken);
 
         if (user is null)
             return Result<UserRolesDto>.Failure("کاربر یافت نشد.");
@@ -65,7 +68,8 @@ public sealed class UserManagementService : IUserManagementService
             user.UserName ?? string.Empty,
             roles
                 .Select(r =>
-                    new UserRoleItem(
+                    new LookupItemDto(
+                        r.Id,
                         r.Name!,
                         userRoles.Contains(r.Name!)))
                 .ToList());
@@ -75,7 +79,7 @@ public sealed class UserManagementService : IUserManagementService
 
     public async Task<Result> AssignRolesAsync(
         Guid userId,
-        IReadOnlyCollection<string> roleNames,
+        IReadOnlyCollection<Guid> roleIds,
         CancellationToken cancellationToken = default)
     {
         var user = await _userManager.Users
@@ -86,19 +90,28 @@ public sealed class UserManagementService : IUserManagementService
 
         var currentRoles = await _userManager.GetRolesAsync(user);
 
-        var removeResult = await _userManager.RemoveFromRolesAsync(
-            user,
-            currentRoles);
-
-        if (!removeResult.Succeeded)
+        if (currentRoles.Count > 0)
         {
-            return Result.Failure(
-                removeResult.Errors.First().Description);
+            await _userManager.RemoveFromRolesAsync(
+                user,
+                currentRoles);
         }
+
+        var selectedRoleNames = await _roleManager.Roles
+            .Where(x => roleIds.Contains(x.Id))
+            .Select(x => x.Name!)
+            .ToListAsync(cancellationToken);
+
+
+        var roles = await _roleManager.Roles
+            .Where(x => roleIds.Contains(x.Id))
+            .Select(x => x.Name!)
+            .ToListAsync(cancellationToken);
+
 
         var addResult = await _userManager.AddToRolesAsync(
             user,
-            roleNames);
+            roles);
 
         if (!addResult.Succeeded)
         {

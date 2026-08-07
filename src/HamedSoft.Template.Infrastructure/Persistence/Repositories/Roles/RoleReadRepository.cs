@@ -1,4 +1,6 @@
-﻿using HamedSoft.Template.Application.Contracts.Repositories.Reads;
+﻿using System.Linq;
+using HamedSoft.Template.Application.Common.Models;
+using HamedSoft.Template.Application.Contracts.Repositories.Reads;
 using HamedSoft.Template.Application.Contracts.Roles;
 using HamedSoft.Template.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -27,20 +29,20 @@ internal sealed class RoleReadRepository : IRoleReadRepository
     }
 
 
-    public async Task<IReadOnlyList<RoleDto>> GetAllAsync(
+    public async Task<IReadOnlyList<RolePermissionsDto>> GetAllAsync(
         CancellationToken cancellationToken = default)
     {
         return await _context.Roles
             .AsNoTracking()
-            .Select(role => new RoleDto(
+            .Select(role => new RolePermissionsDto(
                 role.Id,
                 role.Name!,
-                new List<RolePermissionDto>()))
+                new List<LookupItemDto>()))
             .ToListAsync(cancellationToken);
     }
 
 
-    public async Task<RoleDto?> GetByIdAsync(
+    public async Task<RolePermissionsDto?> GetByIdAsync(
         Guid roleId,
         CancellationToken cancellationToken = default)
     {
@@ -50,14 +52,13 @@ internal sealed class RoleReadRepository : IRoleReadRepository
                 x => x.Id == roleId,
                 cancellationToken);
 
-
         if (role is null)
             return null;
 
 
         var permissions = await _context.Permissions
             .AsNoTracking()
-            .Select(permission => new RolePermissionDto(
+            .Select(permission => new LookupItemDto(
                 permission.Id,
                 permission.Name,
                 _context.RolePermissions.Any(
@@ -67,7 +68,7 @@ internal sealed class RoleReadRepository : IRoleReadRepository
             .ToListAsync(cancellationToken);
 
 
-        return new RoleDto(
+        return new RolePermissionsDto(
             role.Id,
             role.Name!,
             permissions);

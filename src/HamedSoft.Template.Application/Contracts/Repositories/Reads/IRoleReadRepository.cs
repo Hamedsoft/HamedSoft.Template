@@ -9,11 +9,11 @@ public interface IRoleReadRepository
         CancellationToken cancellationToken = default);
 
 
-    Task<IReadOnlyList<RoleDto>> GetAllAsync(
+    Task<IReadOnlyList<RolePermissionsDto>> GetAllAsync(
         CancellationToken cancellationToken = default);
 
 
-    Task<RoleDto?> GetByIdAsync(
+    Task<RolePermissionsDto?> GetByIdAsync(
         Guid roleId,
         CancellationToken cancellationToken = default);
 }

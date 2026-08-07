@@ -41,14 +41,13 @@ public class RolesController : Controller
 
     [HttpGet]
     public async Task<IActionResult> Permissions(
-        Guid id,
-        CancellationToken cancellationToken)
+    Guid id,
+    CancellationToken cancellationToken)
     {
         var result = await _roleManagementService
             .GetByIdAsync(
                 id,
                 cancellationToken);
-
 
         if (!result.Succeeded)
             return NotFound();
@@ -56,15 +55,15 @@ public class RolesController : Controller
 
         var model = new RolePermissionViewModel
         {
-            RoleId = result.Value.RoleId,
+            RoleId = result.Value!.RoleId,
             RoleName = result.Value.RoleName,
 
             Permissions = result.Value.Permissions
                 .Select(x => new PermissionItemViewModel
                 {
-                    PermissionId = x.PermissionId,
-                    Name = x.PermissionName,
-                    IsAssigned = x.IsAssigned
+                    PermissionId = x.Id,
+                    Name = x.Name,
+                    IsAssigned = x.Selected
                 })
                 .ToList()
         };

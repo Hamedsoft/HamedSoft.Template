@@ -58,7 +58,8 @@ public class UsersController : Controller
             Roles = result.Value.Roles
                 .Select(x => new UserRoleItemViewModel
                 {
-                    RoleName = x.RoleName,
+                    RoleId = x.Id,
+                    RoleName = x.Name,
                     Selected = x.Selected
                 })
                 .ToList()
@@ -69,18 +70,18 @@ public class UsersController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Roles(
-    UserRolesViewModel model,
-    CancellationToken cancellationToken)
+        UserRolesViewModel model,
+        CancellationToken cancellationToken)
     {
-        var selectedRoles = model.Roles
+        var selectedRoleIds = model.Roles
             .Where(x => x.Selected)
-            .Select(x => x.RoleName)
+            .Select(x => x.RoleId)
             .ToList();
 
         var result = await _mediator.Send(
             new AssignRolesCommand(
                 model.UserId,
-                selectedRoles),
+                selectedRoleIds),
             cancellationToken);
 
         if (!result.Succeeded)

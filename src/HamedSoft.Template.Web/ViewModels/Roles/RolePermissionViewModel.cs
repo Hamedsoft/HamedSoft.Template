@@ -10,13 +10,3 @@ public sealed class RolePermissionViewModel
 
     public List<Guid> PermissionIds { get; set; } = [];
 }
-
-
-public sealed class PermissionItemViewModel
-{
-    public Guid PermissionId { get; set; }
-
-    public string Name { get; set; } = string.Empty;
-
-    public bool IsAssigned { get; set; }
-}

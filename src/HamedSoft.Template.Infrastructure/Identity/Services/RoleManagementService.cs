@@ -42,19 +42,19 @@ internal sealed class RoleManagementService : IRoleManagementService
         return Result.Success();
     }
 
-    public async Task<Result<IReadOnlyList<RoleDto>>> GetAllAsync(
+    public async Task<Result<IReadOnlyList<RolePermissionsDto>>> GetAllAsync(
        CancellationToken cancellationToken = default)
     {
         var roles = await _roleReadRepository
             .GetAllAsync(cancellationToken);
 
 
-        return Result<IReadOnlyList<RoleDto>>
+        return Result<IReadOnlyList<RolePermissionsDto>>
             .Success(roles);
     }
 
 
-    public async Task<Result<RoleDto>> GetByIdAsync(
+    public async Task<Result<RolePermissionsDto>> GetByIdAsync(
      Guid roleId,
      CancellationToken cancellationToken = default)
     {
@@ -65,10 +65,10 @@ internal sealed class RoleManagementService : IRoleManagementService
 
 
         if (role is null)
-            return Result<RoleDto>.Failure(
+            return Result<RolePermissionsDto>.Failure(
                 "نقش یافت نشد.");
 
 
-        return Result<RoleDto>.Success(role);
+        return Result<RolePermissionsDto>.Success(role);
     }
 }
