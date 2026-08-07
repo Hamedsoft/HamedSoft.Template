@@ -37,7 +37,7 @@ internal sealed class RoleManagementService : IRoleManagementService
             permissionIds,
             cancellationToken);
 
-        await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();
     }

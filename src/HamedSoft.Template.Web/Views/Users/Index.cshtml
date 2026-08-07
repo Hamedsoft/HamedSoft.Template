@@ -39,6 +39,15 @@
 
                         <td>
 
+                            <a asp-action="Edit"
+                               asp-route-id="@user.UserId"
+                               class="btn btn-sm btn-warning">
+
+                                Edit
+
+                            </a>
+
+
                             <a asp-action="Roles"
                                asp-route-userId="@user.UserId"
                                class="btn btn-sm btn-primary">

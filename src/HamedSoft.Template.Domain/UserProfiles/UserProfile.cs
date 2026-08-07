@@ -40,4 +40,15 @@ public sealed class UserProfile : AggregateRoot<UserProfileId>
 
         return userProfile;
     }
+
+    public void UpdateName(
+    string firstName,
+    string lastName)
+    {
+        Guard.AgainstNull(firstName, nameof(firstName));
+        Guard.AgainstNull(lastName, nameof(lastName));
+
+        FirstName = firstName;
+        LastName = lastName;
+    }
 }

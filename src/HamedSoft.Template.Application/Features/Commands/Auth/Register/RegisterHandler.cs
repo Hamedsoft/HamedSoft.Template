@@ -34,7 +34,7 @@ public sealed class RegisterHandler : ICommandHandler<RegisterCommand, Result<Re
 
         await _userProfileWriteRepository.AddAsync(profile, cancellationToken);
 
-        await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result<RegisterResult>.Success(
             new RegisterResult(user.UserId));

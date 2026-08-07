@@ -1,6 +1,10 @@
 ﻿using HamedSoft.Template.Application.Common.Models;
+using HamedSoft.Template.Application.Contracts.Repositories.Reads;
+using HamedSoft.Template.Application.Contracts.Repositories.Writes;
+using HamedSoft.Template.Application.Contracts.UnitOfWork;
 using HamedSoft.Template.Application.Contracts.Users;
 using HamedSoft.Template.Domain.SeedWork;
+using HamedSoft.Template.Domain.SharedKernel.ValueObjects;
 using HamedSoft.Template.Infrastructure.Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -11,13 +15,22 @@ public sealed class UserManagementService : IUserManagementService
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<ApplicationRole> _roleManager;
+    private readonly IUserProfileReadRepository _userProfileReadRepository;
+    private readonly IUserProfileWriteRepository _userProfileWriteRepository;
+    private readonly IApplicationUnitOfWork _unitOfWork;
 
     public UserManagementService(
         UserManager<ApplicationUser> userManager,
-        RoleManager<ApplicationRole> roleManager)
+        RoleManager<ApplicationRole> roleManager,
+        IUserProfileReadRepository userProfileReadRepository,
+        IUserProfileWriteRepository userProfileWriteRepository,
+        IApplicationUnitOfWork unitOfWork)
     {
         _userManager = userManager;
         _roleManager = roleManager;
+        _userProfileReadRepository = userProfileReadRepository;
+        _userProfileWriteRepository = userProfileWriteRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<Result<IReadOnlyList<UserListItem>>> GetAllAsync(
@@ -118,6 +131,238 @@ public sealed class UserManagementService : IUserManagementService
             return Result.Failure(
                 addResult.Errors.First().Description);
         }
+
+        return Result.Success();
+    }
+    public async Task<Result<UserProfileDto>> GetProfileAsync(
+    Guid userId,
+    CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.Users
+            .FirstOrDefaultAsync(
+                x => x.Id == userId,
+                cancellationToken);
+
+        if (user is null)
+            return Result<UserProfileDto>.Failure("کاربر یافت نشد.");
+
+        var profile = await _userProfileReadRepository.GetByIdAsync(
+            UserProfileId.Create(userId),
+            cancellationToken);
+
+        if (profile is null)
+            return Result<UserProfileDto>.Failure("پروفایل کاربر یافت نشد.");
+
+        var dto = new UserProfileDto(
+            user.Id,
+            user.UserName ?? string.Empty,
+            profile.FirstName,
+            profile.LastName,
+            user.Email,
+            user.PhoneNumber);
+
+        return Result<UserProfileDto>.Success(dto);
+    }
+    public async Task<Result> UpdateProfileAsync(
+    UserProfileDto profileDto,
+    CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.Users
+            .FirstOrDefaultAsync(
+                x => x.Id == profileDto.UserId,
+                cancellationToken);
+
+        if (user is null)
+            return Result.Failure("کاربر یافت نشد.");
+
+
+        var profile = await _userProfileReadRepository.GetByIdAsync(
+            UserProfileId.Create(profileDto.UserId),
+            cancellationToken);
+
+
+        if (profile is null)
+            return Result.Failure("پروفایل کاربر یافت نشد.");
+
+
+        profile.UpdateName(
+            profileDto.FirstName,
+            profileDto.LastName);
+
+
+        await _userProfileWriteRepository.UpdateAsync(
+            profile,
+            cancellationToken);
+
+
+        user.Email = profileDto.Email;
+        user.PhoneNumber = profileDto.PhoneNumber;
+
+
+        var identityResult = await _userManager.UpdateAsync(user);
+
+        if (!identityResult.Succeeded)
+        {
+            return Result.Failure(
+                identityResult.Errors.First().Description);
+        }
+
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+
+        return Result.Success();
+    }
+    public async Task<Result<UserSecurityDto>> GetSecurityAsync(
+    Guid userId,
+    CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.Users
+            .FirstOrDefaultAsync(
+                x => x.Id == userId,
+                cancellationToken);
+
+
+        if (user is null)
+        {
+            return Result<UserSecurityDto>.Failure(
+                "کاربر یافت نشد.");
+        }
+
+
+        var dto = new UserSecurityDto(
+            user.Id,
+            user.UserName ?? string.Empty,
+            user.LockoutEnd.HasValue &&
+            user.LockoutEnd.Value > DateTimeOffset.UtcNow,
+            user.IsActive);
+
+
+        return Result<UserSecurityDto>.Success(dto);
+    }
+    public async Task<Result> ResetPasswordAsync(
+    Guid userId,
+    string newPassword,
+    CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.Users
+            .FirstOrDefaultAsync(
+                x => x.Id == userId,
+                cancellationToken);
+
+
+        if (user is null)
+            return Result.Failure("کاربر یافت نشد.");
+
+
+        var token = await _userManager
+            .GeneratePasswordResetTokenAsync(user);
+
+
+        var result = await _userManager
+            .ResetPasswordAsync(
+                user,
+                token,
+                newPassword);
+
+
+        if (!result.Succeeded)
+        {
+            return Result.Failure(
+                result.Errors.First().Description);
+        }
+
+
+        return Result.Success();
+    }
+    public async Task<Result> UpdateStatusAsync(
+    Guid userId,
+    bool isActive,
+    CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.Users
+            .FirstOrDefaultAsync(
+                x => x.Id == userId,
+                cancellationToken);
+
+
+        if (user is null)
+            return Result.Failure("کاربر یافت نشد.");
+
+
+        user.IsActive = isActive;
+
+
+        var result = await _userManager.UpdateAsync(user);
+
+
+        if (!result.Succeeded)
+        {
+            return Result.Failure(
+                result.Errors.First().Description);
+        }
+
+
+        return Result.Success();
+    }
+    public async Task<Result> LockAsync(
+    Guid userId,
+    CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.Users
+            .FirstOrDefaultAsync(
+                x => x.Id == userId,
+                cancellationToken);
+
+
+        if (user is null)
+            return Result.Failure("کاربر یافت نشد.");
+
+
+        user.LockoutEnabled = true;
+
+
+        var result = await _userManager
+            .SetLockoutEndDateAsync(
+                user,
+                DateTimeOffset.UtcNow.AddYears(100));
+
+
+        if (!result.Succeeded)
+        {
+            return Result.Failure(
+                result.Errors.First().Description);
+        }
+
+
+        return Result.Success();
+    }
+    public async Task<Result> UnlockAsync(
+    Guid userId,
+    CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.Users
+            .FirstOrDefaultAsync(
+                x => x.Id == userId,
+                cancellationToken);
+
+
+        if (user is null)
+            return Result.Failure("کاربر یافت نشد.");
+
+
+        var result = await _userManager
+            .SetLockoutEndDateAsync(
+                user,
+                null);
+
+
+        if (!result.Succeeded)
+        {
+            return Result.Failure(
+                result.Errors.First().Description);
+        }
+
 
         return Result.Success();
     }
