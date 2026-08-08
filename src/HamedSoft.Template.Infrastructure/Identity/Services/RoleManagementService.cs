@@ -13,6 +13,7 @@ internal sealed class RoleManagementService : IRoleManagementService
 {
     private readonly IRoleReadRepository _roleReadRepository;
     private readonly IRoleWriteRepository _roleWriteRepository;
+    private readonly IPermissionReadRepository _permissionReadRepository;
     private readonly IApplicationUnitOfWork _unitOfWork;
     private readonly RoleManager<ApplicationRole> _roleManager;
     private readonly UserManager<ApplicationUser> _userManager;
@@ -20,14 +21,16 @@ internal sealed class RoleManagementService : IRoleManagementService
     public RoleManagementService(
         IRoleReadRepository roleReadRepository,
         IRoleWriteRepository roleWriteRepository,
+        IPermissionReadRepository permissionReadRepository,
         IApplicationUnitOfWork unitOfWork,
     RoleManager<ApplicationRole> roleManager,
     UserManager<ApplicationUser> userManager)
     {
         _roleReadRepository = roleReadRepository;
         _roleWriteRepository = roleWriteRepository;
-        _roleManager = roleManager;
+        _permissionReadRepository = permissionReadRepository;
         _unitOfWork = unitOfWork;
+        _roleManager = roleManager;
         _userManager = userManager;
     }
     public async Task<Result> AssignPermissionsAsync(
@@ -35,15 +38,40 @@ internal sealed class RoleManagementService : IRoleManagementService
     IReadOnlyCollection<Guid> permissionIds,
     CancellationToken cancellationToken = default)
     {
-        if (!await _roleReadRepository.ExistsAsync(roleId, cancellationToken))
+        if (!await _roleReadRepository.ExistsAsync(
+            roleId,
+            cancellationToken))
+        {
             return Result.Failure("نقش یافت نشد.");
+        }
+
+        if (await _roleReadRepository.IsAdminAsync(
+            roleId,
+            cancellationToken))
+        {
+            return Result.Failure(
+                "امکان تغییر Permissionهای نقش Admin وجود ندارد.");
+        }
+
+        var distinctPermissionIds = permissionIds
+            .Distinct()
+            .ToArray();
+
+        if (!await _permissionReadRepository.AllExistAsync(
+            distinctPermissionIds,
+            cancellationToken))
+        {
+            return Result.Failure(
+                "یکی از Permissionهای ارسال‌شده معتبر نیست.");
+        }
 
         await _roleWriteRepository.ReplacePermissionsAsync(
             roleId,
-            permissionIds,
+            distinctPermissionIds,
             cancellationToken);
 
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(
+            cancellationToken);
 
         return Result.Success();
     }

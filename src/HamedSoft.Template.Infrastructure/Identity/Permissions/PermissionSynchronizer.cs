@@ -18,36 +18,51 @@ public sealed class PermissionSynchronizer
         _discoveryService = discoveryService;
     }
 
-
     public async Task SyncAsync(
         CancellationToken cancellationToken = default)
     {
         var discoveredPermissions =
             _discoveryService.Discover();
 
+        var definitions = PermissionCatalog.All
+            .ToDictionary(x => x.Name);
 
         var existingPermissions =
             await _context.Permissions
-                .Select(x => x.Name)
                 .ToListAsync(cancellationToken);
 
-
-        var newPermissions =
-            discoveredPermissions
-                .Except(existingPermissions)
-                .ToList();
-
-
-        if (newPermissions.Count == 0)
-            return;
-
-
-        foreach (var permissionName in newPermissions)
+        foreach (var permissionName in discoveredPermissions)
         {
-            _context.Permissions.Add(
-                new Permission(permissionName));
-        }
+            if (!definitions.TryGetValue(
+                    permissionName,
+                    out var definition))
+            {
+                continue;
+            }
 
+            var existing = existingPermissions
+                .FirstOrDefault(x => x.Name == permissionName);
+
+            if (existing is null)
+            {
+                _context.Permissions.Add(
+                    new Permission(
+                        Guid.NewGuid(),
+                        definition.Name,
+                        definition.Module,
+                        definition.Category,
+                        definition.DisplayName,
+                        definition.Description));
+
+                continue;
+            }
+
+            existing.UpdateMetadata(
+                definition.Module,
+                definition.Category,
+                definition.DisplayName,
+                definition.Description);
+        }
 
         await _context.SaveChangesAsync(
             cancellationToken);

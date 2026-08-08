@@ -1,5 +1,7 @@
 ﻿using HamedSoft.Template.Application.Contracts.Roles;
 using HamedSoft.Template.Application.Features.Commands.Roles.AssignPermissions;
+using HamedSoft.Template.Application.Security;
+using HamedSoft.Template.Web.Security;
 using HamedSoft.Template.Web.ViewModels.Roles;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -143,14 +145,11 @@ public class RolesController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-
-
-
-
     [HttpGet]
+    [Permission(PermissionConstants.Roles.AssignPermissions)]
     public async Task<IActionResult> Permissions(
-    Guid id,
-    CancellationToken cancellationToken)
+        Guid id,
+        CancellationToken cancellationToken)
     {
         var result = await _roleManagementService
             .GetByIdAsync(
@@ -159,7 +158,6 @@ public class RolesController : Controller
 
         if (!result.Succeeded)
             return NotFound();
-
 
         var model = new RolePermissionViewModel
         {
@@ -171,6 +169,10 @@ public class RolesController : Controller
                 {
                     PermissionId = x.Id,
                     Name = x.Name,
+                    Module = x.Module,
+                    Category = x.Category,
+                    DisplayName = x.DisplayName,
+                    Description = x.Description,
                     IsAssigned = x.Selected
                 })
                 .ToList()
@@ -180,6 +182,7 @@ public class RolesController : Controller
     }
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Permission(PermissionConstants.Roles.AssignPermissions)]
     public async Task<IActionResult> Permissions(
     RolePermissionViewModel model,
     CancellationToken cancellationToken)
@@ -188,11 +191,9 @@ public class RolesController : Controller
             model.RoleId,
             model.PermissionIds);
 
-
         var result = await _mediator.Send(
             command,
             cancellationToken);
-
 
         if (!result.Succeeded)
         {
@@ -202,7 +203,6 @@ public class RolesController : Controller
 
             return View(model);
         }
-
 
         return RedirectToAction(
             nameof(Permissions),

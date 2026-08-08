@@ -11,6 +11,7 @@ using HamedSoft.Template.Infrastructure.Identity.Options;
 using HamedSoft.Template.Infrastructure.Identity.Permissions;
 using HamedSoft.Template.Infrastructure.Identity.Services;
 using HamedSoft.Template.Infrastructure.Persistence;
+using HamedSoft.Template.Infrastructure.Repositories.Permissions;
 using HamedSoft.Template.Infrastructure.Repositories.Roles;
 using HamedSoft.Template.Infrastructure.Security;
 using Microsoft.AspNetCore.Identity;
@@ -59,6 +60,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<PermissionSynchronizer>();
 
         services.AddScoped<IPermissionChecker, PermissionChecker>();
+
+        services.AddScoped<IPermissionReadRepository, PermissionReadRepository>();
 
         return services;
     }

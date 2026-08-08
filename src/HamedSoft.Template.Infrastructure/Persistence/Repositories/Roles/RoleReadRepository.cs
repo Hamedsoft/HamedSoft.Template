@@ -1,7 +1,6 @@
-﻿using System.Linq;
-using HamedSoft.Template.Application.Common.Models;
-using HamedSoft.Template.Application.Contracts.Repositories.Reads;
+﻿using HamedSoft.Template.Application.Contracts.Repositories.Reads;
 using HamedSoft.Template.Application.Contracts.Roles;
+using HamedSoft.Template.Application.Security;
 using HamedSoft.Template.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,7 +15,6 @@ internal sealed class RoleReadRepository : IRoleReadRepository
         _context = context;
     }
 
-
     public async Task<bool> ExistsAsync(
         Guid roleId,
         CancellationToken cancellationToken = default)
@@ -28,18 +26,17 @@ internal sealed class RoleReadRepository : IRoleReadRepository
                 cancellationToken);
     }
 
-    public async Task<IReadOnlyList<RoleDto>> GetAllAsync(
+    public async Task<IReadOnlyList<RolePermissionsDto>> GetAllAsync(
         CancellationToken cancellationToken = default)
     {
         return await _context.Roles
             .AsNoTracking()
-            .OrderBy(x => x.Name)
-            .Select(role => new RoleDto(
+            .Select(role => new RolePermissionsDto(
                 role.Id,
-                role.Name!))
+                role.Name!,
+                new List<RolePermissionItemDto>()))
             .ToListAsync(cancellationToken);
     }
-
 
     public async Task<RolePermissionsDto?> GetByIdAsync(
         Guid roleId,
@@ -54,22 +51,47 @@ internal sealed class RoleReadRepository : IRoleReadRepository
         if (role is null)
             return null;
 
-
         var permissions = await _context.Permissions
             .AsNoTracking()
-            .Select(permission => new LookupItemDto(
+            .Select(permission => new RolePermissionItemDto(
                 permission.Id,
                 permission.Name,
+                permission.Module,
+                permission.Category,
+                permission.DisplayName,
+                permission.Description,
                 _context.RolePermissions.Any(
                     x =>
                         x.RoleId == roleId &&
                         x.PermissionId == permission.Id)))
             .ToListAsync(cancellationToken);
 
-
         return new RolePermissionsDto(
             role.Id,
             role.Name!,
             permissions);
     }
+
+    async Task<IReadOnlyList<RoleDto>> IRoleReadRepository.GetAllAsync(CancellationToken cancellationToken)
+    {
+        return await _context.Roles
+         .AsNoTracking()
+         .Select(role => new RoleDto(
+             role.Id,
+             role.Name!))
+         .ToListAsync(cancellationToken);
+    }
+    public async Task<bool> IsAdminAsync(
+        Guid roleId,
+        CancellationToken cancellationToken = default)
+    {
+        return await _context.Roles
+            .AsNoTracking()
+            .AnyAsync(
+                x =>
+                    x.Id == roleId &&
+                    x.Name == SystemRoles.Admin,
+                cancellationToken);
+    }
+
 }

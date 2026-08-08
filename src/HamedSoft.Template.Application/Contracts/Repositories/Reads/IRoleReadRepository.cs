@@ -8,10 +8,12 @@ public interface IRoleReadRepository
         Guid roleId,
         CancellationToken cancellationToken = default);
 
+    Task<bool> IsAdminAsync(
+    Guid roleId,
+    CancellationToken cancellationToken = default);
 
     Task<IReadOnlyList<RoleDto>> GetAllAsync(
         CancellationToken cancellationToken = default);
-
 
     Task<RolePermissionsDto?> GetByIdAsync(
         Guid roleId,
