@@ -5,12 +5,14 @@ using HamedSoft.Template.Application.Contracts.Repositories.Writes;
 using HamedSoft.Template.Application.Contracts.Roles;
 using HamedSoft.Template.Application.Contracts.Services;
 using HamedSoft.Template.Application.Contracts.Users;
+using HamedSoft.Template.Application.Security;
 using HamedSoft.Template.Infrastructure.Identity.Models;
 using HamedSoft.Template.Infrastructure.Identity.Options;
 using HamedSoft.Template.Infrastructure.Identity.Permissions;
 using HamedSoft.Template.Infrastructure.Identity.Services;
 using HamedSoft.Template.Infrastructure.Persistence;
 using HamedSoft.Template.Infrastructure.Repositories.Roles;
+using HamedSoft.Template.Infrastructure.Security;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -51,6 +53,9 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IPermissionDiscoveryService, PermissionDiscoveryService>();
 
         services.AddScoped<PermissionSynchronizer>();
+
+        services.AddScoped<IPermissionChecker, PermissionChecker>();
+
         return services;
     }
 }

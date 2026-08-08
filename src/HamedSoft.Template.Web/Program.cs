@@ -1,4 +1,5 @@
 using HamedSoft.Template.Application;
+using HamedSoft.Template.Application.Contracts.Security;
 using HamedSoft.Template.Infrastructure;
 using HamedSoft.Template.Infrastructure.Initialization;
 using HamedSoft.Template.Web.Security;
@@ -20,6 +21,10 @@ builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme);
 builder.Services.AddAuthorization(); 
 builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
 builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
+
+//User Authentication
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 
 var app = builder.Build();
 

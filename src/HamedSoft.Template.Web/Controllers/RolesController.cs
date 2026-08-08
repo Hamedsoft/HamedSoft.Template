@@ -38,6 +38,114 @@ public class RolesController : Controller
 
         return View(result.Value);
     }
+    [HttpGet]
+    public IActionResult Create()
+    {
+        return View(new CreateRoleViewModel());
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(
+        CreateRoleViewModel model,
+        CancellationToken cancellationToken)
+    {
+        if (!ModelState.IsValid)
+            return View(model);
+
+        var result = await _roleManagementService.CreateAsync(
+            model.RoleName,
+            cancellationToken);
+
+        if (!result.Succeeded)
+        {
+            ModelState.AddModelError(
+                string.Empty,
+                result.Error ?? "خطا در ایجاد نقش.");
+
+            return View(model);
+        }
+
+        TempData["Success"] = "نقش با موفقیت ایجاد شد.";
+
+        return RedirectToAction(nameof(Index));
+    }
+    [HttpGet]
+    public async Task<IActionResult> Edit(
+    Guid id,
+    CancellationToken cancellationToken)
+    {
+        var result = await _roleManagementService.GetByIdAsync(
+            id,
+            cancellationToken);
+
+        if (!result.Succeeded)
+        {
+            TempData["Error"] = result.Error;
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        var model = new EditRoleViewModel
+        {
+            RoleId = result.Value!.RoleId,
+            RoleName = result.Value.RoleName
+        };
+
+        return View(model);
+    }
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(
+    EditRoleViewModel model,
+    CancellationToken cancellationToken)
+    {
+        if (!ModelState.IsValid)
+            return View(model);
+
+        var result = await _roleManagementService.UpdateAsync(
+            model.RoleId,
+            model.RoleName,
+            cancellationToken);
+
+        if (!result.Succeeded)
+        {
+            ModelState.AddModelError(
+                string.Empty,
+                result.Error ?? "خطا در بروزرسانی نقش.");
+
+            return View(model);
+        }
+
+        TempData["Success"] = "نقش با موفقیت بروزرسانی شد.";
+
+        return RedirectToAction(nameof(Index));
+    }
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Delete(
+    Guid id,
+    CancellationToken cancellationToken)
+    {
+        var result = await _roleManagementService.DeleteAsync(
+            id,
+            cancellationToken);
+
+        if (!result.Succeeded)
+        {
+            TempData["Error"] = result.Error;
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        TempData["Success"] = "نقش با موفقیت حذف شد.";
+
+        return RedirectToAction(nameof(Index));
+    }
+
+
+
+
 
     [HttpGet]
     public async Task<IActionResult> Permissions(

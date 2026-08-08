@@ -4,10 +4,23 @@ namespace HamedSoft.Template.Application.Contracts.Roles;
 
 public interface IRoleManagementService
 {
-    Task<Result<IReadOnlyList<RolePermissionsDto>>> GetAllAsync(
+    Task<Result<IReadOnlyList<RoleDto>>> GetAllAsync(
         CancellationToken cancellationToken = default);
 
     Task<Result<RolePermissionsDto>> GetByIdAsync(
+        Guid roleId,
+        CancellationToken cancellationToken = default);
+
+    Task<Result<Guid>> CreateAsync(
+        string roleName,
+        CancellationToken cancellationToken = default);
+
+    Task<Result> UpdateAsync(
+        Guid roleId,
+        string roleName,
+        CancellationToken cancellationToken = default);
+
+    Task<Result> DeleteAsync(
         Guid roleId,
         CancellationToken cancellationToken = default);
 

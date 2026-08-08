@@ -1,11 +1,20 @@
 ﻿using HamedSoft.Template.Application.Security;
-using HamedSoft.Template.Web.Security;
 using Microsoft.AspNetCore.Authorization;
 
-public class PermissionAuthorizationHandler
+namespace HamedSoft.Template.Web.Security;
+
+public sealed class PermissionAuthorizationHandler
     : AuthorizationHandler<PermissionRequirement>
 {
-    protected override Task HandleRequirementAsync(
+    private readonly IPermissionChecker _permissionChecker;
+
+    public PermissionAuthorizationHandler(
+        IPermissionChecker permissionChecker)
+    {
+        _permissionChecker = permissionChecker;
+    }
+
+    protected override async Task HandleRequirementAsync(
         AuthorizationHandlerContext context,
         PermissionRequirement requirement)
     {
@@ -13,18 +22,19 @@ public class PermissionAuthorizationHandler
             CustomClaimTypes.Permission,
             SystemPermissions.All);
 
+        if (hasAllPermission)
+        {
+            context.Succeed(requirement);
+            return;
+        }
 
-        var hasRequiredPermission = context.User.HasClaim(
-            CustomClaimTypes.Permission,
-            requirement.Permission);
+        var hasPermission =
+            await _permissionChecker.HasPermissionAsync(
+                requirement.Permission);
 
-
-        if (hasAllPermission || hasRequiredPermission)
+        if (hasPermission)
         {
             context.Succeed(requirement);
         }
-
-
-        return Task.CompletedTask;
     }
 }

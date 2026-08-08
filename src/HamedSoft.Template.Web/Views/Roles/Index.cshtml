@@ -1,10 +1,17 @@
-﻿@model IReadOnlyList<HamedSoft.Template.Application.Contracts.Roles.RolePermissionsDto>
+﻿@model IReadOnlyList<HamedSoft.Template.Application.Contracts.Roles.RoleDto>
 
 <h2 class="mb-4">
     مدیریت نقش‌ها
 </h2>
 
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4>نقش‌ها</h4>
 
+    <a asp-action="Create"
+       class="btn btn-primary">
+        ایجاد نقش جدید
+    </a>
+</div>
 <table class="table table-bordered">
 
     <thead>
@@ -30,11 +37,35 @@
                 </td>
 
                 <td>
-                    <a class="btn btn-primary"
-                       asp-action="Permissions"
-                       asp-route-id="@role.RoleId">
-                        مدیریت دسترسی
+                    <a asp-action="Edit"
+                       asp-route-id="@role.RoleId"
+                       class="btn btn-sm btn-warning">
+                        ویرایش
                     </a>
+
+                    <a asp-action="Permissions"
+                       asp-route-id="@role.RoleId"
+                       class="btn btn-sm btn-info">
+                        دسترسی‌ها
+                    </a>
+
+                    <form asp-action="Delete"
+                          method="post"
+                          class="d-inline"
+                          onsubmit="return confirm('آیا از حذف این نقش مطمئن هستید؟');">
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden"
+                               name="id"
+                               value="@role.RoleId" />
+
+                        <button type="submit"
+                                class="btn btn-sm btn-danger">
+                            حذف
+                        </button>
+
+                    </form>
                 </td>
             </tr>
         }

@@ -9,7 +9,7 @@ public interface IRoleReadRepository
         CancellationToken cancellationToken = default);
 
 
-    Task<IReadOnlyList<RolePermissionsDto>> GetAllAsync(
+    Task<IReadOnlyList<RoleDto>> GetAllAsync(
         CancellationToken cancellationToken = default);
 
 

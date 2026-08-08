@@ -28,16 +28,15 @@ internal sealed class RoleReadRepository : IRoleReadRepository
                 cancellationToken);
     }
 
-
-    public async Task<IReadOnlyList<RolePermissionsDto>> GetAllAsync(
+    public async Task<IReadOnlyList<RoleDto>> GetAllAsync(
         CancellationToken cancellationToken = default)
     {
         return await _context.Roles
             .AsNoTracking()
-            .Select(role => new RolePermissionsDto(
+            .OrderBy(x => x.Name)
+            .Select(role => new RoleDto(
                 role.Id,
-                role.Name!,
-                new List<LookupItemDto>()))
+                role.Name!))
             .ToListAsync(cancellationToken);
     }
 
