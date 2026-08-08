@@ -148,4 +148,11 @@ public class AccountController : Controller
 
         return RedirectToAction("Index", "Home");
     }
+    [HttpGet]
+    public IActionResult AccessDenied(string? returnUrl = null)
+    {
+        ViewData["ReturnUrl"] = returnUrl;
+
+        return View();
+    }
 }

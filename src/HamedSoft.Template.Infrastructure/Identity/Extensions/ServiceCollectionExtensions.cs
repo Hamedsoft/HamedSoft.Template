@@ -34,13 +34,17 @@ public static class ServiceCollectionExtensions
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
 
+        services.ConfigureApplicationCookie(options =>
+        {
+            options.AccessDeniedPath = "/Account/AccessDenied";
+            options.LoginPath = "/Account/Login";
+        });
+
         services.AddHttpContextAccessor();
         services.AddScoped<ICurrentUser, CurrentUser>();
 
         services.AddScoped<IAuthenticationService, IdentityService>();
         services.AddScoped<IPermissionService, PermissionService>();
-
-        services.AddScoped<IAuthenticationService, IdentityService>();
         services.AddScoped<IRoleManagementService, RoleManagementService>();
 
         services.AddScoped<IRoleReadRepository, RoleReadRepository>();
