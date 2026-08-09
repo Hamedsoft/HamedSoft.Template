@@ -1,4 +1,5 @@
-﻿@model IReadOnlyList<HamedSoft.Template.Application.Contracts.Roles.RoleDto>
+﻿@using HamedSoft.Template.Application.Security
+@model IReadOnlyList<HamedSoft.Template.Application.Contracts.Roles.RoleDto>
 
 <h2 class="mb-4">
     مدیریت نقش‌ها
@@ -7,10 +8,12 @@
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h4>نقش‌ها</h4>
 
-    <a asp-action="Create"
-       class="btn btn-primary">
-        ایجاد نقش جدید
-    </a>
+    <permission require="@PermissionConstants.Roles.Create">
+        <a asp-action="Create"
+           class="btn btn-primary">
+            ایجاد نقش جدید
+        </a>
+    </permission>
 </div>
 <table class="table table-bordered">
 
@@ -37,17 +40,21 @@
                 </td>
 
                 <td>
-                    <a asp-action="Edit"
-                       asp-route-id="@role.RoleId"
-                       class="btn btn-sm btn-warning">
-                        ویرایش
-                    </a>
+                    <permission require="@PermissionConstants.Roles.Edit">
+                        <a asp-action="Edit"
+                           asp-route-id="@role.RoleId"
+                           class="btn btn-sm btn-warning">
+                            ویرایش
+                        </a>
+                    </permission>
 
-                    <a asp-action="Permissions"
-                       asp-route-id="@role.RoleId"
-                       class="btn btn-sm btn-info">
-                        دسترسی‌ها
-                    </a>
+                    <permission require="@PermissionConstants.Roles.AssignPermissions">
+                        <a asp-action="Permissions"
+                           asp-route-id="@role.RoleId"
+                           class="btn btn-sm btn-info">
+                            دسترسی‌ها
+                        </a>
+                    </permission>
 
                     <form asp-action="Delete"
                           method="post"
@@ -60,10 +67,12 @@
                                name="id"
                                value="@role.RoleId" />
 
-                        <button type="submit"
-                                class="btn btn-sm btn-danger">
-                            حذف
-                        </button>
+                        <permission require="@PermissionConstants.Roles.Delete">
+                            <button type="submit"
+                                    class="btn btn-sm btn-danger">
+                                حذف
+                            </button>
+                        </permission>
 
                     </form>
                 </td>

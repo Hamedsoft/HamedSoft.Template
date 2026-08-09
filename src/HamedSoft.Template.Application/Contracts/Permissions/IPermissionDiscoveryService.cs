@@ -2,5 +2,5 @@
 
 public interface IPermissionDiscoveryService
 {
-    IReadOnlyCollection<string> Discover();
+    IReadOnlyCollection<PermissionDefinition> Discover();
 }

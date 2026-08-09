@@ -11,5 +11,11 @@ namespace HamedSoft.Template.Web.Controllers
         {
             return Content("Permission Granted");
         }
+
+        [Permission(PermissionConstants.Test.View2)]
+        public IActionResult Index2()
+        {
+            return Content("Permission Granted");
+        }
     }
 }

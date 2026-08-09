@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using HamedSoft.Template.Application.Contracts.Permissions;
-using Microsoft.AspNetCore.Authorization;
+using HamedSoft.Template.Application.Security;
 
 namespace HamedSoft.Template.Infrastructure.Identity.Permissions;
 
@@ -9,31 +9,49 @@ public sealed class PermissionDiscoveryService
 {
     private readonly Assembly _assembly;
 
-    private const string PermissionPrefix = "Permission:";
-
-
     public PermissionDiscoveryService()
     {
-        _assembly = Assembly.GetEntryAssembly()!;
+        _assembly = typeof(PermissionConstants).Assembly;
     }
 
-
-    public IReadOnlyCollection<string> Discover()
+    public IReadOnlyCollection<PermissionDefinition> Discover()
     {
-        var permissions = _assembly
+        return _assembly
             .GetTypes()
-            .SelectMany(type => type.GetMethods())
-            .SelectMany(method =>
-                method.GetCustomAttributes<AuthorizeAttribute>())
-            .Where(attribute =>
-                attribute.Policy is not null &&
-                attribute.Policy.StartsWith(PermissionPrefix))
-            .Select(attribute =>
-                attribute.Policy![PermissionPrefix.Length..])
-            .Distinct()
+            .SelectMany(type =>
+                type.GetFields(
+                    BindingFlags.Public |
+                    BindingFlags.Static))
+            .Where(field =>
+                field.IsLiteral &&
+                !field.IsInitOnly &&
+                field.FieldType == typeof(string))
+            .Select(field =>
+            {
+                var value =
+                    field.GetRawConstantValue() as string;
+
+                var attribute =
+                    field.GetCustomAttribute<
+                        PermissionDefinitionAttribute>();
+
+                return new
+                {
+                    Name = value,
+                    Attribute = attribute
+                };
+            })
+            .Where(x =>
+                !string.IsNullOrWhiteSpace(x.Name) &&
+                x.Attribute is not null)
+            .Select(x =>
+                new PermissionDefinition(
+                    x.Name!,
+                    x.Attribute!.Module,
+                    x.Attribute.Category,
+                    x.Attribute.DisplayName,
+                    x.Attribute.Description))
+            .DistinctBy(x => x.Name)
             .ToList();
-
-
-        return permissions;
     }
 }

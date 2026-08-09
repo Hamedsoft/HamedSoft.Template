@@ -21,27 +21,18 @@ public sealed class PermissionSynchronizer
     public async Task SyncAsync(
         CancellationToken cancellationToken = default)
     {
-        var discoveredPermissions =
+        var definitions =
             _discoveryService.Discover();
-
-        var definitions = PermissionCatalog.All
-            .ToDictionary(x => x.Name);
 
         var existingPermissions =
             await _context.Permissions
                 .ToListAsync(cancellationToken);
 
-        foreach (var permissionName in discoveredPermissions)
+        foreach (var definition in definitions)
         {
-            if (!definitions.TryGetValue(
-                    permissionName,
-                    out var definition))
-            {
-                continue;
-            }
-
             var existing = existingPermissions
-                .FirstOrDefault(x => x.Name == permissionName);
+                .FirstOrDefault(x =>
+                    x.Name == definition.Name);
 
             if (existing is null)
             {
