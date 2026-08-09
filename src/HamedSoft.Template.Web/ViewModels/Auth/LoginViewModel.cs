@@ -11,5 +11,6 @@ public sealed class LoginViewModel
     [DataType(DataType.Password)]
     public string Password { get; set; } = string.Empty;
 
+    [Display(Name ="من را به خاطر بسپار")]
     public bool RememberMe { get; set; }
 }

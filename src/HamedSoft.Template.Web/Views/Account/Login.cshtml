@@ -1,52 +1,104 @@
 ﻿@model HamedSoft.Template.Web.ViewModels.Auth.LoginViewModel
 
 @{
+    Layout = "_Login";
     ViewData["Title"] = "ورود";
 }
 
-<div class="row justify-content-center">
-    <div class="col-md-6">
-
-        <h2 class="mb-4">ورود</h2>
-
-        <form asp-action="Login" method="post">
-
-            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-
-            <div class="mb-3">
-                <label asp-for="UserName" class="form-label"></label>
-                <input asp-for="UserName" class="form-control" autocomplete="username" />
-                <span asp-validation-for="UserName" class="text-danger"></span>
+<div class="wrap-login100 p-6">
+    <form asp-action="Login" method="post">
+        <span class="login100-form-title pb-5">
+            ورود
+        </span>
+        <div class="panel panel-primary">
+            <div class="tab-menu-heading">
+                <div class="tabs-menu1">
+                    <!-- Tabs -->
+                    <ul class="nav panel-tabs">
+                        <li class="mx-0"><a href="#tab5" class="active" data-bs-toggle="tab">نام کاربری</a></li>
+                        <li class="mx-0"><a href="#tab6" data-bs-toggle="tab">موبایل</a></li>
+                    </ul>
+                </div>
             </div>
+            <div class="panel-body tabs-menu-body p-0 pt-5">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab5">
+                        <div class="wrap-input100 validate-input input-group" data-bs-validate="Valid email is required: ex@abc.xyz">
+                            <a href="javascript:void(0)" class="input-group-text bg-white text-muted">
+                                <i class="zmdi zmdi-email text-muted" aria-hidden="true"></i>
+                            </a>
+                            <input asp-for="UserName" class="input100 border-start-0 form-control ms-0" placeholder="نام کاربری" />
+                            <span asp-validation-for="UserName" class="text-danger"></span>
+                        </div>
+                        <div class="wrap-input100 validate-input input-group" id="Password-toggle">
+                            <a href="javascript:void(0)" class="input-group-text bg-white text-muted">
+                                <i class="zmdi zmdi-eye text-muted" aria-hidden="true"></i>
+                            </a>
+                            <input asp-for="Password" class="input100 border-start-0 form-control ms-0" type="password" placeholder="کلمه عبور" autocomplete="current-password" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                        <div>
+                            <label class="custom-control custom-checkbox">
+                                <input asp-for="RememberMe" class="custom-control-input" />
+                                <span asp-for="RememberMe" class="custom-control-label"><label asp-for="RememberMe" class="form-check-label"></label></span>
+                            </label>
+                        </div>
 
 
-            <div class="mb-3">
-                <label asp-for="Password" class="form-label"></label>
-                <input asp-for="Password" class="form-control" autocomplete="current-password" />
-                <span asp-validation-for="Password" class="text-danger"></span>
+                        <div class="text-start pt-4">
+                            <p class="mb-0"><a href="forgot-password.html" class="text-primary ms-1">کلمه عبورتون رو فراموش کردین؟</a></p>
+                        </div>
+                        <div class="container-login100-form-btn">
+                            <button type="submit" class="login100-form-btn btn-primary">ورود</button>
+                        </div>
+                        <div class="text-center pt-3">
+                            <p class="text-dark mb-0">
+                                نام کاربری ندارید؟
+                                <a asp-action="Register" class="text-primary ms-1"> ثبت نام</a>
+                            </p>
+                        </div>
+                        <label class="login-social-icon"><span>شبکه های اجتماعی</span></label>
+                        <div class="d-flex justify-content-center">
+                            <a href="javascript:void(0)">
+                                <div class="social-login me-4 text-center">
+                                    <i class="fa fa-google"></i>
+                                </div>
+                            </a>
+                            <a href="javascript:void(0)">
+                                <div class="social-login me-4 text-center">
+                                    <i class="fa fa-facebook"></i>
+                                </div>
+                            </a>
+                            <a href="javascript:void(0)">
+                                <div class="social-login text-center">
+                                    <i class="fa fa-twitter"></i>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="tab6">
+                        <div id="mobile-num" dir="ltr" class="wrap-input100 validate-input input-group mb-4">
+                            <a href="javascript:void(0)" class="input-group-text bg-white text-muted">
+                                <span>+98</span>
+                            </a>
+                            <input class="input100 border-start-0 form-control ms-0">
+                        </div>
+                        <div id="login-otp" class="justify-content-around mb-5">
+                            <input class="form-control text-center w-15" id="txt1" maxlength="1">
+                            <input class="form-control text-center w-15" id="txt2" maxlength="1">
+                            <input class="form-control text-center w-15" id="txt3" maxlength="1">
+                            <input class="form-control text-center w-15" id="txt4" maxlength="1">
+                        </div>
+                        <span>توجه : به این شماره موبایل پیامکی ارسال خواهد شد.</span>
+                        <div class="container-login100-form-btn ">
+                            <a href="javascript:void(0)" class="login100-form-btn btn-primary" id="generate-otp">
+                                ارسال
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </div>
 
-
-            <div class="form-check mb-3">
-                <input asp-for="RememberMe" class="form-check-input" />
-                <label asp-for="RememberMe" class="form-check-label"></label>
-            </div>
-
-
-            <button type="submit" class="btn btn-primary">
-                ورود
-            </button>
-
-            <a asp-action="Register"
-               class="btn btn-link">
-                ثبت نام
-            </a>
-        </form>
-
-    </div>
+    </form>
 </div>
-
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
