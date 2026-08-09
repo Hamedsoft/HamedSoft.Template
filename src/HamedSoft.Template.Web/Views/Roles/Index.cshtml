@@ -56,25 +56,24 @@
                         </a>
                     </permission>
 
-                    <form asp-action="Delete"
-                          method="post"
-                          class="d-inline"
-                          onsubmit="return confirm('آیا از حذف این نقش مطمئن هستید؟');">
+                    <permission require="@PermissionConstants.Roles.Delete">
+                        <form asp-action="Delete"
+                              method="post"
+                              class="d-inline"
+                              onsubmit="return confirm('آیا از حذف این نقش مطمئن هستید؟');">
 
-                        @Html.AntiForgeryToken()
+                            @Html.AntiForgeryToken()
 
-                        <input type="hidden"
-                               name="id"
-                               value="@role.RoleId" />
+                            <input type="hidden"
+                                   name="id"
+                                   value="@role.RoleId" />
 
-                        <permission require="@PermissionConstants.Roles.Delete">
                             <button type="submit"
                                     class="btn btn-sm btn-danger">
                                 حذف
                             </button>
-                        </permission>
-
-                    </form>
+                        </form>
+                    </permission>
                 </td>
             </tr>
         }

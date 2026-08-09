@@ -30,9 +30,9 @@ public sealed class PermissionSynchronizer
 
         foreach (var definition in definitions)
         {
-            var existing = existingPermissions
-                .FirstOrDefault(x =>
-                    x.Name == definition.Name);
+            var existing =
+                existingPermissions.FirstOrDefault(
+                    x => x.Name == definition.Name);
 
             if (existing is null)
             {

@@ -1,58 +1,64 @@
 ﻿namespace HamedSoft.Template.Application.Security;
 
+[PermissionModule("مدیر سیستم")]
 public static class PermissionConstants
 {
+    [PermissionModule("مدیر سیستم")]
+    [PermissionCategory("کاربران")]
     public static class Users
     {
-        [PermissionDefinition("Administration", "Users", "مشاهده لیست کاربران", "امکان مشاهده فهرست کاربران")]
-        public const string View = "Users.View";
+        [PermissionDefinition("مشاهده لیست کاربران", "کاربر با این امکان می تواند لیست کاربران را مشاهده کند")]
+        public const string View = nameof(Users) + "." + nameof(View);
 
-        [PermissionDefinition("Administration", "Users", "ایجاد کاربر", "امکان ایجاد کاربر جدید")]
-        public const string Create = "Users.Create";
+        [PermissionDefinition("ایجاد کاربر", "امکان ایجاد کاربر جدید")]
+        public const string Create = nameof(Users) + "." + nameof(Create);
 
-        [PermissionDefinition("Administration", "Users", "ویرایش کاربر", "امکان ویرایش اطلاعات کاربر")]
-        public const string Edit = "Users.Edit";
+        [PermissionDefinition("ویرایش کاربر", "امکان ویرایش اطلاعات کاربر")]
+        public const string Edit = nameof(Users) + "." + nameof(Edit);
 
-        [PermissionDefinition("Administration", "Users", "حذف کاربر", "امکان حذف کاربر")]
-        public const string Delete = "Users.Delete";
+        [PermissionDefinition("حذف کاربر", "امکان حذف کاربر")]
+        public const string Delete = nameof(Users) + "." + nameof(Delete);
     }
 
+    [PermissionModule("مدیر سیستم")]
+    [PermissionCategory("نقش‌ها")]
     public static class Roles
     {
-        [PermissionDefinition("Administration", "Roles", "مشاهده لیست نقش‌ها", "امکان مشاهده فهرست نقش‌ها")]
-        public const string View = "Roles.View";
+        [PermissionDefinition("مشاهده لیست نقش‌ها", "امکان مشاهده فهرست نقش‌ها")]
+        public const string View = nameof(Roles) + "." + nameof(View);
 
-        [PermissionDefinition("Administration", "Roles", "ایجاد نقش", "امکان ایجاد نقش جدید")]
-        public const string Create = "Roles.Create";
+        [PermissionDefinition("ایجاد نقش", "امکان ایجاد نقش جدید")]
+        public const string Create = nameof(Roles) + "." + nameof(Create);
 
-        [PermissionDefinition("Administration", "Roles", "ویرایش نقش", "امکان ویرایش نقش")] 
-        public const string Edit = "Roles.Edit";
+        [PermissionDefinition("ویرایش نقش", "امکان ویرایش نقش")]
+        public const string Edit = nameof(Roles) + "." + nameof(Edit);
 
-        [PermissionDefinition("Administration", "Roles", "حذف نقش", "امکان حذف نقش")] 
-        public const string Delete = "Roles.Delete";
+        [PermissionDefinition("حذف نقش", "امکان حذف نقش")]
+        public const string Delete = nameof(Roles) + "." + nameof(Delete);
 
-        [PermissionDefinition("Administration", "Roles", "مدیریت دسترسی‌های نقش", "امکان تعیین دسترسی‌های یک نقش")]
-        public const string AssignPermissions = "Roles.AssignPermissions";
+        [PermissionDefinition("مدیریت دسترسی‌های نقش", "امکان تعیین دسترسی‌های یک نقش")]
+        public const string AssignPermissions = nameof(Roles) + "." + nameof(AssignPermissions);
     }
 
+    [PermissionModule("تنظیمات")]
+    [PermissionCategory("تنظیمات")]
     public static class Settings
     {
-        [PermissionDefinition("Administration", "Settings", "مشاهده تنظیمات", "امکان مشاهده تنظیمات سیستم")]
-        public const string View = "Settings.View";
+        [PermissionDefinition("مشاهده تنظیمات", "امکان مشاهده تنظیمات سیستم")]
+        public const string View = nameof(Settings) + "." + nameof(View);
 
-        [PermissionDefinition("Administration", "Settings", "ویرایش تنظیمات", "امکان ویرایش تنظیمات سیستم")]
-        public const string Edit = "Settings.Edit";
+        [PermissionDefinition("ویرایش تنظیمات", "امکان ویرایش تنظیمات سیستم")]
+        public const string Edit = nameof(Settings) + "." + nameof(Edit);
     }
 
+    [PermissionModule("ماژول تست")]
+    [PermissionCategory("تست")]
     public static class Test
     {
-        [PermissionDefinition("Test", "Test", "نمایش فرم تست", "امکان مشاهده فرم تست")]
-        public const string View = "Test.View";
+        [PermissionDefinition("تست 1", "تست 1 1")]
+        public const string View = nameof(Test) + "." + nameof(View);
 
-        [PermissionDefinition("Test", "Test", "نمایش فرم تست دوم", "امکان مشاهده فرم تست دوم")]
-        public const string View2 = "Test.View2";
-
-        [PermissionDefinition("Test3", "Test3", "نمایش فرم تست سوم", "امکان مشاهده فرم تست سوم")]
-        public const string View3 = "Test.View3";
+        [PermissionDefinition("تست 2", "تست 2 2")]
+        public const string View2 = nameof(Test) + "." + nameof(View2);
     }
 }

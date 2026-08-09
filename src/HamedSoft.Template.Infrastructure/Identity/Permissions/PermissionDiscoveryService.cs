@@ -16,41 +16,72 @@ public sealed class PermissionDiscoveryService
 
     public IReadOnlyCollection<PermissionDefinition> Discover()
     {
-        return _assembly
+        var definitions = new List<PermissionDefinition>();
+
+        var fields = _assembly
             .GetTypes()
             .SelectMany(type =>
                 type.GetFields(
                     BindingFlags.Public |
-                    BindingFlags.Static))
+                    BindingFlags.Static |
+                    BindingFlags.DeclaredOnly))
             .Where(field =>
                 field.IsLiteral &&
                 !field.IsInitOnly &&
-                field.FieldType == typeof(string))
-            .Select(field =>
+                field.FieldType == typeof(string));
+
+        foreach (var field in fields)
+        {
+            var definition =
+                field.GetCustomAttribute<PermissionDefinitionAttribute>();
+
+            if (definition is null)
+                continue;
+
+            var module =
+                field.DeclaringType?
+                    .GetCustomAttribute<PermissionModuleAttribute>();
+
+            var category =
+                field.DeclaringType?
+                    .GetCustomAttribute<PermissionCategoryAttribute>();
+
+            if (module is null)
             {
-                var value =
-                    field.GetRawConstantValue() as string;
+                throw new InvalidOperationException(
+                    $"Permission '{field.Name}' in " +
+                    $"'{field.DeclaringType?.FullName}' " +
+                    "does not have a PermissionModuleAttribute.");
+            }
 
-                var attribute =
-                    field.GetCustomAttribute<
-                        PermissionDefinitionAttribute>();
+            if (category is null)
+            {
+                throw new InvalidOperationException(
+                    $"Permission '{field.Name}' in " +
+                    $"'{field.DeclaringType?.FullName}' " +
+                    "does not have a PermissionCategoryAttribute.");
+            }
 
-                return new
-                {
-                    Name = value,
-                    Attribute = attribute
-                };
-            })
-            .Where(x =>
-                !string.IsNullOrWhiteSpace(x.Name) &&
-                x.Attribute is not null)
-            .Select(x =>
+            var permissionName =
+                field.GetRawConstantValue() as string;
+
+            if (string.IsNullOrWhiteSpace(permissionName))
+            {
+                throw new InvalidOperationException(
+                    $"Permission '{field.DeclaringType?.FullName}.{field.Name}' " +
+                    "has an empty permission name.");
+            }
+
+            definitions.Add(
                 new PermissionDefinition(
-                    x.Name!,
-                    x.Attribute!.Module,
-                    x.Attribute.Category,
-                    x.Attribute.DisplayName,
-                    x.Attribute.Description))
+                    permissionName,
+                    module.Name,
+                    category.Name,
+                    definition.DisplayName,
+                    definition.Description));
+        }
+
+        return definitions
             .DistinctBy(x => x.Name)
             .ToList();
     }
