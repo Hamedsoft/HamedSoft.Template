@@ -5,55 +5,72 @@
     ViewData["Title"] = "ورود";
 }
 
-<div class="wrap-login100 p-6">
+<div class="wrap-login100 col-md-4 pt-7">
     <form asp-action="Login" method="post">
         <span class="login100-form-title pb-5">
             @ViewData["Title"]
         </span>
         <div class="panel panel-primary">
             <div class="panel-body tabs-menu-body p-0 pt-5">
-                <div class="tab-content">
-                    <div class="tab-pane active" id="tab5">
-                        <div class="wrap-input100 validate-input input-group" data-bs-validate="Valid email is required: ex@abc.xyz">
-                            <a href="javascript:void(0)" class="input-group-text bg-white text-muted">
-                                <i class="zmdi zmdi-email text-muted" aria-hidden="true"></i>
-                            </a>
-                            <input asp-for="UserName" class="input100 border-start-0 form-control ms-0" placeholder="نام کاربری" />
+                <div class="tab-pane active" id="tab5">
+                    <div class="row">
+                        <div class="col-sm-6 col-md-12 mt-2">
+                            <div class="form-group mb-0">
+                                <span class="text-red m-lg-1">*</span>
+                                <label asp-for="UserName" class="mt-2"></label>
+                                <div class="wrap-input100 validate-input input-group">
+                                    <a href="javascript:void(0)" class="input-group-text bg-white text-muted">
+                                        <i class="zmdi zmdi-pin-account text-muted" aria-hidden="true"></i>
+                                    </a>
+                                    <input asp-for="UserName" class="input100 border-start-0 form-control ms-0  is-invalid" placeholder="نام کاربری" />
+                                </div>
+                            </div>
+                            <div class="bg-danger-transparent-2 text-danger mt-0">
+                                <span asp-validation-for="UserName"></span>
+                            </div>
                         </div>
-                        <div class="wrap-input100 validate-input input-group" id="Password-toggle">
-                            <a href="javascript:void(0)" class="input-group-text bg-white text-muted">
-                                <i class="zmdi zmdi-eye text-muted" aria-hidden="true"></i>
-                            </a>
-                            <input asp-for="Password" class="input100 border-start-0 form-control ms-0" type="password" placeholder="کلمه عبور" autocomplete="current-password" />
+
+                        <div class="col-sm-6 col-md-12 mt-2">
+                            <div class="form-group mb-0">
+                                <span class="text-red m-lg-1">*</span>
+                                <label asp-for="Password" class="mt-2"></label>
+                                <div class="wrap-input100 validate-input input-group" id="Password-toggle">
+                                    <a href="javascript:void(0)" class="input-group-text bg-white text-muted">
+                                        <i class="zmdi zmdi-eye text-muted" aria-hidden="true"></i>
+                                    </a>
+                                    <input asp-for="Password" class="input100 border-start-0 form-control ms-0" type="password" placeholder="کلمه عبور" autocomplete="current-password" />
+                                </div>
+                            </div>
+                            <div class="bg-danger-transparent-2 text-danger mt-0">
+                                <span asp-validation-for="Password"></span>
+                            </div>
                         </div>
-                        <div class="mt-6">
-                            <label class="custom-control custom-checkbox">
-                                <input asp-for="RememberMe" class="custom-control-input" />
-                                <span asp-for="RememberMe" class="custom-control-label"><label asp-for="RememberMe" class="form-check-label"></label></span>
-                            </label>
+
+                        <div class="col-sm-6 col-md-12 mt-2">
+                            <div class="form-group mb-0">
+                                <label class="custom-control custom-checkbox">
+                                    <input asp-for="RememberMe" class="custom-control-input" />
+                                    <span asp-for="RememberMe" class="custom-control-label"><label asp-for="RememberMe" class="form-check-label"></label></span>
+                                </label>
+                            </div>
                         </div>
 
 
-                        <div class="text-start pt-4">
-                            <p class="mb-0"><a href="forgot-password.html" class="text-primary ms-1">کلمه عبورتون رو فراموش کردین؟</a></p>
+                        <div class="col-sm-6 col-md-12 mt-2">
+                            <div class="form-group mb-0">
+                                <button type="submit" class="login100-form-btn btn-primary">ورود</button>
+                            </div>
                         </div>
-                        <div class="container-login100-form-btn">
-                            <button type="submit" class="login100-form-btn btn-primary">ورود</button>
-                        </div>
-                        <div class="text-center pt-3 mt-4">
-                            <p class="text-dark mb-0">نام کاربری ندارید؟
-                                <a asp-action="Register" class="text-primary ms-1"> ثبت نام</a>
-                            </p>
+                        <div class="col-sm-6 col-md-12 mt-2">
+                            <div class="form-group mb-0">
+                                <p class="text-dark text-center mb-0">
+                                    نام کاربری ندارید؟
+                                    <a asp-action="Register" class="text-primary ms-1"> ثبت نام</a>
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="wrap-input100 validate-input input-group">
-            <div class="pt-4 d-flex flex-column gap-2">
-                <span asp-validation-for="UserName" class="text-danger"></span>
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-        </div>
     </form>
 </div>
