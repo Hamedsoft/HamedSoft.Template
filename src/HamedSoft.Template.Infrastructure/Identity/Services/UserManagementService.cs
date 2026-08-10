@@ -45,13 +45,10 @@ public sealed class UserManagementService : IUserManagementService
         foreach (var user in users)
         {
             var roles = await _userManager.GetRolesAsync(user);
+            var profile = await _userProfileReadRepository.GetByIdAsync(UserProfileId.Create(user.Id), cancellationToken);
+            var dto = new UserProfileDto(user.Id, user?.UserName ?? "", profile?.FirstName ?? "", profile?.LastName, user.Email, user.PhoneNumber);
 
-            result.Add(
-                new UserListItem(
-                    user.Id,
-                    user.UserName ?? string.Empty,
-                    user.UserName ?? string.Empty,
-                    roles.ToArray()));
+            result.Add(new UserListItem(user.Id, user.UserName ?? string.Empty, user.UserName ?? string.Empty, dto, roles.ToArray()));
         }
 
         return Result<IReadOnlyList<UserListItem>>

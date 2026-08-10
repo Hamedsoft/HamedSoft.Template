@@ -1,70 +1,45 @@
 ﻿@using HamedSoft.Template.Application.Contracts.Users
 @model IReadOnlyList<UserListItem>
-
 @{
-    ViewData["Title"] = "Users";
+    ViewData["Title"] = "لیست کاربران";
 }
+<div class="row justify-content-center">
+    <div class="card col-md-12">
 
-<div class="card">
-    <div class="card-header">
-        <h3>Users</h3>
+        <div class="card-header">
+            <h3 class="card-title">@ViewData["Title"]</h3>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table border text-nowrap text-md-nowrap table-striped mb-0">
+                    <thead>
+                        <tr>
+                            <th>نام کاربر</th>
+                            <th>نام کاربری</th>
+                            <th>نقش</th>
+                            <th>موبایل</th>
+                            <th>ایمیل</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model)
+                        {
+                            <tr>
+                                <td>@string.Concat(user.UserProfile.FirstName, " ", user.UserProfile.LastName)</td>
+                                <td>@user.UserName</td>
+                                <td>@string.Join(", ", user.Roles)</td>
+                                <td>@user.UserProfile.PhoneNumber</td>
+                                <td>@user.UserProfile.Email</td>
+                                <td>
+                                    <a asp-action="Edit" asp-route-id="@user.UserId" class="btn btn-sm btn-warning"><i class="fa fa fa-pencil me-2"></i>ویرایش</a>
+                                    <a asp-action="Roles" asp-route-userId="@user.UserId" class="btn btn-sm btn-primary"><i class="fa fa fa-users me-2"></i>نقش ها</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-
-    <div class="card-body">
-
-        <table class="table table-striped">
-
-            <thead>
-
-                <tr>
-                    <th>User Name</th>
-                    <th>Display Name</th>
-                    <th>Roles</th>
-                    <th></th>
-                </tr>
-
-            </thead>
-
-            <tbody>
-
-                @foreach (var user in Model)
-                {
-                    <tr>
-
-                        <td>@user.UserName</td>
-
-                        <td>@user.DisplayName</td>
-
-                        <td>@string.Join(", ", user.Roles)</td>
-
-                        <td>
-
-                            <a asp-action="Edit"
-                               asp-route-id="@user.UserId"
-                               class="btn btn-sm btn-warning">
-
-                                Edit
-
-                            </a>
-
-
-                            <a asp-action="Roles"
-                               asp-route-userId="@user.UserId"
-                               class="btn btn-sm btn-primary">
-
-                                Roles
-
-                            </a>
-
-                        </td>
-
-                    </tr>
-                }
-
-            </tbody>
-
-        </table>
-
-    </div>
-
 </div>
