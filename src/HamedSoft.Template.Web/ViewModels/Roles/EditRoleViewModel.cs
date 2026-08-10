@@ -6,10 +6,8 @@ public sealed class EditRoleViewModel
 {
     public Guid RoleId { get; set; }
 
-    [Required(ErrorMessage = "نام نقش الزامی است.")]
-    [StringLength(
-        100,
-        MinimumLength = 2,
-        ErrorMessage = "نام نقش باید بین 2 تا 100 کاراکتر باشد.")]
+    [Display(Name ="نام نقش")]
+    [Required(ErrorMessage = "{0} را وارد کنید.")]
+    [StringLength(100, MinimumLength = 2, ErrorMessage = "{0} باید بین 2 تا 100 کاراکتر باشد.")]
     public string RoleName { get; set; } = string.Empty;
 }

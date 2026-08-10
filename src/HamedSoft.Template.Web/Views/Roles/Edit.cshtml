@@ -1,68 +1,34 @@
 ﻿@model HamedSoft.Template.Web.ViewModels.Roles.EditRoleViewModel
-
 @{
     ViewData["Title"] = "ویرایش نقش";
 }
-
-<div class="card">
-
-    <div class="card-header">
-        <h5 class="mb-0">
-            ویرایش نقش
-        </h5>
+<form asp-controller="Roles" asp-action="Edit" method="post">
+    <div class="row justify-content-center">
+        <div class="card col-md-12">
+            <div class="card-header">
+                <h3 class="card-title">@ViewData["Title"]</h3>
+            </div>
+            <div class="card-body pb-2">
+                <div class="col-md-12 mt-2">
+                    <div class="form-group mb-0">
+                        <span class="text-red m-lg-1">*</span>
+                        <label asp-for="RoleName" class="mt-2"></label>
+                        <div class="wrap-input100 validate-input input-group" id="RoleName-toggle">
+                            <a href="javascript:void(0)" class="input-group-text bg-white text-muted">
+                                <i class="zmdi zmdi-eye text-muted" aria-hidden="true"></i>
+                            </a>
+                            <input asp-for="RoleName" class="input100 border-start-0 form-control ms-0" placeholder="نام نقش" />
+                        </div>
+                    </div>
+                    <div class="bg-danger-transparent-2 text-danger mt-0">
+                        <span asp-validation-for="RoleName"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer text-end">
+                <button type="submit" class="btn btn-primary">تغییر کلمه عبور</button>
+                <a asp-controller="Roles" asp-action="index" class="btn btn-default">بازگشت</a>
+            </div>
+        </div>
     </div>
-
-    <div class="card-body">
-
-        <form asp-action="Edit"
-              method="post">
-
-            @Html.AntiForgeryToken()
-
-            <input asp-for="RoleId"
-                   type="hidden" />
-
-            <div asp-validation-summary="ModelOnly"
-                 class="text-danger mb-3">
-            </div>
-
-            <div class="mb-3">
-
-                <label asp-for="RoleName"
-                       class="form-label">
-                    نام نقش
-                </label>
-
-                <input asp-for="RoleName"
-                       class="form-control"
-                       autocomplete="off" />
-
-                <span asp-validation-for="RoleName"
-                      class="text-danger">
-                </span>
-
-            </div>
-
-            <div class="d-flex gap-2">
-
-                <button type="submit"
-                        class="btn btn-primary">
-                    ذخیره تغییرات
-                </button>
-
-                <a asp-action="Index"
-                   class="btn btn-secondary">
-                    انصراف
-                </a>
-
-            </div>
-
-        </form>
-
-    </div>
-
-</div>
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
+</form>
