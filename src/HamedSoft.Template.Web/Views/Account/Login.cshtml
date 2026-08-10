@@ -8,7 +8,7 @@
 <div class="wrap-login100 p-6">
     <form asp-action="Login" method="post">
         <span class="login100-form-title pb-5">
-            ورود
+            @ViewData["Title"]
         </span>
         <div class="panel panel-primary">
             <div class="panel-body tabs-menu-body p-0 pt-5">
@@ -19,14 +19,12 @@
                                 <i class="zmdi zmdi-email text-muted" aria-hidden="true"></i>
                             </a>
                             <input asp-for="UserName" class="input100 border-start-0 form-control ms-0" placeholder="نام کاربری" />
-                            <span asp-validation-for="UserName" class="text-danger"></span>
                         </div>
                         <div class="wrap-input100 validate-input input-group" id="Password-toggle">
                             <a href="javascript:void(0)" class="input-group-text bg-white text-muted">
                                 <i class="zmdi zmdi-eye text-muted" aria-hidden="true"></i>
                             </a>
                             <input asp-for="Password" class="input100 border-start-0 form-control ms-0" type="password" placeholder="کلمه عبور" autocomplete="current-password" />
-                            <span asp-validation-for="Password" class="text-danger"></span>
                         </div>
                         <div class="mt-6">
                             <label class="custom-control custom-checkbox">
@@ -51,6 +49,11 @@
                 </div>
             </div>
         </div>
-
+        <div class="wrap-input100 validate-input input-group">
+            <div class="pt-4 d-flex flex-column gap-2">
+                <span asp-validation-for="UserName" class="text-danger"></span>
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+        </div>
     </form>
 </div>

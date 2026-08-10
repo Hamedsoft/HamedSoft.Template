@@ -1,4 +1,84 @@
 ﻿@model HamedSoft.Template.Web.ViewModels.Auth.RegisterViewModel
+@{
+    Layout = "_Login";
+    ViewData["Title"] = "ثبت نام";
+}
+
+<div class="wrap-login100 p-6">
+    <form asp-action="Register" method="post">
+        <span class="login100-form-title pb-5">
+            @ViewData["Title"]
+        </span>
+        <div class="panel panel-primary">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            <div class="panel-body tabs-menu-body p-0 pt-5">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab5">
+
+                        <div class="wrap-input100 validate-input input-group">
+                            <a href="javascript:void(0)" class="input-group-text bg-white text-muted">
+                                <i class="zmdi zmdi-email text-muted" aria-hidden="true"></i>
+                            </a>
+                            <input asp-for="UserName" class="input100 border-start-0 form-control ms-0" placeholder="نام کاربری" />
+                        </div>
+                        <div class="wrap-input100 validate-input input-group">
+                            <a href="javascript:void(0)" class="input-group-text bg-white text-muted">
+                                <i class="zmdi zmdi-email text-muted" aria-hidden="true"></i>
+                            </a>
+                            <input asp-for="FirstName" class="input100 border-start-0 form-control ms-0" placeholder="نام" />
+                        </div>
+                        <div class="wrap-input100 validate-input input-group">
+                            <a href="javascript:void(0)" class="input-group-text bg-white text-muted">
+                                <i class="zmdi zmdi-email text-muted" aria-hidden="true"></i>
+                            </a>
+                            <input asp-for="LastName" class="input100 border-start-0 form-control ms-0" placeholder="نام خانوادگی" />
+                        </div>
+                        <div class="wrap-input100 validate-input input-group" id="Password-toggle">
+                            <a href="javascript:void(0)" class="input-group-text bg-white text-muted">
+                                <i class="zmdi zmdi-eye text-muted" aria-hidden="true"></i>
+                            </a>
+                            <input asp-for="Password" class="input100 border-start-0 form-control ms-0" type="password" placeholder="کلمه عبور" autocomplete="current-password" />
+                        </div>
+                        <div class="wrap-input100 validate-input input-group" id="Password-toggle">
+                            <a href="javascript:void(0)" class="input-group-text bg-white text-muted">
+                                <i class="zmdi zmdi-eye text-muted" aria-hidden="true"></i>
+                            </a>
+                            <input asp-for="ConfirmPassword" class="input100 border-start-0 form-control ms-0" type="password" placeholder="تکرار کلمه عبور" autocomplete="current-password" />
+                        </div>
+
+                        <div class="container-login100-form-btn">
+                            <div class="row justify-content-center w-100 g-2">
+                                <div class="col-md-5">
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        ثبت نام
+                                    </button>
+                                </div>
+
+                                <div class="col-md-5">
+                                    <a type="button" asp-action="Login" class="btn btn-secondary w-100">
+                                        ورود
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wrap-input100 validate-input input-group">
+            <div class="pt-4 d-flex flex-column gap-2">
+                <span asp-validation-for="UserName" class="text-danger"></span>
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+                <span asp-validation-for="LastName" class="text-danger"></span>
+                <span asp-validation-for="Password" class="text-danger"></span>
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
 
 @{
     ViewData["Title"] = "ثبت نام";
@@ -41,8 +121,7 @@
             <div class="mb-3">
                 <label asp-for="ConfirmPassword" class="form-label"></label>
                 <input asp-for="ConfirmPassword" class="form-control" />
-                <span asp-validation-for="ConfirmPassword"
-                      class="text-danger"></span>
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
 
             <button type="submit" class="btn btn-primary"> ثبت نام </button>
@@ -50,8 +129,3 @@
 
     </div>
 </div>
-
-@section Scripts
-{
-    <partial name="_ValidationScriptsPartial" />
-}
