@@ -1,5 +1,6 @@
 using HamedSoft.Template.Application.Contracts.Security;
 using HamedSoft.Template.Application.Security;
+using HamedSoft.Template.Web.Security;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading;
 
@@ -18,6 +19,7 @@ public class HomeController : Controller
         _permissionChecker = permissionChecker;
     }
 
+    [Permission(PermissionConstants.Common.Home)]
     public async Task<IActionResult> IndexAsync(CancellationToken cancellationToken)
     {
         var currentUserId = _currentUser.UserId;

@@ -144,7 +144,9 @@ public class AccountController : Controller
         return RedirectToAction("Login", "Account");
     }
 
+
     [HttpGet]
+    [Permission(PermissionConstants.Users.ChangePassword)]
     public IActionResult ChangePassword()
     {
         return View();
@@ -152,6 +154,7 @@ public class AccountController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Permission(PermissionConstants.Users.ChangePassword)]
     public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
     {
         if (!ModelState.IsValid)
@@ -178,6 +181,7 @@ public class AccountController : Controller
         return RedirectToAction("Index", "Home");
     }
     [HttpGet]
+
     public IActionResult AccessDenied(string? returnUrl = null)
     {
         ViewData["ReturnUrl"] = returnUrl;

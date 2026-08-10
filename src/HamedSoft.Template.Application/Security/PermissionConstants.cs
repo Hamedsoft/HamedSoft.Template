@@ -3,6 +3,14 @@
 [PermissionModule("مدیر سیستم")]
 public static class PermissionConstants
 {
+    [PermissionModule("عمومی")]
+    [PermissionCategory("مشترک")]
+    public static class Common
+    {
+        [PermissionDefinition("صفحه اصلی", "امکان ورود به صفحه اصلی")]
+        public const string Home = nameof(Common) + "." + nameof(Home);
+    }
+
     [PermissionModule("مدیر سیستم")]
     [PermissionCategory("کاربران")]
     public static class Users
