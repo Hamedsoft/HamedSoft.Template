@@ -275,24 +275,29 @@
 	// $('body').addClass('rtl');
 
     let bodyRtl = $('body').hasClass('rtl');
+
     if (bodyRtl) {
         $('body').addClass('rtl');
 
         $('#slide-left').removeClass('d-none');
         $('#slide-right').removeClass('d-none');
+
         $("html[lang=en]").attr("dir", "rtl");
         $('body').removeClass('ltr');
-        
-        (document.getElementById("style").setAttribute("href", "../assets/plugins/bootstrap/css/bootstrap.rtl.min.css"));
+
+        document.getElementById("style").setAttribute("href", "/assets/plugins/bootstrap/css/bootstrap.rtl.min.css");
+
         var carousel = $('.owl-carousel');
+
         $.each(carousel, function (index, element) {
-            // element == this
             var carouselData = $(element).data('owl.carousel');
-            carouselData.settings.rtl = true; //don't know if both are necessary
+
+            carouselData.settings.rtl = true;
             carouselData.options.rtl = true;
+
             $(element).trigger('refresh.owl.carousel');
         });
-    } 
+    }
 
 
 	/******* Header Styles ********/
