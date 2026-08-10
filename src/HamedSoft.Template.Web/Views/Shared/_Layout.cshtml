@@ -148,7 +148,9 @@
                                     <permission require="@PermissionConstants.Users.Profile">
                                         <li><a asp-controller="Users" asp-action="UserProfile" class="slide-item">پروفایل</a></li>
                                     </permission>
-                                    <li><a href="calendar2.html" class="slide-item">تغییر کلمه عبور</a></li>
+                                    <permission require="@PermissionConstants.Users.ChangePassword">
+                                        <li><a asp-controller="Account" asp-action="ChangePassword" class="slide-item">تغییر کلمه عبور</a></li>
+                                    </permission>
                                     <li>
                                         <permission require="@PermissionConstants.Users.View">
                                             <a asp-controller="Users" asp-action="index" class="slide-item">مدیریت کاربران</a>
