@@ -21,6 +21,9 @@ public static class PermissionConstants
 
         [PermissionDefinition("پروفایل کاربر", "امکان مدیریت پروفایل")]
         public const string Profile = nameof(Users) + "." + nameof(Profile);
+
+        [PermissionDefinition("تغییر کلمه عبور", "امکان تغییر کلمه عبور خود کاربر")]
+        public const string ChangePassword = nameof(Users) + "." + nameof(ChangePassword);
     }
 
     [PermissionModule("مدیر سیستم")]

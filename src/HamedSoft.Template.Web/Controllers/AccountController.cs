@@ -90,12 +90,12 @@ public class AccountController : Controller
 
 
         var claims = new List<Claim>
-    {
-        new(ClaimTypes.NameIdentifier, loginResult.UserId.ToString()),
-        new(ClaimTypes.Name, loginResult.UserName),
-        new(CustomClaimTypes.DisplayName, userProfile.DisplayName),
-        new(CustomClaimTypes.Roles, string.Join(", ", userProfile.Roles))
-    };
+        {
+            new(ClaimTypes.NameIdentifier, loginResult.UserId.ToString()),
+            new(ClaimTypes.Name, loginResult.UserName),
+            new(CustomClaimTypes.DisplayName, userProfile.DisplayName),
+            new(CustomClaimTypes.Roles, string.Join(", ", userProfile.Roles))
+        };
 
         // Add user roles
         foreach (var role in loginResult.Roles.Distinct(StringComparer.OrdinalIgnoreCase))
