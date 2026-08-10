@@ -3,7 +3,6 @@ using HamedSoft.Template.Application.Contracts.Permissions;
 using HamedSoft.Template.Application.Contracts.Repositories.Reads;
 using HamedSoft.Template.Application.Contracts.Repositories.Writes;
 using HamedSoft.Template.Application.Contracts.Roles;
-using HamedSoft.Template.Application.Contracts.Services;
 using HamedSoft.Template.Application.Contracts.Users;
 using HamedSoft.Template.Application.Security;
 using HamedSoft.Template.Infrastructure.Identity.Models;
@@ -42,7 +41,6 @@ public static class ServiceCollectionExtensions
         });
 
         services.AddHttpContextAccessor();
-        services.AddScoped<ICurrentUser, CurrentUser>();
 
         services.AddScoped<IAuthenticationService, IdentityService>();
         services.AddScoped<IPermissionService, PermissionService>();

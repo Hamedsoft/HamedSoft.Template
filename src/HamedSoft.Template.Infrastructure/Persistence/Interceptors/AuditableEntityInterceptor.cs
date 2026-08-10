@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using HamedSoft.Template.Domain.SeedWork;
-using HamedSoft.Template.Application.Contracts.Services;
+using HamedSoft.Template.Application.Contracts.Security;
 
 namespace HamedSoft.Template.Infrastructure.Persistence.Interceptors;
 

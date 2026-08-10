@@ -13,27 +13,40 @@ public sealed class CurrentUser : ICurrentUser
         _httpContextAccessor = httpContextAccessor;
     }
 
+    private ClaimsPrincipal? User =>
+        _httpContextAccessor.HttpContext?.User;
+
     public bool IsAuthenticated =>
-        _httpContextAccessor.HttpContext?
-            .User
-            .Identity?
-            .IsAuthenticated
+        User?.Identity?.IsAuthenticated
         ?? false;
 
     public Guid? UserId
     {
         get
         {
-            var user = _httpContextAccessor.HttpContext?.User;
-
-            if (user?.Identity?.IsAuthenticated != true)
-                return null;
-
-            var value = user.FindFirstValue(ClaimTypes.NameIdentifier);
+            var value = User?.FindFirstValue(
+                ClaimTypes.NameIdentifier);
 
             return Guid.TryParse(value, out var userId)
                 ? userId
                 : null;
         }
     }
+
+    public string? UserName =>
+        User?.FindFirstValue(ClaimTypes.Name);
+
+    public string? DisplayName =>
+        User?.FindFirstValue(CustomClaimTypes.DisplayName);
+
+    public IReadOnlyCollection<string> Roles =>
+        User?
+            .FindAll(ClaimTypes.Role)
+            .Select(x => x.Value)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray()
+        ?? Array.Empty<string>();
+
+    public bool IsInRole(string role) =>
+        User?.IsInRole(role) ?? false;
 }

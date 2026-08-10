@@ -1,0 +1,48 @@
+﻿@model HamedSoft.Template.Web.ViewModels.Users.UserProfileViewModel
+@{
+    ViewData["Title"] = "پروفایل";
+}
+<div class="row" id="user-profile">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="wideget-user mb-2">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12">
+                            <div class="row">
+                                <div class="panel profile-cover">
+                                    <div class="profile-cover__action bg-img"></div>
+                                    <div class="profile-cover__img">
+                                        <div class="profile-img-1">
+                                            <img src="../assets/images/users/profile.webp" alt="profileimg">
+                                        </div>
+                                        <div class="profile-img-content text-dark text-start">
+                                            <div class="text-dark">
+                                                <h3 class="h3 mb-2">@string.Concat(Model.FirstName, " ", Model.LastName)</h3>
+                                                <h5 class="text-muted">نقشهای کاربر رو باید اینجا بزنم و با سپریتور جدا کنم</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="px-0 px-sm-4">
+                                    <div class="social social-profile-buttons mt-5 float-end">
+                                        <div class="mt-3">
+                                            <a class="social-icon text-primary"
+                                               href="https://mail.google.com/mail/?view=cm&fs=1&to=@Model.Email"
+                                               target="_blank">
+                                                <i class="fa fa-envelope"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>

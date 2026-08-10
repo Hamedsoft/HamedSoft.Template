@@ -1,4 +1,5 @@
 ﻿using HamedSoft.Template.Application.Contracts.Roles;
+using HamedSoft.Template.Application.Contracts.Security;
 using HamedSoft.Template.Application.Contracts.Users;
 using HamedSoft.Template.Application.Features.Commands.Users.AssignRoles;
 using HamedSoft.Template.Application.Features.Commands.Users.LockUser;
@@ -19,10 +20,12 @@ namespace HamedSoft.Template.Web.Controllers;
 public class UsersController : Controller
 {
     private readonly IMediator _mediator;
+    private readonly ICurrentUser _currentUser;
 
-    public UsersController(IMediator mediator)
+    public UsersController(IMediator mediator, ICurrentUser currentUser)
     {
         _mediator = mediator;
+        _currentUser = currentUser;
     }
 
     [HttpGet]
@@ -150,12 +153,42 @@ public class UsersController : Controller
 
         return View(model);
     }
+    [HttpGet]
+    public async Task<IActionResult> UserProfile(CancellationToken cancellationToken)
+    {
+        if (_currentUser.UserId is not Guid currentUserId)
+            return RedirectToAction("index", "Home");
+
+        var profileResult = await _mediator.Send(new GetUserProfileQuery(currentUserId), cancellationToken);
+        
+        if (!profileResult.Succeeded)
+        {
+            TempData["Error"] = profileResult.Error;
+            return RedirectToAction("index", "Home");
+        }
+        var model = new UserProfileViewModel
+        {
+            UserId = currentUserId,
+            FirstName = profileResult.Value?.FirstName ?? "",
+            LastName = profileResult.Value?.LastName ?? "",
+            Email = profileResult.Value?.Email ?? "",
+            PhoneNumber = profileResult?.Value.PhoneNumber ?? "",
+            UserName = profileResult?.Value?.UserName ?? ""
+        };
+        return View(model);
+    }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> UpdateProfile(UserProfileViewModel model, CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(new UpdateUserProfileCommand(model.UserId, model.FirstName, model.LastName, model.Email, model.PhoneNumber), cancellationToken);
+        if (model?.UserId is not Guid userId)
+        {
+            TempData["Error"] = "کاربری با مشخصات داده شده یافت نشد";
+            return RedirectToAction(nameof(Edit), new { id = model.UserId });
+        }
+
+        var result = await _mediator.Send(new UpdateUserProfileCommand(userId, model.FirstName, model.LastName, model.Email, model.PhoneNumber), cancellationToken);
 
         if (!result.Succeeded)
         {

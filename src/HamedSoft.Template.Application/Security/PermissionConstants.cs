@@ -18,6 +18,9 @@ public static class PermissionConstants
 
         [PermissionDefinition("حذف کاربر", "امکان حذف کاربر")]
         public const string Delete = nameof(Users) + "." + nameof(Delete);
+
+        [PermissionDefinition("پروفایل کاربر", "امکان مدیریت پروفایل")]
+        public const string Profile = nameof(Users) + "." + nameof(Profile);
     }
 
     [PermissionModule("مدیر سیستم")]

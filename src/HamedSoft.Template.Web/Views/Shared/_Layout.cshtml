@@ -145,7 +145,9 @@
                                 <ul class="slide-menu">
                                     <li class="side-menu-label1"><a href="javascript:void(0)">Users</a></li>
                                     <li><a asp-controller="Account" asp-action="Register" class="slide-item">کاربر جدید</a></li>
-                                    <li><a href="calendar.html" class="slide-item">پروفایل</a></li>
+                                    <permission require="@PermissionConstants.Users.Profile">
+                                        <li><a asp-controller="Users" asp-action="UserProfile" class="slide-item">پروفایل</a></li>
+                                    </permission>
                                     <li><a href="calendar2.html" class="slide-item">تغییر کلمه عبور</a></li>
                                     <li>
                                         <permission require="@PermissionConstants.Users.View">
@@ -170,12 +172,6 @@
                                     <li><a asp-controller="Account" asp-action="Register" class="slide-item">کاربر جدید</a></li>
                                 </ul>
                             </li>
-                            <li>
-                                <a class="side-menu__item has-link" asp-controller="Account" asp-action="Logout">
-                                    <i class="side-menu__icon fa fa-arrow-circle-right"></i><span class="side-menu__label">خروج</span>
-                                </a>
-                            </li>
-
                         </ul>
                         <div class="slide-right" id="slide-right"><svg xmlns="http://www.w3.org/2000/svg" fill="#7b8191" width="24" height="24" viewBox="0 0 24 24"><path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z" /></svg></div>
                     </div>
