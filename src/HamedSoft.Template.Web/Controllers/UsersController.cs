@@ -160,19 +160,13 @@ public class UsersController : Controller
             return RedirectToAction("index", "Home");
 
         var profileResult = await _mediator.Send(new GetUserProfileQuery(currentUserId), cancellationToken);
-        
-        if (!profileResult.Succeeded)
-        {
-            TempData["Error"] = profileResult.Error;
-            return RedirectToAction("index", "Home");
-        }
         var model = new UserProfileViewModel
         {
             UserId = currentUserId,
             FirstName = profileResult.Value?.FirstName ?? "",
             LastName = profileResult.Value?.LastName ?? "",
             Email = profileResult.Value?.Email ?? "",
-            PhoneNumber = profileResult?.Value.PhoneNumber ?? "",
+            PhoneNumber = profileResult?.Value?.PhoneNumber ?? "",
             UserName = profileResult?.Value?.UserName ?? ""
         };
         return View(model);
