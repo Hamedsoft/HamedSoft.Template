@@ -3,4 +3,5 @@
 public sealed record RolePermissionsDto(
     Guid RoleId,
     string RoleName,
+    bool IsAdmin,
     IReadOnlyList<RolePermissionItemDto> Permissions);

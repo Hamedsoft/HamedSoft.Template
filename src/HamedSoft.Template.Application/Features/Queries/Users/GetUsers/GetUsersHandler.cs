@@ -15,6 +15,6 @@ public sealed class GetUsersHandler : IQueryHandler<GetUsersQuery, Result<IReadO
 
     public async Task<Result<IReadOnlyList<UserListItem>>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
     {
-        return await _userManagementService.GetAllAsync(cancellationToken);
+        return await _userManagementService.GetAllAsync(false, cancellationToken);
     }
 }

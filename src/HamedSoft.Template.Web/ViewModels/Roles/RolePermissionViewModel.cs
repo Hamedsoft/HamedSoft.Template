@@ -5,6 +5,8 @@ public sealed class RolePermissionViewModel
     public Guid RoleId { get; set; }
 
     public string RoleName { get; set; } = string.Empty;
+    
+    public bool IsAdmin { get; set; }
 
     public List<PermissionItemViewModel> Permissions { get; set; } = [];
 

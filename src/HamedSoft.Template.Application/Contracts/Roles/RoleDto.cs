@@ -2,4 +2,5 @@
 
 public sealed record RoleDto(
     Guid RoleId,
-    string RoleName);
+    string RoleName,
+    bool IsAdmin);

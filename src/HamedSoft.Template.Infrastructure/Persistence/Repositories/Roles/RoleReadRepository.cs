@@ -3,6 +3,7 @@ using HamedSoft.Template.Application.Contracts.Roles;
 using HamedSoft.Template.Application.Security;
 using HamedSoft.Template.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace HamedSoft.Template.Infrastructure.Repositories.Roles;
 
@@ -15,9 +16,7 @@ internal sealed class RoleReadRepository : IRoleReadRepository
         _context = context;
     }
 
-    public async Task<bool> ExistsAsync(
-        Guid roleId,
-        CancellationToken cancellationToken = default)
+    public async Task<bool> ExistsAsync(Guid roleId, CancellationToken cancellationToken = default)
     {
         return await _context.Roles
             .AsNoTracking()
@@ -26,21 +25,7 @@ internal sealed class RoleReadRepository : IRoleReadRepository
                 cancellationToken);
     }
 
-    public async Task<IReadOnlyList<RolePermissionsDto>> GetAllAsync(
-        CancellationToken cancellationToken = default)
-    {
-        return await _context.Roles
-            .AsNoTracking()
-            .Select(role => new RolePermissionsDto(
-                role.Id,
-                role.Name!,
-                new List<RolePermissionItemDto>()))
-            .ToListAsync(cancellationToken);
-    }
-
-    public async Task<RolePermissionsDto?> GetByIdAsync(
-        Guid roleId,
-        CancellationToken cancellationToken = default)
+    public async Task<RolePermissionsDto?> GetByIdAsync(Guid roleId, CancellationToken cancellationToken = default)
     {
         var role = await _context.Roles
             .AsNoTracking()
@@ -69,21 +54,22 @@ internal sealed class RoleReadRepository : IRoleReadRepository
         return new RolePermissionsDto(
             role.Id,
             role.Name!,
+             role.Name! == SystemRoles.Admin,
             permissions);
     }
 
-    async Task<IReadOnlyList<RoleDto>> IRoleReadRepository.GetAllAsync(CancellationToken cancellationToken)
+    async Task<IReadOnlyList<RoleDto>> IRoleReadRepository.GetAllAsync(bool withAdmin, CancellationToken cancellationToken)
     {
-        return await _context.Roles
+        var result = await _context.Roles
          .AsNoTracking()
          .Select(role => new RoleDto(
              role.Id,
-             role.Name!))
+             role.Name!,
+             role.Name! == SystemRoles.Admin))
          .ToListAsync(cancellationToken);
+        return result.Where(m => m.IsAdmin == withAdmin).ToList();
     }
-    public async Task<bool> IsAdminAsync(
-        Guid roleId,
-        CancellationToken cancellationToken = default)
+    public async Task<bool> IsAdminAsync(Guid roleId, CancellationToken cancellationToken = default)
     {
         return await _context.Roles
             .AsNoTracking()

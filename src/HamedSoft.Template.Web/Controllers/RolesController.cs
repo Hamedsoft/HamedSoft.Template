@@ -27,7 +27,7 @@ public class RolesController : Controller
         CancellationToken cancellationToken)
     {
         var result = await _roleManagementService
-            .GetAllAsync(cancellationToken);
+            .GetAllAsync(false, cancellationToken);
 
 
         if (!result.Succeeded)
@@ -163,7 +163,7 @@ public class RolesController : Controller
         {
             RoleId = result.Value!.RoleId,
             RoleName = result.Value.RoleName,
-
+            IsAdmin = result.Value.IsAdmin,
             Permissions = result.Value.Permissions
                 .Select(x => new PermissionItemViewModel
                 {

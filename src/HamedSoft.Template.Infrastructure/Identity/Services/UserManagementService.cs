@@ -1,13 +1,15 @@
-﻿using HamedSoft.Template.Application.Common.Models;
-using HamedSoft.Template.Application.Contracts.Repositories.Reads;
+﻿using HamedSoft.Template.Application.Contracts.Repositories.Reads;
 using HamedSoft.Template.Application.Contracts.Repositories.Writes;
+using HamedSoft.Template.Application.Contracts.Roles;
 using HamedSoft.Template.Application.Contracts.UnitOfWork;
 using HamedSoft.Template.Application.Contracts.Users;
+using HamedSoft.Template.Application.Security;
 using HamedSoft.Template.Domain.SeedWork;
 using HamedSoft.Template.Domain.SharedKernel.ValueObjects;
 using HamedSoft.Template.Infrastructure.Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace HamedSoft.Template.Infrastructure.Identity.Services;
 
@@ -33,13 +35,16 @@ public sealed class UserManagementService : IUserManagementService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Result<IReadOnlyList<UserListItem>>> GetAllAsync(
+    public async Task<Result<IReadOnlyList<UserListItem>>> GetAllAsync(bool withAdminUser,
         CancellationToken cancellationToken = default)
     {
         var users = await _userManager.Users
             .OrderBy(x => x.UserName)
             .ToListAsync(cancellationToken);
 
+        if (!withAdminUser)
+            users = users.Where(x => x.UserName!.ToLower() != SystemRoles.Admin.ToLower()).ToList();
+        
         var result = new List<UserListItem>();
 
         foreach (var user in users)
@@ -76,14 +81,8 @@ public sealed class UserManagementService : IUserManagementService
         var dto = new UserRolesDto(
             user.Id,
             user.UserName ?? string.Empty,
-            roles
-                .Select(r =>
-                    new LookupItemDto(
-                        r.Id,
-                        r.Name!,
-                        userRoles.Contains(r.Name!)))
-                .ToList());
-
+            roles.Select(r => new SelectRole( new RoleDto(r.Id, r.Name!, r.Name! == SystemRoles.Admin), userRoles.Contains(r.Name!)))
+            .Where(m => !m.roleDto.IsAdmin).ToList());
         return Result<UserRolesDto>.Success(dto);
     }
 
@@ -112,9 +111,8 @@ public sealed class UserManagementService : IUserManagementService
             .Select(x => x.Name!)
             .ToListAsync(cancellationToken);
 
-
         var roles = await _roleManager.Roles
-            .Where(x => roleIds.Contains(x.Id))
+            .Where(x => roleIds.Contains(x.Id) && x.Name! != SystemRoles.Admin)
             .Select(x => x.Name!)
             .ToListAsync(cancellationToken);
 

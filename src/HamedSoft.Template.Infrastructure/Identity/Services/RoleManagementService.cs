@@ -76,11 +76,11 @@ internal sealed class RoleManagementService : IRoleManagementService
         return Result.Success();
     }
 
-    public async Task<Result<IReadOnlyList<RoleDto>>> GetAllAsync(
+    public async Task<Result<IReadOnlyList<RoleDto>>> GetAllAsync(bool withAdmin,
        CancellationToken cancellationToken = default)
     {
         var roles = await _roleReadRepository
-            .GetAllAsync(cancellationToken);
+            .GetAllAsync(withAdmin, cancellationToken);
 
 
         return Result<IReadOnlyList<RoleDto>>
@@ -154,6 +154,11 @@ internal sealed class RoleManagementService : IRoleManagementService
 
         if (role is null)
             return Result.Failure("نقش یافت نشد.");
+
+        if (string.Equals(role.Name, SystemRoles.Admin, StringComparison.OrdinalIgnoreCase)) 
+        {
+            return Result.Failure("نقش Admin قابل ویرایش نیست.");
+        }
 
         var existingRole = await _roleManager.FindByNameAsync(roleName);
 

@@ -28,12 +28,15 @@
                             <tr>
                                 <td>@role.RoleName</td>
                                 <td>
-                                    <permission require="@PermissionConstants.Roles.Edit">
-                                        <a asp-action="Edit" asp-route-id="@role.RoleId" class="btn btn-sm btn-warning"><i class="fa fa fa-pencil me-2"></i>ویرایش</a>
-                                    </permission>
-                                    <permission require="@PermissionConstants.Roles.AssignPermissions">
-                                        <a asp-action="Permissions" asp-route-id="@role.RoleId" class="btn btn-sm btn-primary"><i class="fa fa fa fa-shield me-2"></i>دسترسی‌ها</a>
-                                    </permission>
+                                    @if (!role.IsAdmin)
+                                    {
+                                        <permission require="@PermissionConstants.Roles.Edit">
+                                            <a asp-action="Edit" asp-route-id="@role.RoleId" class="btn btn-sm btn-warning"><i class="fa fa fa-pencil me-2"></i>ویرایش</a>
+                                        </permission>
+                                        <permission require="@PermissionConstants.Roles.AssignPermissions">
+                                            <a asp-action="Permissions" asp-route-id="@role.RoleId" class="btn btn-sm btn-primary"><i class="fa fa fa fa-shield me-2"></i>دسترسی‌ها</a>
+                                        </permission>
+                                    }
                                 </td>
                             </tr>
                         }

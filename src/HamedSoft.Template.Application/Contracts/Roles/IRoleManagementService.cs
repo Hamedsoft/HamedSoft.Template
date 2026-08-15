@@ -4,7 +4,7 @@ namespace HamedSoft.Template.Application.Contracts.Roles;
 
 public interface IRoleManagementService
 {
-    Task<Result<IReadOnlyList<RoleDto>>> GetAllAsync(
+    Task<Result<IReadOnlyList<RoleDto>>> GetAllAsync(bool withAdmin,
         CancellationToken cancellationToken = default);
 
     Task<Result<RolePermissionsDto>> GetByIdAsync(

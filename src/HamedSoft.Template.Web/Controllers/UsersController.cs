@@ -60,8 +60,8 @@ public class UsersController : Controller
             Roles = result.Value.Roles
             .Select(x => new UserRoleItemViewModel
             {
-                RoleId = x.Id,
-                RoleName = x.Name,
+                RoleId = x.roleDto.RoleId,
+                RoleName = x.roleDto.RoleName,
                 Selected = x.Selected
             }).ToList()
         };
@@ -136,8 +136,8 @@ public class UsersController : Controller
                 Roles = rolesResult.Value.Roles
                 .Select(x => new UserRoleItemViewModel
                 {
-                    RoleId = x.Id,
-                    RoleName = x.Name,
+                    RoleId = x.roleDto.RoleId,
+                    RoleName = x.roleDto.RoleName,
                     Selected = x.Selected
                 }).ToList()
             },

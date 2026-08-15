@@ -4,7 +4,7 @@ namespace HamedSoft.Template.Application.Contracts.Users;
 
 public interface IUserManagementService
 {
-    Task<Result<IReadOnlyList<UserListItem>>> GetAllAsync(
+    Task<Result<IReadOnlyList<UserListItem>>> GetAllAsync(bool withAdminUser,
         CancellationToken cancellationToken = default);
 
 
