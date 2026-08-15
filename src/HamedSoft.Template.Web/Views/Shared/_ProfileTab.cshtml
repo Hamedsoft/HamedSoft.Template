@@ -1,81 +1,47 @@
 ﻿@model HamedSoft.Template.Web.ViewModels.Users.UserProfileViewModel
-
-
-<form asp-action="UpdateProfile"
-      method="post">
-
+<form asp-action="UpdateProfile" method="post">
     @Html.AntiForgeryToken()
-
-    <input type="hidden"
-           asp-for="UserId" />
-
-
-    <div class="mb-3">
-
-        <label class="form-label">
-            نام کاربری
-        </label>
-
-        <input class="form-control"
-               asp-for="UserName"
-               readonly />
-
+    <input type="hidden" asp-for="UserId" />
+    <input type="hidden" asp-for="UserName" />
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">
+                نام کاربری : "@Model.UserName"
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-6 col-md-6">
+                    <div class="form-group">
+                        <label class="form-label" asp-for="FirstName"><span class="text-red">*</span></label>
+                        <input class="form-control" asp-for="FirstName" placeholder="نام" />
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-6">
+                    <div class="form-group">
+                        <label class="form-label" asp-for="LastName"><span class="text-red">*</span></label>
+                        <input class="form-control" asp-for="LastName" placeholder="نام خانوادگی" />
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-6">
+                    <div class="form-group">
+                        <label class="form-label" asp-for="Email"></label>
+                        <input class="form-control" asp-for="Email" placeholder="ایمیل" />
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-6">
+                    <div class="form-group">
+                        <label class="form-label" asp-for="PhoneNumber"></label>
+                        <input class="form-control" asp-for="PhoneNumber" placeholder="شماره موبایل" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-success">ذخیره اطلاعات</button>
+            <a class="btn btn-default" asp-action="index">بازگشت</a>
+        </div>
     </div>
-
-
-    <div class="mb-3">
-
-        <label class="form-label">
-            نام
-        </label>
-
-        <input class="form-control"
-               asp-for="FirstName" />
-
-    </div>
-
-
-    <div class="mb-3">
-
-        <label class="form-label">
-            نام خانوادگی
-        </label>
-
-        <input class="form-control"
-               asp-for="LastName" />
-
-    </div>
-
-
-    <div class="mb-3">
-
-        <label class="form-label">
-            Email
-        </label>
-
-        <input class="form-control"
-               asp-for="Email" />
-
-    </div>
-
-
-    <div class="mb-3">
-
-        <label class="form-label">
-            شماره تماس
-        </label>
-
-        <input class="form-control"
-               asp-for="PhoneNumber" />
-
-    </div>
-
-
-    <button type="submit"
-            class="btn btn-primary">
-
-        ذخیره اطلاعات
-
-    </button>
 
 </form>
+

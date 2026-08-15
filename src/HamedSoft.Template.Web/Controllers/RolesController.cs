@@ -205,10 +205,6 @@ public class RolesController : Controller
         }
 
         return RedirectToAction(
-            nameof(Permissions),
-            new
-            {
-                id = model.RoleId
-            });
+            nameof(Index));
     }
 }
