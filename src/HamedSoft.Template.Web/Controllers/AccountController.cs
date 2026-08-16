@@ -136,6 +136,7 @@ public class AccountController : Controller
 
         return RedirectToAction("Index", "Home");
     }
+    
     [HttpPost]
     public async Task<IActionResult> Logout()
     {
@@ -143,7 +144,6 @@ public class AccountController : Controller
 
         return RedirectToAction("Login", "Account");
     }
-
 
     [HttpGet]
     [Permission(PermissionConstants.Users.ChangePassword)]
@@ -180,8 +180,8 @@ public class AccountController : Controller
 
         return RedirectToAction("Index", "Home");
     }
-    [HttpGet]
 
+    [HttpGet]
     public IActionResult AccessDenied(string? returnUrl = null)
     {
         ViewData["ReturnUrl"] = returnUrl;

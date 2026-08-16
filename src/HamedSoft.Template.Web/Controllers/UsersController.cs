@@ -11,6 +11,8 @@ using HamedSoft.Template.Application.Features.Queries.Users.GetUserProfile;
 using HamedSoft.Template.Application.Features.Queries.Users.GetUserRoles;
 using HamedSoft.Template.Application.Features.Queries.Users.GetUsers;
 using HamedSoft.Template.Application.Features.Queries.Users.GetUserSecurity;
+using HamedSoft.Template.Application.Security;
+using HamedSoft.Template.Web.Security;
 using HamedSoft.Template.Web.ViewModels.Users;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -29,6 +31,7 @@ public class UsersController : Controller
     }
 
     [HttpGet]
+    [Permission(PermissionConstants.Users.View)]
     public async Task<IActionResult> Index(CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(new GetUsersQuery(), cancellationToken);
@@ -41,7 +44,9 @@ public class UsersController : Controller
 
         return View(result.Value);
     }
+
     [HttpGet]
+    [Permission(PermissionConstants.Roles.View)]
     public async Task<IActionResult> Roles(Guid userId, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(new GetUserRolesQuery(userId), cancellationToken);
@@ -68,8 +73,10 @@ public class UsersController : Controller
 
         return View(model);
     }
+
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Permission(PermissionConstants.Roles.View)]
     public async Task<IActionResult> Roles(UserRolesViewModel model, CancellationToken cancellationToken)
     {
         var selectedRoleIds = model.Roles
@@ -88,7 +95,9 @@ public class UsersController : Controller
         TempData["Success"] = "نقش‌های کاربر با موفقیت بروزرسانی شد.";
         return RedirectToAction(nameof(Index));
     }
+
     [HttpGet]
+    [Permission(PermissionConstants.Users.Edit)]
     public async Task<IActionResult> Edit(Guid id, CancellationToken cancellationToken)
     {
         var profileResult = await _mediator.Send(new GetUserProfileQuery(id), cancellationToken);
@@ -153,7 +162,9 @@ public class UsersController : Controller
 
         return View(model);
     }
+
     [HttpGet]
+    [Permission(PermissionConstants.Users.Profile)]
     public async Task<IActionResult> UserProfile(CancellationToken cancellationToken)
     {
         if (_currentUser.UserId is not Guid currentUserId)
@@ -176,6 +187,7 @@ public class UsersController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Permission(PermissionConstants.Users.Profile)]
     public async Task<IActionResult> UpdateProfile(UserProfileViewModel model, CancellationToken cancellationToken)
     {
         if (model?.UserId is not Guid userId)
@@ -200,6 +212,7 @@ public class UsersController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Permission(PermissionConstants.Roles.Edit)]
     public async Task<IActionResult> UpdateRoles(UserRolesViewModel model, CancellationToken cancellationToken)
     {
         var selectedRoleIds = model.Roles
@@ -222,6 +235,7 @@ public class UsersController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Permission(PermissionConstants.Users.Edit)]
     public async Task<IActionResult> UpdateStatus(Guid userId, bool isActive, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(new UpdateUserStatusCommand(userId, isActive), cancellationToken);
@@ -240,6 +254,7 @@ public class UsersController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Permission(PermissionConstants.Users.Edit)]
     public async Task<IActionResult> Lock(Guid userId, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(new LockUserCommand(userId), cancellationToken);
@@ -251,6 +266,7 @@ public class UsersController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Permission(PermissionConstants.Users.Edit)]
     public async Task<IActionResult> Unlock(Guid userId, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(new UnlockUserCommand(userId), cancellationToken);
@@ -260,6 +276,7 @@ public class UsersController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Permission(PermissionConstants.Users.Edit)]
     public async Task<IActionResult> ResetPassword(Guid userId, string newPassword, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(new ResetPasswordCommand(userId, newPassword), cancellationToken);
