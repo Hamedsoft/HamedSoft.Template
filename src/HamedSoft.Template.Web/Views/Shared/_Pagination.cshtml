@@ -1,0 +1,49 @@
+﻿@model HamedSoft.Template.Web.ViewModels.Paging.PaginationViewModel
+
+@if (Model.TotalPages > 1)
+{
+    <nav aria-label="Pagination">
+        <ul class="pagination justify-content-center mb-0">
+
+            @if (Model.HasPreviousPage)
+            {
+                <li class="page-item">
+                    <a class="page-link"
+                       asp-controller="@Model.Controller"
+                       asp-action="@Model.Action"
+                       asp-route-pageNumber="@(Model.PageNumber - 1)"
+                       asp-route-pageSize="@Model.PageSize">
+                        قبلی
+                    </a>
+                </li>
+            }
+
+            @for (var pageNumber = 1; pageNumber <= Model.TotalPages; pageNumber++)
+            {
+                <li class="page-item @(pageNumber == Model.PageNumber ? "active" : "")">
+                    <a class="page-link"
+                       asp-controller="@Model.Controller"
+                       asp-action="@Model.Action"
+                       asp-route-pageNumber="@pageNumber"
+                       asp-route-pageSize="@Model.PageSize">
+                        @pageNumber
+                    </a>
+                </li>
+            }
+
+            @if (Model.HasNextPage)
+            {
+                <li class="page-item">
+                    <a class="page-link"
+                       asp-controller="@Model.Controller"
+                       asp-action="@Model.Action"
+                       asp-route-pageNumber="@(Model.PageNumber + 1)"
+                       asp-route-pageSize="@Model.PageSize">
+                        بعدی
+                    </a>
+                </li>
+            }
+
+        </ul>
+    </nav>
+}
