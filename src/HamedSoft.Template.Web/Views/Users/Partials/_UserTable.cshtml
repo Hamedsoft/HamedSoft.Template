@@ -1,0 +1,89 @@
+﻿@using HamedSoft.Template.Application.Contracts.Users
+
+@model IReadOnlyCollection<UserListItem>
+
+<div class="table-responsive">
+
+    <table class="table border text-nowrap text-md-nowrap table-striped mb-0">
+
+        <thead>
+            <tr>
+                <th>نام کاربر</th>
+                <th>نام کاربری</th>
+                <th>نقش</th>
+                <th>موبایل</th>
+                <th>ایمیل</th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @if (Model.Count == 0)
+            {
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-4">
+                        کاربری برای نمایش وجود ندارد.
+                    </td>
+                </tr>
+            }
+            else
+            {
+                foreach (var user in Model)
+                {
+                    <tr>
+
+                        <td>
+                            @string.Concat(
+                            user.UserProfile.FirstName,
+                                        " ",
+                                        user.UserProfile.LastName)
+                </td>
+
+                <td>
+                    @user.UserName
+                </td>
+
+                <td>
+                    @string.Join(", ", user.Roles)
+                </td>
+
+                <td>
+                    @user.UserProfile.PhoneNumber
+                </td>
+
+                <td>
+                    @user.UserProfile.Email
+                </td>
+
+                <td>
+
+                    <a asp-action="Edit"
+                       asp-route-id="@user.UserId"
+                       class="btn btn-sm btn-warning">
+
+                        <i class="fa fa-pencil me-2"></i>
+                        ویرایش
+
+                    </a>
+
+                    <a asp-action="Roles"
+                       asp-route-userId="@user.UserId"
+                       class="btn btn-sm btn-primary">
+
+                        <i class="fa fa-users me-2"></i>
+                        نقش ها
+
+                    </a>
+
+                </td>
+
+            </tr>
+                        }
+            }
+
+        </tbody>
+
+    </table>
+
+</div>

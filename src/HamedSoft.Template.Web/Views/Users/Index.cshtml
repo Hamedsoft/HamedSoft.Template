@@ -3,8 +3,6 @@
 @model HamedSoft.Template.Web.ViewModels.Users.UsersIndexViewModel
 @{
     ViewData["Title"] = "لیست کاربران";
-    var activeTab = Context.Request.Query["activeTab"].FirstOrDefault() ?? "active";
-
 }
 
 <div class="row justify-content-center">
@@ -63,7 +61,7 @@
 
                             <li>
                                 <a href="#active"
-                                   class="@(activeTab == "active" ? "active" : "")"
+                                   class="@(Model.ActiveTab == "active" ? "active" : "")"
                                    data-bs-toggle="tab">
 
                                     <span class="fa fa-check me-2 text-success"></span>
@@ -74,7 +72,7 @@
 
                             <li>
                                 <a href="#deactive"
-                                   class="@(activeTab == "deactive" ? "active" : "")"
+                                   class="@(Model.ActiveTab == "deactive" ? "active" : "")"
                                    data-bs-toggle="tab">
 
                                     <span class="fa fa-close me-2 text-danger"></span>
@@ -85,7 +83,7 @@
 
                             <li>
                                 <a href="#Locked"
-                                   class="@(activeTab == "locked" ? "active" : "")"
+                                   class="@(Model.ActiveTab == "locked" ? "active" : "")"
                                    data-bs-toggle="tab">
 
                                     <span class="fa fa-lock me-2 text-warning"></span>
@@ -104,323 +102,43 @@
                     <div class="tab-content">
 
                         <!-- Active -->
-                        <div class="tab-pane @(activeTab == "active" ? "active" : "")" id="active">
+                        <div class="tab-pane @(Model.ActiveTab == "active" ? "active" : "")"
+                             id="active">
 
-                            <div class="table-responsive">
+                            @await Html.PartialAsync(
+                            "~/Views/Users/Partials/_UserTable.cshtml",
+                                                        Model.ActiveUsers.Items)
 
-                                <table class="table border text-nowrap text-md-nowrap table-striped mb-0">
-
-                                    <thead>
-                                        <tr>
-                                            <th>نام کاربر</th>
-                                            <th>نام کاربری</th>
-                                            <th>نقش</th>
-                                            <th>موبایل</th>
-                                            <th>ایمیل</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-
-                                    <tbody>
-
-                                        @foreach (var user in Model.ActiveUsers.Items)
-                                        {
-                                            <tr>
-
-                                                <td>
-                                                    @string.Concat(
-                                                    user.UserProfile.FirstName,
-                                                                                                " ",
-                                                                                                user.UserProfile.LastName)
-                                            </td>
-
-                                            <td>
-                                                @user.UserName
-                                            </td>
-
-                                            <td>
-                                                @string.Join(", ", user.Roles)
-                                            </td>
-
-                                            <td>
-                                                @user.UserProfile.PhoneNumber
-                                            </td>
-
-                                            <td>
-                                                @user.UserProfile.Email
-                                            </td>
-
-                                            <td>
-
-                                                <a asp-action="Edit"
-                                                   asp-route-id="@user.UserId"
-                                                   class="btn btn-sm btn-warning">
-
-                                                    <i class="fa fa-pencil me-2"></i>
-                                                    ویرایش
-
-                                                </a>
-
-                                                <a asp-action="Roles"
-                                                   asp-route-userId="@user.UserId"
-                                                   class="btn btn-sm btn-primary">
-
-                                                    <i class="fa fa-users me-2"></i>
-                                                    نقش ها
-
-                                                </a>
-
-                                            </td>
-
-                                        </tr>
-                                                                                }
-
-                                    </tbody>
-
-                                </table>
-                                @await Html.PartialAsync(
-                                "_Pagination",
-                                                                new HamedSoft.Template.Web.ViewModels.Common.Pagination.PaginationViewModel
-                                                                {
-                                                                    PageNumber = Model.ActiveUsers.PageNumber,
-                                                                    PageSize = Model.PageSize,
-                                                                    TotalCount = Model.ActiveUsers.TotalCount,
-                                                                    TotalPages = Model.ActiveUsers.TotalPages,
-
-                                                                    Action = "Index",
-
-                                                                    PageParameterName = "activePageNumber",
-
-                                                                    ActiveTab = "active",
-
-                                                                    Search = Model.Search,
-
-                                                                    AdditionalParameters =
-                                                                new Dictionary<string, string?>
-                                                                {
-                                                                    ["inactivePageNumber"] =
-                                                                Model.InactiveUsers.PageNumber.ToString(),
-
-                                                                    ["lockedPageNumber"] =
-                                                                Model.LockedUsers.PageNumber.ToString()
-                                                                }
-                                                                })
-                            </div>
-
+                            @await Html.PartialAsync(
+                                                        "_Pagination",
+                                                        Model.ActivePagination)
                         </div>
 
-
                         <!-- Inactive -->
-                        <div class="tab-pane @(activeTab == "deactive" ? "active" : "")" id="deactive">
+                        <div class="tab-pane @(Model.ActiveTab == "deactive" ? "active" : "")"
+                             id="deactive">
 
-                            <div class="table-responsive">
+                            @await Html.PartialAsync(
+                                                        "~/Views/Users/Partials/_UserTable.cshtml",
+                                                        Model.InactiveUsers.Items)
 
-                                <table class="table border text-nowrap text-md-nowrap table-striped mb-0">
-
-                                    <thead>
-                                        <tr>
-                                            <th>نام کاربر</th>
-                                            <th>نام کاربری</th>
-                                            <th>نقش</th>
-                                            <th>موبایل</th>
-                                            <th>ایمیل</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-
-                                    <tbody>
-
-                                        @foreach (var user in Model.InactiveUsers.Items)
-                                        {
-                                            <tr>
-
-                                                <td>
-                                                    @string.Concat(
-                                                    user.UserProfile.FirstName,
-                                                                                                " ",
-                                                                                                user.UserProfile.LastName)
-                                            </td>
-
-                                            <td>
-                                                @user.UserName
-                                            </td>
-
-                                            <td>
-                                                @string.Join(", ", user.Roles)
-                                            </td>
-
-                                            <td>
-                                                @user.UserProfile.PhoneNumber
-                                            </td>
-
-                                            <td>
-                                                @user.UserProfile.Email
-                                            </td>
-
-                                            <td>
-
-                                                <a asp-action="Edit"
-                                                   asp-route-id="@user.UserId"
-                                                   class="btn btn-sm btn-warning">
-
-                                                    <i class="fa fa-pencil me-2"></i>
-                                                    ویرایش
-
-                                                </a>
-
-                                                <a asp-action="Roles"
-                                                   asp-route-userId="@user.UserId"
-                                                   class="btn btn-sm btn-primary">
-
-                                                    <i class="fa fa-users me-2"></i>
-                                                    نقش ها
-
-                                                </a>
-
-                                            </td>
-
-                                        </tr>
-                                                                                }
-
-                                    </tbody>
-
-                                </table>
-                                @await Html.PartialAsync(
-                                "_Pagination",
-                                                                new HamedSoft.Template.Web.ViewModels.Common.Pagination.PaginationViewModel
-                                                                {
-                                                                    PageNumber = Model.InactiveUsers.PageNumber,
-                                                                    PageSize = Model.PageSize,
-                                                                    TotalCount = Model.InactiveUsers.TotalCount,
-                                                                    TotalPages = Model.InactiveUsers.TotalPages,
-
-                                                                    Action = "Index",
-
-                                                                    PageParameterName = "inactivePageNumber",
-
-                                                                    ActiveTab = "deactive",
-
-                                                                    Search = Model.Search,
-
-                                                                    AdditionalParameters =
-                                                                new Dictionary<string, string?>
-                                                                {
-                                                                    ["activePageNumber"] =
-                                                                Model.ActiveUsers.PageNumber.ToString(),
-
-                                                                    ["lockedPageNumber"] =
-                                                                Model.LockedUsers.PageNumber.ToString()
-                                                                }
-                                                                })
-                            </div>
-
+                            @await Html.PartialAsync(
+                                                        "_Pagination",
+                                                        Model.InactivePagination)
                         </div>
 
 
                         <!-- Locked -->
-                        <div class="tab-pane @(activeTab == "locked" ? "active" : "")" id="Locked">
+                        <div class="tab-pane @(Model.ActiveTab == "locked" ? "active" : "")"
+                             id="Locked">
 
-                            <div class="table-responsive">
+                            @await Html.PartialAsync(
+                                                        "~/Views/Users/Partials/_UserTable.cshtml",
+                                                        Model.LockedUsers.Items)
 
-                                <table class="table border text-nowrap text-md-nowrap table-striped mb-0">
-
-                                    <thead>
-                                        <tr>
-                                            <th>نام کاربر</th>
-                                            <th>نام کاربری</th>
-                                            <th>نقش</th>
-                                            <th>موبایل</th>
-                                            <th>ایمیل</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-
-                                    <tbody>
-
-                                        @foreach (var user in Model.LockedUsers.Items)
-                                        {
-                                            <tr>
-
-                                                <td>
-                                                    @string.Concat(
-                                                    user.UserProfile.FirstName,
-                                                                                                " ",
-                                                                                                user.UserProfile.LastName)
-                                            </td>
-
-                                            <td>
-                                                @user.UserName
-                                            </td>
-
-                                            <td>
-                                                @string.Join(", ", user.Roles)
-                                            </td>
-
-                                            <td>
-                                                @user.UserProfile.PhoneNumber
-                                            </td>
-
-                                            <td>
-                                                @user.UserProfile.Email
-                                            </td>
-
-                                            <td>
-
-                                                <a asp-action="Edit"
-                                                   asp-route-id="@user.UserId"
-                                                   class="btn btn-sm btn-warning">
-
-                                                    <i class="fa fa-pencil me-2"></i>
-                                                    ویرایش
-
-                                                </a>
-
-                                                <a asp-action="Roles"
-                                                   asp-route-userId="@user.UserId"
-                                                   class="btn btn-sm btn-primary">
-
-                                                    <i class="fa fa-users me-2"></i>
-                                                    نقش ها
-
-                                                </a>
-
-                                            </td>
-
-                                        </tr>
-                                                                                }
-
-                                    </tbody>
-
-                                </table>
-                                @await Html.PartialAsync(
-                                "_Pagination",
-                                                                new HamedSoft.Template.Web.ViewModels.Common.Pagination.PaginationViewModel
-                                                                {
-                                                                    PageNumber = Model.LockedUsers.PageNumber,
-                                                                    PageSize = Model.PageSize,
-                                                                    TotalCount = Model.LockedUsers.TotalCount,
-                                                                    TotalPages = Model.LockedUsers.TotalPages,
-
-                                                                    Action = "Index",
-
-                                                                    PageParameterName = "lockedPageNumber",
-
-                                                                    ActiveTab = "locked",
-
-                                                                    Search = Model.Search,
-
-                                                                    AdditionalParameters =
-                                                                new Dictionary<string, string?>
-                                                                {
-                                                                    ["activePageNumber"] =
-                                                                Model.ActiveUsers.PageNumber.ToString(),
-
-                                                                    ["inactivePageNumber"] =
-                                                                Model.InactiveUsers.PageNumber.ToString()
-                                                                }
-                                                                })
-                            </div>
-
+                            @await Html.PartialAsync(
+                                                        "_Pagination",
+                                                        Model.LockedPagination)
                         </div>
 
                     </div>

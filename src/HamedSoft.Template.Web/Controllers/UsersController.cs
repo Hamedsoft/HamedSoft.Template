@@ -14,6 +14,7 @@ using HamedSoft.Template.Application.Features.Queries.Users.GetUsers;
 using HamedSoft.Template.Application.Features.Queries.Users.GetUserSecurity;
 using HamedSoft.Template.Application.Security;
 using HamedSoft.Template.Web.Security;
+using HamedSoft.Template.Web.ViewModels.Common.Pagination;
 using HamedSoft.Template.Web.ViewModels.Users;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -39,17 +40,25 @@ public class UsersController : Controller
     int lockedPageNumber = 1,
     int pageSize = 10,
     string? search = null,
+    string activeTab = "active",
     CancellationToken cancellationToken = default)
     {
         pageSize = Math.Clamp(pageSize, 1, 100);
 
+        activeTab = activeTab.ToLowerInvariant();
+
+        if (activeTab is not ("active" or "deactive" or "locked"))
+        {
+            activeTab = "active";
+        }
+
         var activeResult = await _mediator.Send(
-    new GetUsersQuery(
-        activePageNumber,
-        pageSize,
-        search,
-        UserStatus.Active),
-    cancellationToken);
+            new GetUsersQuery(
+                activePageNumber,
+                pageSize,
+                search,
+                UserStatus.Active),
+            cancellationToken);
 
         var inactiveResult = await _mediator.Send(
             new GetUsersQuery(
@@ -82,31 +91,102 @@ public class UsersController : Controller
             TempData["Error"] = lockedResult.Error;
         }
 
+        var activeUsers =
+            activeResult.Value
+            ?? new PagedResult<UserListItem>(
+                Array.Empty<UserListItem>(),
+                activePageNumber,
+                pageSize,
+                0);
+
+        var inactiveUsers =
+            inactiveResult.Value
+            ?? new PagedResult<UserListItem>(
+                Array.Empty<UserListItem>(),
+                inactivePageNumber,
+                pageSize,
+                0);
+
+        var lockedUsers =
+            lockedResult.Value
+            ?? new PagedResult<UserListItem>(
+                Array.Empty<UserListItem>(),
+                lockedPageNumber,
+                pageSize,
+                0);
+
         var model = new UsersIndexViewModel
         {
-            ActiveUsers = activeResult.Value
-                ?? new PagedResult<UserListItem>(
-                    Array.Empty<UserListItem>(),
-                    activePageNumber,
-                    pageSize,
-                    0),
-
-            InactiveUsers = inactiveResult.Value
-                ?? new PagedResult<UserListItem>(
-                    Array.Empty<UserListItem>(),
-                    inactivePageNumber,
-                    pageSize,
-                    0),
-
-            LockedUsers = lockedResult.Value
-                ?? new PagedResult<UserListItem>(
-                    Array.Empty<UserListItem>(),
-                    lockedPageNumber,
-                    pageSize,
-                    0),
+            ActiveUsers = activeUsers,
+            InactiveUsers = inactiveUsers,
+            LockedUsers = lockedUsers,
 
             Search = search,
-            PageSize = pageSize
+            PageSize = pageSize,
+            ActiveTab = activeTab,
+
+            ActivePagination = new PaginationViewModel
+            {
+                PageNumber = activeUsers.PageNumber,
+                PageSize = pageSize,
+                TotalCount = activeUsers.TotalCount,
+                TotalPages = activeUsers.TotalPages,
+                Action = "Index",
+                PageParameterName = "activePageNumber",
+                ActiveTab = "active",
+                Search = search,
+
+                AdditionalParameters = new Dictionary<string, string?>
+                {
+                    ["inactivePageNumber"] =
+                        inactiveUsers.PageNumber.ToString(),
+
+                    ["lockedPageNumber"] =
+                        lockedUsers.PageNumber.ToString()
+                }
+            },
+
+            InactivePagination = new PaginationViewModel
+            {
+                PageNumber = inactiveUsers.PageNumber,
+                PageSize = pageSize,
+                TotalCount = inactiveUsers.TotalCount,
+                TotalPages = inactiveUsers.TotalPages,
+                Action = "Index",
+                PageParameterName = "inactivePageNumber",
+                ActiveTab = "deactive",
+                Search = search,
+
+                AdditionalParameters = new Dictionary<string, string?>
+                {
+                    ["activePageNumber"] =
+                        activeUsers.PageNumber.ToString(),
+
+                    ["lockedPageNumber"] =
+                        lockedUsers.PageNumber.ToString()
+                }
+            },
+
+            LockedPagination = new PaginationViewModel
+            {
+                PageNumber = lockedUsers.PageNumber,
+                PageSize = pageSize,
+                TotalCount = lockedUsers.TotalCount,
+                TotalPages = lockedUsers.TotalPages,
+                Action = "Index",
+                PageParameterName = "lockedPageNumber",
+                ActiveTab = "locked",
+                Search = search,
+
+                AdditionalParameters = new Dictionary<string, string?>
+                {
+                    ["activePageNumber"] =
+                        activeUsers.PageNumber.ToString(),
+
+                    ["inactivePageNumber"] =
+                        inactiveUsers.PageNumber.ToString()
+                }
+            }
         };
 
         return View(model);
