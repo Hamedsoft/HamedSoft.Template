@@ -54,7 +54,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach (var user in Model.Where(m => m.IsActive))
+                                        @foreach (var user in Model.Where(m => m.IsActive && !m.IsLocked))
                                         {
                                             <tr>
                                                 <td>@string.Concat(user.UserProfile.FirstName, " ", user.UserProfile.LastName)</td>

@@ -1,10 +1,7 @@
 ﻿@{
+    Layout = "_Login";
     ViewData["Title"] = "دسترسی غیرمجاز";
-
     var returnUrl = ViewData["ReturnUrl"] as string;
-    var safeReturnUrl = !string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl)
-        ? returnUrl
-        : Url.Action("Index", "Home");
 }
 
 <div class="container py-5">
@@ -30,17 +27,13 @@
 
                     <div class="d-flex justify-content-center gap-2">
 
-                        <a href="@safeReturnUrl"
-                           class="btn btn-outline-secondary">
-                            <i class="bi bi-arrow-right me-1"></i>
-                            بازگشت
+                        <a asp-controller="Account" asp-action="Login" class="btn btn-primary">
+                            <i class="fa fa-arrow-circle-right me-1"></i>
+                            ورود
                         </a>
-
-                        <a asp-controller="Home"
-                           asp-action="Index"
-                           class="btn btn-primary">
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">
                             <i class="bi bi-house me-1"></i>
-                            داشبورد
+                            خانه
                         </a>
 
                     </div>

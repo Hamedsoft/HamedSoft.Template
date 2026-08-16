@@ -13,18 +13,15 @@ public class RolesController : Controller
     private readonly IRoleManagementService _roleManagementService;
     private readonly IMediator _mediator;
 
-    public RolesController(
-        IRoleManagementService roleManagementService,
-        IMediator mediator)
+    public RolesController(IRoleManagementService roleManagementService, IMediator mediator)
     {
         _roleManagementService = roleManagementService;
         _mediator = mediator;
     }
 
-
     [HttpGet]
-    public async Task<IActionResult> Index(
-        CancellationToken cancellationToken)
+    [Permission(PermissionConstants.Roles.View)]
+    public async Task<IActionResult> Index(CancellationToken cancellationToken)
     {
         var result = await _roleManagementService
             .GetAllAsync(false, cancellationToken);
@@ -40,7 +37,9 @@ public class RolesController : Controller
 
         return View(result.Value);
     }
+
     [HttpGet]
+    [Permission(PermissionConstants.Roles.Create)]
     public IActionResult Create()
     {
         return View(new CreateRoleViewModel());
@@ -48,9 +47,8 @@ public class RolesController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(
-        CreateRoleViewModel model,
-        CancellationToken cancellationToken)
+    [Permission(PermissionConstants.Roles.Create)]
+    public async Task<IActionResult> Create(CreateRoleViewModel model, CancellationToken cancellationToken)
     {
         if (!ModelState.IsValid)
             return View(model);
@@ -72,10 +70,10 @@ public class RolesController : Controller
 
         return RedirectToAction(nameof(Index));
     }
+
     [HttpGet]
-    public async Task<IActionResult> Edit(
-    Guid id,
-    CancellationToken cancellationToken)
+    [Permission(PermissionConstants.Roles.Edit)]
+    public async Task<IActionResult> Edit(Guid id, CancellationToken cancellationToken)
     {
         var result = await _roleManagementService.GetByIdAsync(
             id,
@@ -96,11 +94,11 @@ public class RolesController : Controller
 
         return View(model);
     }
+
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(
-    EditRoleViewModel model,
-    CancellationToken cancellationToken)
+    [Permission(PermissionConstants.Roles.Edit)]
+    public async Task<IActionResult> Edit(EditRoleViewModel model, CancellationToken cancellationToken)
     {
         if (!ModelState.IsValid)
             return View(model);
@@ -123,11 +121,11 @@ public class RolesController : Controller
 
         return RedirectToAction(nameof(Index));
     }
+
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Delete(
-    Guid id,
-    CancellationToken cancellationToken)
+    [Permission(PermissionConstants.Roles.Delete)]
+    public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
         var result = await _roleManagementService.DeleteAsync(
             id,
@@ -147,9 +145,7 @@ public class RolesController : Controller
 
     [HttpGet]
     [Permission(PermissionConstants.Roles.AssignPermissions)]
-    public async Task<IActionResult> Permissions(
-        Guid id,
-        CancellationToken cancellationToken)
+    public async Task<IActionResult> Permissions(Guid id, CancellationToken cancellationToken)
     {
         var result = await _roleManagementService
             .GetByIdAsync(
@@ -180,12 +176,11 @@ public class RolesController : Controller
 
         return View(model);
     }
+    
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Permission(PermissionConstants.Roles.AssignPermissions)]
-    public async Task<IActionResult> Permissions(
-    RolePermissionViewModel model,
-    CancellationToken cancellationToken)
+    public async Task<IActionResult> Permissions(RolePermissionViewModel model, CancellationToken cancellationToken)
     {
         var command = new AssignPermissionsCommand(
             model.RoleId,
