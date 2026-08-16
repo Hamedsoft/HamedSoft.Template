@@ -1,32 +1,75 @@
-﻿@model HamedSoft.Template.Web.ViewModels.Paging.PaginationViewModel
+﻿@using Microsoft.AspNetCore.WebUtilities
+
+@model HamedSoft.Template.Web.ViewModels.Common.Pagination.PaginationViewModel
+
+@{
+    string BuildUrl(int pageNumber)
+    {
+        var query = new Dictionary<string, string?>();
+
+        if (!string.IsNullOrWhiteSpace(Model.ActiveTab))
+        {
+            query["activeTab"] = Model.ActiveTab;
+        }
+
+        if (!string.IsNullOrWhiteSpace(Model.Search))
+        {
+            query["search"] = Model.Search;
+        }
+
+        if (Model.PageSize > 0)
+        {
+            query[Model.PageSizeParameterName] =
+                Model.PageSize.ToString();
+        }
+
+        query[Model.PageParameterName] =
+            pageNumber.ToString();
+
+        foreach (var parameter in Model.AdditionalParameters)
+        {
+            query[parameter.Key] = parameter.Value;
+        }
+
+        var url = Url.Action(
+            Model.Action,
+            Model.Controller);
+
+        return QueryHelpers.AddQueryString(
+            url ?? string.Empty,
+            query);
+    }
+}
 
 @if (Model.TotalPages > 1)
 {
-    <nav aria-label="Pagination">
-        <ul class="pagination justify-content-center mb-0">
+    <nav class="mt-4" aria-label="Pagination">
+        <ul class="pagination justify-content-center">
 
             @if (Model.HasPreviousPage)
             {
                 <li class="page-item">
                     <a class="page-link"
-                       asp-controller="@Model.Controller"
-                       asp-action="@Model.Action"
-                       asp-route-pageNumber="@(Model.PageNumber - 1)"
-                       asp-route-pageSize="@Model.PageSize">
-                        قبلی
+                       href="@BuildUrl(Model.PageNumber - 1)">
+                        <i class="fa fa-angle-right"></i>
                     </a>
                 </li>
             }
-
-            @for (var pageNumber = 1; pageNumber <= Model.TotalPages; pageNumber++)
+            else
             {
-                <li class="page-item @(pageNumber == Model.PageNumber ? "active" : "")">
+                <li class="page-item disabled">
+                    <span class="page-link">
+                        <i class="fa fa-angle-right"></i>
+                    </span>
+                </li>
+            }
+
+            @for (var spage = 1; spage <= Model.TotalPages; spage++)
+            {
+                <li class="page-item @(spage == Model.PageNumber ? "active" : "")">
                     <a class="page-link"
-                       asp-controller="@Model.Controller"
-                       asp-action="@Model.Action"
-                       asp-route-pageNumber="@pageNumber"
-                       asp-route-pageSize="@Model.PageSize">
-                        @pageNumber
+                       href="@BuildUrl(spage)">
+                        @spage
                     </a>
                 </li>
             }
@@ -35,12 +78,17 @@
             {
                 <li class="page-item">
                     <a class="page-link"
-                       asp-controller="@Model.Controller"
-                       asp-action="@Model.Action"
-                       asp-route-pageNumber="@(Model.PageNumber + 1)"
-                       asp-route-pageSize="@Model.PageSize">
-                        بعدی
+                       href="@BuildUrl(Model.PageNumber + 1)">
+                        <i class="fa fa-angle-left"></i>
                     </a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item disabled">
+                    <span class="page-link">
+                        <i class="fa fa-angle-left"></i>
+                    </span>
                 </li>
             }
 

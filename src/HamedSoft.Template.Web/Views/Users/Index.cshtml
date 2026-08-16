@@ -178,68 +178,33 @@
                                     </tbody>
 
                                 </table>
-                                @if (Model.ActiveUsers.TotalPages > 1)
-                                {
-                                    <nav class="mt-4">
-                                        <ul class="pagination justify-content-center">
+                                @await Html.PartialAsync(
+                                "_Pagination",
+                                                                new HamedSoft.Template.Web.ViewModels.Common.Pagination.PaginationViewModel
+                                                                {
+                                                                    PageNumber = Model.ActiveUsers.PageNumber,
+                                                                    PageSize = Model.PageSize,
+                                                                    TotalCount = Model.ActiveUsers.TotalCount,
+                                                                    TotalPages = Model.ActiveUsers.TotalPages,
 
-                                            @if (Model.ActiveUsers.HasPreviousPage)
-                                            {
-                                                <li class="page-item">
-                                                    <a class="page-link"
-                                                       asp-action="Index"
-                                                       asp-route-activeTab="active"
-                                                       asp-route-activePageNumber="@(Model.ActiveUsers.PageNumber - 1)"
-                                                       asp-route-inactivePageNumber="@Model.InactiveUsers.PageNumber"
-                                                       asp-route-lockedPageNumber="@Model.LockedUsers.PageNumber"
-                                                       asp-route-pageSize="@Model.PageSize"
-                                                       asp-route-search="@Model.Search">
+                                                                    Action = "Index",
 
-                                                        <i class="fa fa-angle-right"></i>
-                                                    </a>
-                                                </li>
-                                            }
+                                                                    PageParameterName = "activePageNumber",
 
-                                            @for (var curentpage = 1; curentpage <= Model.ActiveUsers.TotalPages; curentpage++)
-                                            {
-                                                <li class="page-item @(curentpage == Model.ActiveUsers.PageNumber ? "active" : "")">
+                                                                    ActiveTab = "active",
 
-                                                    <a class="page-link"
-                                                       asp-action="Index"
-                                                       asp-route-activeTab="active"
-                                                       asp-route-activePageNumber="@curentpage"
-                                                       asp-route-inactivePageNumber="@Model.InactiveUsers.PageNumber"
-                                                       asp-route-lockedPageNumber="@Model.LockedUsers.PageNumber"
-                                                       asp-route-pageSize="@Model.PageSize"
-                                                       asp-route-search="@Model.Search">
+                                                                    Search = Model.Search,
 
-                                                        @curentpage
+                                                                    AdditionalParameters =
+                                                                new Dictionary<string, string?>
+                                                                {
+                                                                    ["inactivePageNumber"] =
+                                                                Model.InactiveUsers.PageNumber.ToString(),
 
-                                                    </a>
-
-                                                </li>
-                                            }
-
-                                            @if (Model.ActiveUsers.HasNextPage)
-                                            {
-                                                <li class="page-item">
-                                                    <a class="page-link"
-                                                       asp-action="Index"
-                                                       asp-route-activeTab="active"
-                                                       asp-route-activePageNumber="@(Model.ActiveUsers.PageNumber + 1)"
-                                                       asp-route-inactivePageNumber="@Model.InactiveUsers.PageNumber"
-                                                       asp-route-lockedPageNumber="@Model.LockedUsers.PageNumber"
-                                                       asp-route-pageSize="@Model.PageSize"
-                                                       asp-route-search="@Model.Search">
-
-                                                        <i class="fa fa-angle-left"></i>
-                                                    </a>
-                                                </li>
-                                            }
-
-                                        </ul>
-                                    </nav>
-                                }
+                                                                    ["lockedPageNumber"] =
+                                                                Model.LockedUsers.PageNumber.ToString()
+                                                                }
+                                                                })
                             </div>
 
                         </div>
@@ -320,70 +285,33 @@
                                     </tbody>
 
                                 </table>
-                                @if (Model.InactiveUsers.TotalPages > 1)
-                                {
-                                    <nav class="mt-4">
-                                        <ul class="pagination justify-content-center">
+                                @await Html.PartialAsync(
+                                "_Pagination",
+                                                                new HamedSoft.Template.Web.ViewModels.Common.Pagination.PaginationViewModel
+                                                                {
+                                                                    PageNumber = Model.InactiveUsers.PageNumber,
+                                                                    PageSize = Model.PageSize,
+                                                                    TotalCount = Model.InactiveUsers.TotalCount,
+                                                                    TotalPages = Model.InactiveUsers.TotalPages,
 
-                                            @if (Model.InactiveUsers.HasPreviousPage)
-                                            {
-                                                <li class="page-item">
-                                                    <a class="page-link"
-                                                       asp-action="Index"
-                                                       asp-route-activeTab="deactive"
-                                                       asp-route-activePageNumber="@Model.ActiveUsers.PageNumber"
-                                                       asp-route-inactivePageNumber="@(Model.InactiveUsers.PageNumber - 1)"
-                                                       asp-route-lockedPageNumber="@Model.LockedUsers.PageNumber"
-                                                       asp-route-pageSize="@Model.PageSize"
-                                                       asp-route-search="@Model.Search">
+                                                                    Action = "Index",
 
-                                                        <i class="fa fa-angle-right"></i>
-                                                    </a>
-                                                </li>
-                                            }
+                                                                    PageParameterName = "inactivePageNumber",
 
-                                            @for (var currentPage = 1;
-                                                                                    currentPage <= Model.InactiveUsers.TotalPages;
-                                                                                    currentPage++)
-                                            {
-                                                <li class="page-item @(currentPage == Model.InactiveUsers.PageNumber ? "active" : "")">
+                                                                    ActiveTab = "deactive",
 
-                                                    <a class="page-link"
-                                                       asp-action="Index"
-                                                       asp-route-activeTab="deactive"
-                                                       asp-route-activePageNumber="@Model.ActiveUsers.PageNumber"
-                                                       asp-route-inactivePageNumber="@currentPage"
-                                                       asp-route-lockedPageNumber="@Model.LockedUsers.PageNumber"
-                                                       asp-route-pageSize="@Model.PageSize"
-                                                       asp-route-search="@Model.Search">
+                                                                    Search = Model.Search,
 
-                                                        @currentPage
+                                                                    AdditionalParameters =
+                                                                new Dictionary<string, string?>
+                                                                {
+                                                                    ["activePageNumber"] =
+                                                                Model.ActiveUsers.PageNumber.ToString(),
 
-                                                    </a>
-
-                                                </li>
-                                            }
-
-                                            @if (Model.InactiveUsers.HasNextPage)
-                                            {
-                                                <li class="page-item">
-                                                    <a class="page-link"
-                                                       asp-action="Index"
-                                                       asp-route-activeTab="deactive"
-                                                       asp-route-activePageNumber="@Model.ActiveUsers.PageNumber"
-                                                       asp-route-inactivePageNumber="@(Model.InactiveUsers.PageNumber + 1)"
-                                                       asp-route-lockedPageNumber="@Model.LockedUsers.PageNumber"
-                                                       asp-route-pageSize="@Model.PageSize"
-                                                       asp-route-search="@Model.Search">
-
-                                                        <i class="fa fa-angle-left"></i>
-                                                    </a>
-                                                </li>
-                                            }
-
-                                        </ul>
-                                    </nav>
-                                }
+                                                                    ["lockedPageNumber"] =
+                                                                Model.LockedUsers.PageNumber.ToString()
+                                                                }
+                                                                })
                             </div>
 
                         </div>
@@ -464,99 +392,33 @@
                                     </tbody>
 
                                 </table>
-                                @if (Model.LockedUsers.TotalPages > 1)
-                                {
-                                    <nav class="mt-4">
-                                        <ul class="pagination justify-content-center">
+                                @await Html.PartialAsync(
+                                "_Pagination",
+                                                                new HamedSoft.Template.Web.ViewModels.Common.Pagination.PaginationViewModel
+                                                                {
+                                                                    PageNumber = Model.LockedUsers.PageNumber,
+                                                                    PageSize = Model.PageSize,
+                                                                    TotalCount = Model.LockedUsers.TotalCount,
+                                                                    TotalPages = Model.LockedUsers.TotalPages,
 
-                                            @* Previous *@
-                                            @if (Model.LockedUsers.HasPreviousPage)
-                                            {
-                                                <li class="page-item">
+                                                                    Action = "Index",
 
-                                                    <a class="page-link"
-                                                       asp-action="Index"
-                                                       asp-route-activeTab="locked"
-                                                       asp-route-activePageNumber="@Model.ActiveUsers.PageNumber"
-                                                       asp-route-inactivePageNumber="@Model.InactiveUsers.PageNumber"
-                                                       asp-route-lockedPageNumber="@(Model.LockedUsers.PageNumber - 1)"
-                                                       asp-route-pageSize="@Model.PageSize"
-                                                       asp-route-search="@Model.Search">
+                                                                    PageParameterName = "lockedPageNumber",
 
-                                                        <i class="fa fa-angle-right"></i>
+                                                                    ActiveTab = "locked",
 
-                                                    </a>
+                                                                    Search = Model.Search,
 
-                                                </li>
-                                            }
-                                            else
-                                            {
-                                                <li class="page-item disabled">
+                                                                    AdditionalParameters =
+                                                                new Dictionary<string, string?>
+                                                                {
+                                                                    ["activePageNumber"] =
+                                                                Model.ActiveUsers.PageNumber.ToString(),
 
-                                                    <span class="page-link">
-                                                        <i class="fa fa-angle-right"></i>
-                                                    </span>
-
-                                                </li>
-                                            }
-
-                                            @* Page Numbers *@
-                                            @for (var currentPage = 1;
-                                                                                    currentPage <= Model.LockedUsers.TotalPages;
-                                                                                    currentPage++)
-                                            {
-                                                <li class="page-item @(currentPage == Model.LockedUsers.PageNumber ? "active" : "")">
-
-                                                    <a class="page-link"
-                                                       asp-action="Index"
-                                                       asp-route-activeTab="locked"
-                                                       asp-route-activePageNumber="@Model.ActiveUsers.PageNumber"
-                                                       asp-route-inactivePageNumber="@Model.InactiveUsers.PageNumber"
-                                                       asp-route-lockedPageNumber="@currentPage"
-                                                       asp-route-pageSize="@Model.PageSize"
-                                                       asp-route-search="@Model.Search">
-
-                                                        @currentPage
-
-                                                    </a>
-
-                                                </li>
-                                            }
-
-                                            @* Next *@
-                                            @if (Model.LockedUsers.HasNextPage)
-                                            {
-                                                <li class="page-item">
-
-                                                    <a class="page-link"
-                                                       asp-action="Index"
-                                                       asp-route-activeTab="locked"
-                                                       asp-route-activePageNumber="@Model.ActiveUsers.PageNumber"
-                                                       asp-route-inactivePageNumber="@Model.InactiveUsers.PageNumber"
-                                                       asp-route-lockedPageNumber="@(Model.LockedUsers.PageNumber + 1)"
-                                                       asp-route-pageSize="@Model.PageSize"
-                                                       asp-route-search="@Model.Search">
-
-                                                        <i class="fa fa-angle-left"></i>
-
-                                                    </a>
-
-                                                </li>
-                                            }
-                                            else
-                                            {
-                                                <li class="page-item disabled">
-
-                                                    <span class="page-link">
-                                                        <i class="fa fa-angle-left"></i>
-                                                    </span>
-
-                                                </li>
-                                            }
-
-                                        </ul>
-                                    </nav>
-                                }
+                                                                    ["inactivePageNumber"] =
+                                                                Model.InactiveUsers.PageNumber.ToString()
+                                                                }
+                                                                })
                             </div>
 
                         </div>
