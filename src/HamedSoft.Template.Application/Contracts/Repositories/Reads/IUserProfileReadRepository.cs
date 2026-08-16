@@ -8,4 +8,8 @@ public interface IUserProfileReadRepository
     Task<UserProfile?> GetByIdAsync(
         UserProfileId id,
         CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<UserProfile>> GetByIdsAsync(
+        IReadOnlyCollection<UserProfileId> ids,
+        CancellationToken cancellationToken = default);
 }

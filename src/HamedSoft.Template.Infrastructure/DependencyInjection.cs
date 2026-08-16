@@ -13,6 +13,7 @@ using HamedSoft.Template.Infrastructure.Persistence;
 using HamedSoft.Template.Infrastructure.Persistence.Interceptors;
 using HamedSoft.Template.Infrastructure.Persistence.Repositories.UserProfiles;
 using HamedSoft.Template.Infrastructure.Persistence.UnitOfWorks;
+using HamedSoft.Template.Infrastructure.Repositories.Users;
 using HamedSoft.Template.Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -50,7 +51,9 @@ public static class DependencyInjection
         services.AddScoped<IUserProfileWriteRepository, UserProfileWriteRepository>();
 
         services.AddScoped<IUserProfileReadRepository, UserProfileReadRepository>();
-        
+
+        services.AddScoped<IUserReadRepository, UserReadRepository>();
+
         services.AddScoped<IApplicationUnitOfWork, ApplicationUnitOfWork>();
 
         services.AddIdentityServices(configuration);

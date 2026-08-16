@@ -1,48 +1,115 @@
-﻿@using HamedSoft.Template.Application.Contracts.Users
-@model IReadOnlyList<UserListItem>
+﻿@using HamedSoft.Template.Application.Common.Paging
+@using HamedSoft.Template.Application.Contracts.Users
+@model HamedSoft.Template.Web.ViewModels.Users.UsersIndexViewModel
 @{
     ViewData["Title"] = "لیست کاربران";
+    var activeTab = Context.Request.Query["activeTab"].FirstOrDefault() ?? "active";
+
 }
+
 <div class="row justify-content-center">
     <div class="card col-md-12">
 
         <div class="card-header">
             <h3 class="card-title">@ViewData["Title"]</h3>
         </div>
+        <form asp-action="Index" method="get" class="mb-4">
+            <div class="row align-items-end">
+
+                <div class="col-md-5">
+                    <label class="form-label">جستجو</label>
+
+                    <input type="text"
+                           name="search"
+                           value="@Model.Search"
+                           class="form-control"
+                           placeholder="نام، نام خانوادگی، نام کاربری، موبایل یا ایمیل" />
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">تعداد در صفحه</label>
+
+                    <select name="pageSize" class="form-select">
+                        <option value="10" selected="@(Model.PageSize == 10)">10</option>
+                        <option value="20" selected="@(Model.PageSize == 20)">20</option>
+                        <option value="50" selected="@(Model.PageSize == 50)">50</option>
+                        <option value="100" selected="@(Model.PageSize == 100)">100</option>
+                    </select>
+                </div>
+
+                <div class="col-md-auto">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa fa-search me-1"></i>
+                        جستجو
+                    </button>
+
+                    <a asp-action="Index"
+                       class="btn btn-default">
+                        <i class="fa fa-refresh me-1"></i>
+                        حذف فیلتر
+                    </a>
+                </div>
+
+            </div>
+        </form>
         <div class="card-body">
+
             <div class="panel panel-primary">
-                <div class=" tab-menu-heading">
+
+                <div class="tab-menu-heading">
                     <div class="tabs-menu1">
-                        <!-- Tabs -->
+
                         <ul class="nav panel-tabs">
+
                             <li>
-                                <a href="#active" class="active" data-bs-toggle="tab">
+                                <a href="#active"
+                                   class="@(activeTab == "active" ? "active" : "")"
+                                   data-bs-toggle="tab">
+
                                     <span class="fa fa-check me-2 text-success"></span>
                                     کاربران فعال
+
                                 </a>
                             </li>
 
                             <li>
-                                <a href="#deactive" data-bs-toggle="tab">
+                                <a href="#deactive"
+                                   class="@(activeTab == "deactive" ? "active" : "")"
+                                   data-bs-toggle="tab">
+
                                     <span class="fa fa-close me-2 text-danger"></span>
                                     کاربران غیر فعال
+
                                 </a>
                             </li>
 
                             <li>
-                                <a href="#Locked" data-bs-toggle="tab">
-                                    <span class="fa fa-lock me-2  text-warning"></span>
+                                <a href="#Locked"
+                                   class="@(activeTab == "locked" ? "active" : "")"
+                                   data-bs-toggle="tab">
+
+                                    <span class="fa fa-lock me-2 text-warning"></span>
                                     کاربران مسدود
+
                                 </a>
                             </li>
+
                         </ul>
+
                     </div>
                 </div>
+
                 <div class="panel-body tabs-menu-body">
+
                     <div class="tab-content">
-                        <div class="tab-pane active" id="active">
+
+                        <!-- Active -->
+                        <div class="tab-pane @(activeTab == "active" ? "active" : "")" id="active">
+
                             <div class="table-responsive">
+
                                 <table class="table border text-nowrap text-md-nowrap table-striped mb-0">
+
                                     <thead>
                                         <tr>
                                             <th>نام کاربر</th>
@@ -53,93 +120,466 @@
                                             <th></th>
                                         </tr>
                                     </thead>
+
                                     <tbody>
-                                        @foreach (var user in Model.Where(m => m.IsActive && !m.IsLocked))
+
+                                        @foreach (var user in Model.ActiveUsers.Items)
                                         {
                                             <tr>
-                                                <td>@string.Concat(user.UserProfile.FirstName, " ", user.UserProfile.LastName)</td>
-                                                <td>@user.UserName</td>
-                                                <td>@string.Join(", ", user.Roles)</td>
-                                                <td>@user.UserProfile.PhoneNumber</td>
-                                                <td>@user.UserProfile.Email</td>
+
                                                 <td>
-                                                    <a asp-action="Edit" asp-route-id="@user.UserId" class="btn btn-sm btn-warning"><i class="fa fa fa-pencil me-2"></i>ویرایش</a>
-                                                    <a asp-action="Roles" asp-route-userId="@user.UserId" class="btn btn-sm btn-primary"><i class="fa fa fa-users me-2"></i>نقش ها</a>
-                                                </td>
-                                            </tr>
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="tab-pane" id="deactive">
-                            <div class="table-responsive">
-                                <table class="table border text-nowrap text-md-nowrap table-striped mb-0">
-                                    <thead>
-                                        <tr>
-                                            <th>نام کاربر</th>
-                                            <th>نام کاربری</th>
-                                            <th>نقش</th>
-                                            <th>موبایل</th>
-                                            <th>ایمیل</th>
-                                            <th></th>
+                                                    @string.Concat(
+                                                    user.UserProfile.FirstName,
+                                                                                                " ",
+                                                                                                user.UserProfile.LastName)
+                                            </td>
+
+                                            <td>
+                                                @user.UserName
+                                            </td>
+
+                                            <td>
+                                                @string.Join(", ", user.Roles)
+                                            </td>
+
+                                            <td>
+                                                @user.UserProfile.PhoneNumber
+                                            </td>
+
+                                            <td>
+                                                @user.UserProfile.Email
+                                            </td>
+
+                                            <td>
+
+                                                <a asp-action="Edit"
+                                                   asp-route-id="@user.UserId"
+                                                   class="btn btn-sm btn-warning">
+
+                                                    <i class="fa fa-pencil me-2"></i>
+                                                    ویرایش
+
+                                                </a>
+
+                                                <a asp-action="Roles"
+                                                   asp-route-userId="@user.UserId"
+                                                   class="btn btn-sm btn-primary">
+
+                                                    <i class="fa fa-users me-2"></i>
+                                                    نقش ها
+
+                                                </a>
+
+                                            </td>
+
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach (var user in Model.Where(m => !m.IsActive))
-                                        {
-                                            <tr>
-                                                <td>@string.Concat(user.UserProfile.FirstName, " ", user.UserProfile.LastName)</td>
-                                                <td>@user.UserName</td>
-                                                <td>@string.Join(", ", user.Roles)</td>
-                                                <td>@user.UserProfile.PhoneNumber</td>
-                                                <td>@user.UserProfile.Email</td>
-                                                <td>
-                                                    <a asp-action="Edit" asp-route-id="@user.UserId" class="btn btn-sm btn-warning"><i class="fa fa fa-pencil me-2"></i>ویرایش</a>
-                                                    <a asp-action="Roles" asp-route-userId="@user.UserId" class="btn btn-sm btn-primary"><i class="fa fa fa-users me-2"></i>نقش ها</a>
-                                                </td>
-                                            </tr>
-                                        }
+                                                                                }
+
                                     </tbody>
+
                                 </table>
-                            </div>
-                        </div>
-                        <div class="tab-pane" id="Locked">
-                            <div class="table-responsive">
-                                <table class="table border text-nowrap text-md-nowrap table-striped mb-0">
-                                    <thead>
-                                        <tr>
-                                            <th>نام کاربر</th>
-                                            <th>نام کاربری</th>
-                                            <th>نقش</th>
-                                            <th>موبایل</th>
-                                            <th>ایمیل</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach (var user in Model.Where(mbox => mbox.IsLocked))
-                                        {
-                                            <tr>
-                                                <td>@string.Concat(user.UserProfile.FirstName, " ", user.UserProfile.LastName)</td>
-                                                <td>@user.UserName</td>
-                                                <td>@string.Join(", ", user.Roles)</td>
-                                                <td>@user.UserProfile.PhoneNumber</td>
-                                                <td>@user.UserProfile.Email</td>
-                                                <td>
-                                                    <a asp-action="Edit" asp-route-id="@user.UserId" class="btn btn-sm btn-warning"><i class="fa fa fa-pencil me-2"></i>ویرایش</a>
-                                                    <a asp-action="Roles" asp-route-userId="@user.UserId" class="btn btn-sm btn-primary"><i class="fa fa fa-users me-2"></i>نقش ها</a>
-                                                </td>
-                                            </tr>
-                                        }
-                                    </tbody>
-                                </table>
+                                @if (Model.ActiveUsers.TotalPages > 1)
+                                {
+                                    <nav class="mt-4">
+                                        <ul class="pagination justify-content-center">
+
+                                            @if (Model.ActiveUsers.HasPreviousPage)
+                                            {
+                                                <li class="page-item">
+                                                    <a class="page-link"
+                                                       asp-action="Index"
+                                                       asp-route-activeTab="active"
+                                                       asp-route-activePageNumber="@(Model.ActiveUsers.PageNumber - 1)"
+                                                       asp-route-inactivePageNumber="@Model.InactiveUsers.PageNumber"
+                                                       asp-route-lockedPageNumber="@Model.LockedUsers.PageNumber"
+                                                       asp-route-pageSize="@Model.PageSize"
+                                                       asp-route-search="@Model.Search">
+
+                                                        <i class="fa fa-angle-right"></i>
+                                                    </a>
+                                                </li>
+                                            }
+
+                                            @for (var curentpage = 1; curentpage <= Model.ActiveUsers.TotalPages; curentpage++)
+                                            {
+                                                <li class="page-item @(curentpage == Model.ActiveUsers.PageNumber ? "active" : "")">
+
+                                                    <a class="page-link"
+                                                       asp-action="Index"
+                                                       asp-route-activeTab="active"
+                                                       asp-route-activePageNumber="@curentpage"
+                                                       asp-route-inactivePageNumber="@Model.InactiveUsers.PageNumber"
+                                                       asp-route-lockedPageNumber="@Model.LockedUsers.PageNumber"
+                                                       asp-route-pageSize="@Model.PageSize"
+                                                       asp-route-search="@Model.Search">
+
+                                                        @curentpage
+
+                                                    </a>
+
+                                                </li>
+                                            }
+
+                                            @if (Model.ActiveUsers.HasNextPage)
+                                            {
+                                                <li class="page-item">
+                                                    <a class="page-link"
+                                                       asp-action="Index"
+                                                       asp-route-activeTab="active"
+                                                       asp-route-activePageNumber="@(Model.ActiveUsers.PageNumber + 1)"
+                                                       asp-route-inactivePageNumber="@Model.InactiveUsers.PageNumber"
+                                                       asp-route-lockedPageNumber="@Model.LockedUsers.PageNumber"
+                                                       asp-route-pageSize="@Model.PageSize"
+                                                       asp-route-search="@Model.Search">
+
+                                                        <i class="fa fa-angle-left"></i>
+                                                    </a>
+                                                </li>
+                                            }
+
+                                        </ul>
+                                    </nav>
+                                }
                             </div>
 
                         </div>
+
+
+                        <!-- Inactive -->
+                        <div class="tab-pane @(activeTab == "deactive" ? "active" : "")" id="deactive">
+
+                            <div class="table-responsive">
+
+                                <table class="table border text-nowrap text-md-nowrap table-striped mb-0">
+
+                                    <thead>
+                                        <tr>
+                                            <th>نام کاربر</th>
+                                            <th>نام کاربری</th>
+                                            <th>نقش</th>
+                                            <th>موبایل</th>
+                                            <th>ایمیل</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+
+                                        @foreach (var user in Model.InactiveUsers.Items)
+                                        {
+                                            <tr>
+
+                                                <td>
+                                                    @string.Concat(
+                                                    user.UserProfile.FirstName,
+                                                                                                " ",
+                                                                                                user.UserProfile.LastName)
+                                            </td>
+
+                                            <td>
+                                                @user.UserName
+                                            </td>
+
+                                            <td>
+                                                @string.Join(", ", user.Roles)
+                                            </td>
+
+                                            <td>
+                                                @user.UserProfile.PhoneNumber
+                                            </td>
+
+                                            <td>
+                                                @user.UserProfile.Email
+                                            </td>
+
+                                            <td>
+
+                                                <a asp-action="Edit"
+                                                   asp-route-id="@user.UserId"
+                                                   class="btn btn-sm btn-warning">
+
+                                                    <i class="fa fa-pencil me-2"></i>
+                                                    ویرایش
+
+                                                </a>
+
+                                                <a asp-action="Roles"
+                                                   asp-route-userId="@user.UserId"
+                                                   class="btn btn-sm btn-primary">
+
+                                                    <i class="fa fa-users me-2"></i>
+                                                    نقش ها
+
+                                                </a>
+
+                                            </td>
+
+                                        </tr>
+                                                                                }
+
+                                    </tbody>
+
+                                </table>
+                                @if (Model.InactiveUsers.TotalPages > 1)
+                                {
+                                    <nav class="mt-4">
+                                        <ul class="pagination justify-content-center">
+
+                                            @if (Model.InactiveUsers.HasPreviousPage)
+                                            {
+                                                <li class="page-item">
+                                                    <a class="page-link"
+                                                       asp-action="Index"
+                                                       asp-route-activeTab="deactive"
+                                                       asp-route-activePageNumber="@Model.ActiveUsers.PageNumber"
+                                                       asp-route-inactivePageNumber="@(Model.InactiveUsers.PageNumber - 1)"
+                                                       asp-route-lockedPageNumber="@Model.LockedUsers.PageNumber"
+                                                       asp-route-pageSize="@Model.PageSize"
+                                                       asp-route-search="@Model.Search">
+
+                                                        <i class="fa fa-angle-right"></i>
+                                                    </a>
+                                                </li>
+                                            }
+
+                                            @for (var currentPage = 1;
+                                                                                    currentPage <= Model.InactiveUsers.TotalPages;
+                                                                                    currentPage++)
+                                            {
+                                                <li class="page-item @(currentPage == Model.InactiveUsers.PageNumber ? "active" : "")">
+
+                                                    <a class="page-link"
+                                                       asp-action="Index"
+                                                       asp-route-activeTab="deactive"
+                                                       asp-route-activePageNumber="@Model.ActiveUsers.PageNumber"
+                                                       asp-route-inactivePageNumber="@currentPage"
+                                                       asp-route-lockedPageNumber="@Model.LockedUsers.PageNumber"
+                                                       asp-route-pageSize="@Model.PageSize"
+                                                       asp-route-search="@Model.Search">
+
+                                                        @currentPage
+
+                                                    </a>
+
+                                                </li>
+                                            }
+
+                                            @if (Model.InactiveUsers.HasNextPage)
+                                            {
+                                                <li class="page-item">
+                                                    <a class="page-link"
+                                                       asp-action="Index"
+                                                       asp-route-activeTab="deactive"
+                                                       asp-route-activePageNumber="@Model.ActiveUsers.PageNumber"
+                                                       asp-route-inactivePageNumber="@(Model.InactiveUsers.PageNumber + 1)"
+                                                       asp-route-lockedPageNumber="@Model.LockedUsers.PageNumber"
+                                                       asp-route-pageSize="@Model.PageSize"
+                                                       asp-route-search="@Model.Search">
+
+                                                        <i class="fa fa-angle-left"></i>
+                                                    </a>
+                                                </li>
+                                            }
+
+                                        </ul>
+                                    </nav>
+                                }
+                            </div>
+
+                        </div>
+
+
+                        <!-- Locked -->
+                        <div class="tab-pane @(activeTab == "locked" ? "active" : "")" id="Locked">
+
+                            <div class="table-responsive">
+
+                                <table class="table border text-nowrap text-md-nowrap table-striped mb-0">
+
+                                    <thead>
+                                        <tr>
+                                            <th>نام کاربر</th>
+                                            <th>نام کاربری</th>
+                                            <th>نقش</th>
+                                            <th>موبایل</th>
+                                            <th>ایمیل</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+
+                                        @foreach (var user in Model.LockedUsers.Items)
+                                        {
+                                            <tr>
+
+                                                <td>
+                                                    @string.Concat(
+                                                    user.UserProfile.FirstName,
+                                                                                                " ",
+                                                                                                user.UserProfile.LastName)
+                                            </td>
+
+                                            <td>
+                                                @user.UserName
+                                            </td>
+
+                                            <td>
+                                                @string.Join(", ", user.Roles)
+                                            </td>
+
+                                            <td>
+                                                @user.UserProfile.PhoneNumber
+                                            </td>
+
+                                            <td>
+                                                @user.UserProfile.Email
+                                            </td>
+
+                                            <td>
+
+                                                <a asp-action="Edit"
+                                                   asp-route-id="@user.UserId"
+                                                   class="btn btn-sm btn-warning">
+
+                                                    <i class="fa fa-pencil me-2"></i>
+                                                    ویرایش
+
+                                                </a>
+
+                                                <a asp-action="Roles"
+                                                   asp-route-userId="@user.UserId"
+                                                   class="btn btn-sm btn-primary">
+
+                                                    <i class="fa fa-users me-2"></i>
+                                                    نقش ها
+
+                                                </a>
+
+                                            </td>
+
+                                        </tr>
+                                                                                }
+
+                                    </tbody>
+
+                                </table>
+                                @if (Model.LockedUsers.TotalPages > 1)
+                                {
+                                    <nav class="mt-4">
+                                        <ul class="pagination justify-content-center">
+
+                                            @* Previous *@
+                                            @if (Model.LockedUsers.HasPreviousPage)
+                                            {
+                                                <li class="page-item">
+
+                                                    <a class="page-link"
+                                                       asp-action="Index"
+                                                       asp-route-activeTab="locked"
+                                                       asp-route-activePageNumber="@Model.ActiveUsers.PageNumber"
+                                                       asp-route-inactivePageNumber="@Model.InactiveUsers.PageNumber"
+                                                       asp-route-lockedPageNumber="@(Model.LockedUsers.PageNumber - 1)"
+                                                       asp-route-pageSize="@Model.PageSize"
+                                                       asp-route-search="@Model.Search">
+
+                                                        <i class="fa fa-angle-right"></i>
+
+                                                    </a>
+
+                                                </li>
+                                            }
+                                            else
+                                            {
+                                                <li class="page-item disabled">
+
+                                                    <span class="page-link">
+                                                        <i class="fa fa-angle-right"></i>
+                                                    </span>
+
+                                                </li>
+                                            }
+
+                                            @* Page Numbers *@
+                                            @for (var currentPage = 1;
+                                                                                    currentPage <= Model.LockedUsers.TotalPages;
+                                                                                    currentPage++)
+                                            {
+                                                <li class="page-item @(currentPage == Model.LockedUsers.PageNumber ? "active" : "")">
+
+                                                    <a class="page-link"
+                                                       asp-action="Index"
+                                                       asp-route-activeTab="locked"
+                                                       asp-route-activePageNumber="@Model.ActiveUsers.PageNumber"
+                                                       asp-route-inactivePageNumber="@Model.InactiveUsers.PageNumber"
+                                                       asp-route-lockedPageNumber="@currentPage"
+                                                       asp-route-pageSize="@Model.PageSize"
+                                                       asp-route-search="@Model.Search">
+
+                                                        @currentPage
+
+                                                    </a>
+
+                                                </li>
+                                            }
+
+                                            @* Next *@
+                                            @if (Model.LockedUsers.HasNextPage)
+                                            {
+                                                <li class="page-item">
+
+                                                    <a class="page-link"
+                                                       asp-action="Index"
+                                                       asp-route-activeTab="locked"
+                                                       asp-route-activePageNumber="@Model.ActiveUsers.PageNumber"
+                                                       asp-route-inactivePageNumber="@Model.InactiveUsers.PageNumber"
+                                                       asp-route-lockedPageNumber="@(Model.LockedUsers.PageNumber + 1)"
+                                                       asp-route-pageSize="@Model.PageSize"
+                                                       asp-route-search="@Model.Search">
+
+                                                        <i class="fa fa-angle-left"></i>
+
+                                                    </a>
+
+                                                </li>
+                                            }
+                                            else
+                                            {
+                                                <li class="page-item disabled">
+
+                                                    <span class="page-link">
+                                                        <i class="fa fa-angle-left"></i>
+                                                    </span>
+
+                                                </li>
+                                            }
+
+                                        </ul>
+                                    </nav>
+                                }
+                            </div>
+
+                        </div>
+
                     </div>
+
                 </div>
             </div>
+
         </div>
     </div>
-</div>
+    <script>
+        document.querySelectorAll('[data-bs-toggle="tab"]').forEach(function (tab) {
+            tab.addEventListener('shown.bs.tab', function (event) {
+
+                const target = event.target.getAttribute('href');
+                const tabName = target.replace('#', '');
+
+                const url = new URL(window.location.href);
+
+                url.searchParams.set('activeTab', tabName);
+
+                history.replaceState(null, '', url);
+            });
+        });
+    </script>

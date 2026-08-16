@@ -1,4 +1,5 @@
-﻿using HamedSoft.Template.Application.Contracts.Roles;
+﻿using HamedSoft.Template.Application.Common.Paging;
+using HamedSoft.Template.Application.Contracts.Roles;
 using HamedSoft.Template.Application.Contracts.Security;
 using HamedSoft.Template.Application.Contracts.Users;
 using HamedSoft.Template.Application.Features.Commands.Users.AssignRoles;
@@ -32,17 +33,83 @@ public class UsersController : Controller
 
     [HttpGet]
     [Permission(PermissionConstants.Users.View)]
-    public async Task<IActionResult> Index(CancellationToken cancellationToken)
+    public async Task<IActionResult> Index(
+    int activePageNumber = 1,
+    int inactivePageNumber = 1,
+    int lockedPageNumber = 1,
+    int pageSize = 10,
+    string? search = null,
+    CancellationToken cancellationToken = default)
     {
-        var result = await _mediator.Send(new GetUsersQuery(), cancellationToken);
+        pageSize = Math.Clamp(pageSize, 1, 100);
 
-        if (!result.Succeeded)
+        var activeResult = await _mediator.Send(
+    new GetUsersQuery(
+        activePageNumber,
+        pageSize,
+        search,
+        UserStatus.Active),
+    cancellationToken);
+
+        var inactiveResult = await _mediator.Send(
+            new GetUsersQuery(
+                inactivePageNumber,
+                pageSize,
+                search,
+                UserStatus.Inactive),
+            cancellationToken);
+
+        var lockedResult = await _mediator.Send(
+            new GetUsersQuery(
+                lockedPageNumber,
+                pageSize,
+                search,
+                UserStatus.Locked),
+            cancellationToken);
+
+        if (!activeResult.Succeeded)
         {
-            TempData["Error"] = result.Error;
-            return View(Array.Empty<UserListItem>());
+            TempData["Error"] = activeResult.Error;
         }
 
-        return View(result.Value);
+        if (!inactiveResult.Succeeded)
+        {
+            TempData["Error"] = inactiveResult.Error;
+        }
+
+        if (!lockedResult.Succeeded)
+        {
+            TempData["Error"] = lockedResult.Error;
+        }
+
+        var model = new UsersIndexViewModel
+        {
+            ActiveUsers = activeResult.Value
+                ?? new PagedResult<UserListItem>(
+                    Array.Empty<UserListItem>(),
+                    activePageNumber,
+                    pageSize,
+                    0),
+
+            InactiveUsers = inactiveResult.Value
+                ?? new PagedResult<UserListItem>(
+                    Array.Empty<UserListItem>(),
+                    inactivePageNumber,
+                    pageSize,
+                    0),
+
+            LockedUsers = lockedResult.Value
+                ?? new PagedResult<UserListItem>(
+                    Array.Empty<UserListItem>(),
+                    lockedPageNumber,
+                    pageSize,
+                    0),
+
+            Search = search,
+            PageSize = pageSize
+        };
+
+        return View(model);
     }
 
     [HttpGet]

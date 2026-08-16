@@ -1,4 +1,5 @@
-﻿using HamedSoft.Template.Application.Contracts.Repositories.Reads;
+﻿using HamedSoft.Template.Application.Common.Paging;
+using HamedSoft.Template.Application.Contracts.Repositories.Reads;
 using HamedSoft.Template.Application.Contracts.Repositories.Writes;
 using HamedSoft.Template.Application.Contracts.Roles;
 using HamedSoft.Template.Application.Contracts.UnitOfWork;
@@ -7,6 +8,7 @@ using HamedSoft.Template.Application.Security;
 using HamedSoft.Template.Domain.SeedWork;
 using HamedSoft.Template.Domain.SharedKernel.ValueObjects;
 using HamedSoft.Template.Infrastructure.Identity.Models;
+using HamedSoft.Template.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -20,45 +22,187 @@ public sealed class UserManagementService : IUserManagementService
     private readonly IUserProfileReadRepository _userProfileReadRepository;
     private readonly IUserProfileWriteRepository _userProfileWriteRepository;
     private readonly IApplicationUnitOfWork _unitOfWork;
+    private readonly IUserReadRepository _userReadRepository;
+    private readonly ApplicationDbContext _context;
 
     public UserManagementService(
         UserManager<ApplicationUser> userManager,
         RoleManager<ApplicationRole> roleManager,
         IUserProfileReadRepository userProfileReadRepository,
         IUserProfileWriteRepository userProfileWriteRepository,
-        IApplicationUnitOfWork unitOfWork)
+        IApplicationUnitOfWork unitOfWork,
+        ApplicationDbContext context)
     {
         _userManager = userManager;
         _roleManager = roleManager;
         _userProfileReadRepository = userProfileReadRepository;
         _userProfileWriteRepository = userProfileWriteRepository;
         _unitOfWork = unitOfWork;
+        _context = context;
     }
 
-    public async Task<Result<IReadOnlyList<UserListItem>>> GetAllAsync(bool withAdminUser,
-        CancellationToken cancellationToken = default)
+    public async Task<Result<PagedResult<UserListItem>>> GetAllAsync(
+    bool withAdminUser,
+    int pageNumber,
+    int pageSize,
+    string? search = null,
+    UserStatus? status = null,
+    CancellationToken cancellationToken = default)
     {
-        var users = await _userManager.Users
-            .OrderBy(x => x.UserName)
-            .ToListAsync(cancellationToken);
+        pageNumber = Math.Max(pageNumber, 1);
+        pageSize = Math.Clamp(pageSize, 1, 100);
+
+        IQueryable<ApplicationUser> query =
+            _userManager.Users.AsNoTracking();
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            search = search.Trim();
+
+            query = query.Where(user =>
+                user.UserName!.Contains(search) ||
+                user.Email!.Contains(search) ||
+                user.PhoneNumber!.Contains(search) ||
+                _context.UserProfiles.Any(profile =>
+                    profile.Id == user.Id &&
+                    (
+                        profile.FirstName.Contains(search) ||
+                        profile.LastName.Contains(search)
+                    )));
+        }
 
         if (!withAdminUser)
-            users = users.Where(x => x.UserName!.ToLower() != SystemRoles.Admin.ToLower()).ToList();
-        
-        var result = new List<UserListItem>();
+        {
+            query = query.Where(
+                x => x.UserName != SystemRoles.Admin);
+        }
+
+        var now = DateTimeOffset.UtcNow;
+
+        if (status.HasValue)
+        {
+            query = status.Value switch
+            {
+                UserStatus.Active =>
+                    query.Where(x =>
+                        x.IsActive &&
+                        (!x.LockoutEnd.HasValue ||
+                         x.LockoutEnd.Value <= now)),
+
+                UserStatus.Inactive =>
+                    query.Where(x =>
+                        !x.IsActive),
+
+                UserStatus.Locked =>
+                    query.Where(x =>
+                        x.LockoutEnd.HasValue &&
+                        x.LockoutEnd.Value > now),
+
+                _ => query
+            };
+        }
+
+        var totalCount = await query
+            .CountAsync(cancellationToken);
+
+        var users = await query
+            .OrderBy(x => x.UserName)
+            .ThenBy(x => x.Id)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
+
+        if (users.Count == 0)
+        {
+            return Result<PagedResult<UserListItem>>.Success(
+                new PagedResult<UserListItem>(
+    Array.Empty<UserListItem>(),
+    pageNumber,
+    pageSize,
+    totalCount,
+    search));
+        }
+
+        var userIds = users
+            .Select(x => x.Id)
+            .ToArray();
+
+        var profileIds = userIds
+            .Select(UserProfileId.Create)
+            .ToArray();
+
+        var profiles = await _userProfileReadRepository
+            .GetByIdsAsync(
+                profileIds,
+                cancellationToken);
+
+        var profileDictionary = profiles
+            .ToDictionary(x => x.Id);
+
+        var userRoles = await (
+            from userRole in _context.UserRoles.AsNoTracking()
+            join role in _context.Roles.AsNoTracking()
+                on userRole.RoleId equals role.Id
+            where userIds.Contains(userRole.UserId)
+            select new
+            {
+                userRole.UserId,
+                RoleName = role.Name!
+            })
+            .ToListAsync(cancellationToken);
+
+        var rolesByUser = userRoles
+            .GroupBy(x => x.UserId)
+            .ToDictionary(
+                x => x.Key,
+                x => x
+                    .Select(r => r.RoleName)
+                    .OrderBy(r => r)
+                    .ToArray());
+
+        var result = new List<UserListItem>(
+            users.Count);
 
         foreach (var user in users)
         {
-            var roles = await _userManager.GetRolesAsync(user);
-            var profile = await _userProfileReadRepository.GetByIdAsync(UserProfileId.Create(user.Id), cancellationToken);
-            var dto = new UserProfileDto(user.Id, user?.UserName ?? "", profile?.FirstName ?? "", profile?.LastName, user.Email, user.PhoneNumber);
-            
-            bool isLocked = user.LockoutEnd.HasValue && user.LockoutEnd.Value > DateTimeOffset.UtcNow;
-            result.Add(new UserListItem(user.Id, user.UserName ?? string.Empty, user.UserName ?? string.Empty, user.IsActive, isLocked, dto, roles.ToArray()));
+            profileDictionary.TryGetValue(
+                UserProfileId.Create(user.Id),
+                out var profile);
+
+            rolesByUser.TryGetValue(
+                user.Id,
+                out var roles);
+
+            var isLocked =
+                user.LockoutEnd.HasValue &&
+                user.LockoutEnd.Value > now;
+
+            var userProfile = new UserProfileDto(
+                user.Id,
+                user.UserName ?? string.Empty,
+                profile?.FirstName ?? string.Empty,
+                profile?.LastName ?? string.Empty,
+                user.Email,
+                user.PhoneNumber);
+
+            result.Add(
+                new UserListItem(
+                    user.Id,
+                    user.UserName ?? string.Empty,
+                    user.UserName ?? string.Empty,
+                    user.IsActive,
+                    isLocked,
+                    userProfile,
+                    roles ?? Array.Empty<string>()));
         }
 
-        return Result<IReadOnlyList<UserListItem>>
-            .Success(result);
+        return Result<PagedResult<UserListItem>>.Success(
+            new PagedResult<UserListItem>(
+    result,
+    pageNumber,
+    pageSize,
+    totalCount,
+    search));
     }
 
     public async Task<Result<UserRolesDto>> GetRolesAsync(
@@ -82,7 +226,7 @@ public sealed class UserManagementService : IUserManagementService
         var dto = new UserRolesDto(
             user.Id,
             user.UserName ?? string.Empty,
-            roles.Select(r => new SelectRole( new RoleDto(r.Id, r.Name!, r.Name! == SystemRoles.Admin), userRoles.Contains(r.Name!)))
+            roles.Select(r => new SelectRole(new RoleDto(r.Id, r.Name!, r.Name! == SystemRoles.Admin), userRoles.Contains(r.Name!)))
             .Where(m => !m.roleDto.IsAdmin).ToList());
         return Result<UserRolesDto>.Success(dto);
     }

@@ -1,10 +1,16 @@
-﻿using HamedSoft.Template.Domain.SeedWork;
+﻿using HamedSoft.Template.Application.Common.Paging;
+using HamedSoft.Template.Domain.SeedWork;
 
 namespace HamedSoft.Template.Application.Contracts.Users;
 
 public interface IUserManagementService
 {
-    Task<Result<IReadOnlyList<UserListItem>>> GetAllAsync(bool withAdminUser,
+    Task<Result<PagedResult<UserListItem>>> GetAllAsync(
+        bool withAdminUser,
+        int pageNumber,
+        int pageSize,
+        string? search = null,
+        UserStatus? status = null,
         CancellationToken cancellationToken = default);
 
 

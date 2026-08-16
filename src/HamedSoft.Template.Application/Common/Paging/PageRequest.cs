@@ -1,20 +1,36 @@
 ﻿namespace HamedSoft.Template.Application.Common.Paging;
 
-public sealed record PageRequest(
-    int PageNumber = 1,
-    int PageSize = 20)
+public sealed record PageRequest
 {
+    public const int DefaultPageSize = 20;
+
+    public const int MaxPageSize = 100;
+
+    public int PageNumber { get; }
+
+    public int PageSize { get; }
+
+    public int Skip =>
+        (NormalizedPageNumber - 1) * NormalizedPageSize;
+
     public int NormalizedPageNumber =>
-        PageNumber < 1 ? 1 : PageNumber;
+        PageNumber < 1
+            ? 1
+            : PageNumber;
 
     public int NormalizedPageSize =>
         PageSize switch
         {
-            < 1 => 20,
-            > 100 => 100,
+            <= 0 => DefaultPageSize,
+            > MaxPageSize => MaxPageSize,
             _ => PageSize
         };
 
-    public int Skip =>
-        (NormalizedPageNumber - 1) * NormalizedPageSize;
+    public PageRequest(
+        int pageNumber = 1,
+        int pageSize = DefaultPageSize)
+    {
+        PageNumber = pageNumber;
+        PageSize = pageSize;
+    }
 }

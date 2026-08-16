@@ -21,6 +21,22 @@ internal sealed class UserProfileReadRepository
         CancellationToken cancellationToken = default)
     {
         return await _context.UserProfiles
-            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+            .AsNoTracking()
+            .FirstOrDefaultAsync(
+                x => x.Id == id,
+                cancellationToken);
+    }
+
+    public async Task<IReadOnlyList<UserProfile>> GetByIdsAsync(
+        IReadOnlyCollection<UserProfileId> ids,
+        CancellationToken cancellationToken = default)
+    {
+        if (ids.Count == 0)
+            return Array.Empty<UserProfile>();
+
+        return await _context.UserProfiles
+            .AsNoTracking()
+            .Where(x => ids.Contains(x.Id))
+            .ToListAsync(cancellationToken);
     }
 }

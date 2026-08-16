@@ -1,13 +1,19 @@
 ﻿namespace HamedSoft.Template.Application.Common.Paging;
 
-public sealed record PagedResult<T>(
-    IReadOnlyList<T> Items,
-    int PageNumber,
-    int PageSize,
-    int TotalCount)
+public sealed class PagedResult<T>
 {
+    public IReadOnlyList<T> Items { get; }
+
+    public int PageNumber { get; }
+
+    public int PageSize { get; }
+
+    public int TotalCount { get; }
+
+    public string? Search { get; }
+
     public int TotalPages =>
-        TotalCount == 0
+        PageSize <= 0
             ? 0
             : (int)Math.Ceiling(
                 TotalCount / (double)PageSize);
@@ -17,4 +23,18 @@ public sealed record PagedResult<T>(
 
     public bool HasNextPage =>
         PageNumber < TotalPages;
+
+    public PagedResult(
+        IReadOnlyList<T> items,
+        int pageNumber,
+        int pageSize,
+        int totalCount,
+        string? search = null)
+    {
+        Items = items;
+        PageNumber = pageNumber;
+        PageSize = pageSize;
+        TotalCount = totalCount;
+        Search = search;
+    }
 }
