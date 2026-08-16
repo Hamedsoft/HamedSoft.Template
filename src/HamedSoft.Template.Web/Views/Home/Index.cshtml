@@ -1,14 +1,3 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-
-<div class="text-center">
-    <h2 class="display-4">خوش آمدید</h2>
-    <p>کاربر لاگین کرده : @ViewData["isAuthenticated"]</p>
-    <p>کاربر وارد شده : @ViewData["name"]</p>
-    @if (User.Identity?.IsAuthenticated == false)
-    {
-        <a asp-action="login" asp-controller="Account" class="btn btn-link">ورود</a>
-        <a asp-action="Register" asp-controller="Account" class="btn btn-link">ثبت نام</a>
-    }
-</div>

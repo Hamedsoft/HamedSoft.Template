@@ -18,8 +18,8 @@
                                         </div>
                                         <div class="profile-img-content text-dark text-start">
                                             <div class="text-dark">
-                                                <h3 class="h3 mb-2">@string.Concat(Model.FirstName, " ", Model.LastName)</h3>
-                                                <h5 class="text-muted">نقشهای کاربر رو باید اینجا بزنم و با سپریتور جدا کنم</h5>
+                                                <h3 class="h3 mb-2">@Model.DisplayName</h3>
+                                                <h5 class="text-muted">@string.Join("، ", Model.Roles)</h5>
                                             </div>
                                         </div>
                                     </div>

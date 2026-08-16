@@ -167,7 +167,9 @@ public class UsersController : Controller
             LastName = profileResult.Value?.LastName ?? "",
             Email = profileResult.Value?.Email ?? "",
             PhoneNumber = profileResult?.Value?.PhoneNumber ?? "",
-            UserName = profileResult?.Value?.UserName ?? ""
+            UserName = profileResult?.Value?.UserName ?? "",
+            DisplayName = string.Concat(profileResult?.Value?.FirstName ?? "" , profileResult?.Value?.LastName ?? ""),
+            Roles = _currentUser.Roles
         };
         return View(model);
     }

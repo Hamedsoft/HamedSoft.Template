@@ -1,156 +1,86 @@
 ﻿@model HamedSoft.Template.Web.ViewModels.Users.UserSecurityViewModel
-
-
 <div class="card">
-
-    <div class="card-body">
-
-
-        <h5 class="mb-4">
-            تنظیمات امنیتی:
-            @Model.UserName
-        </h5>
-
-
-        <!-- Active Status -->
-
-        <form asp-action="UpdateStatus"
-              method="post"
-              class="mb-4">
-
-            @Html.AntiForgeryToken()
-
-            <input type="hidden"
-                   name="UserId"
-                   value="@Model.UserId" />
-
-
-            <div class="form-check form-switch">
-
-                <input class="form-check-input"
-                       type="checkbox"
-                       name="IsActive"
-                       value="true"
-                       @(Model.IsActive ? "checked" : "") />
-
-                <label class="form-check-label">
-
-                    کاربر فعال است
-
-                </label>
-
-            </div>
-
-
-            <button class="btn btn-primary mt-2"
-                    type="submit">
-
-                ذخیره وضعیت
-
-            </button>
-
-        </form>
-
-
-
-        <hr />
-
-
-
-        <!-- Lock -->
-
-        <div class="mb-4">
-
-            @if (Model.IsLocked)
-            {
-                <form asp-action="Unlock"
-                      method="post">
-
-                    @Html.AntiForgeryToken()
-
-                    <input type="hidden"
-                           name="userId"
-                           value="@Model.UserId" />
-
-
-                    <button class="btn btn-success">
-
-                        باز کردن قفل کاربر
-
-                    </button>
-
-                </form>
-            }
-            else
-            {
-                <form asp-action="Lock"
-                      method="post">
-
-                    @Html.AntiForgeryToken()
-
-                    <input type="hidden"
-                           name="userId"
-                           value="@Model.UserId" />
-
-
-                    <button class="btn btn-danger">
-
-                        قفل کردن کاربر
-
-                    </button>
-
-                </form>
-            }
-
-        </div>
-
-
-
-        <hr />
-
-
-
-        <!-- Reset Password -->
-
-
-        <form asp-action="ResetPassword"
-              method="post">
-
-
-            @Html.AntiForgeryToken()
-
-
-            <input type="hidden"
-                   name="UserId"
-                   value="@Model.UserId" />
-
-
-            <div class="mb-3">
-
-                <label class="form-label">
-                    رمز عبور جدید
-                </label>
-
-
-                <input type="password"
-                       name="NewPassword"
-                       class="form-control"
-                       required />
-
-            </div>
-
-
-
-            <button class="btn btn-warning">
-
-                تغییر رمز عبور
-
-            </button>
-
-
-        </form>
-
-
+    <div class="card-header">
+        <h3 class="card-title">
+            تنظیمات امنیتی
+        </h3>
     </div>
-
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <form asp-action="UpdateStatus" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="UserId" value="@Model.UserId" />
+                            <div class="d-flex">
+                                <div class="form-group mt-2 mb-0">
+                                    <label class="custom-switch form-switch mb-0">
+                                        <input type="checkbox" class="custom-switch-input" asp-for="IsActive" />
+                                        <span class="custom-switch-indicator"></span>
+                                        <span class="form-check-label ms-2">فعال / غیر فعال</span>
+                                    </label>
+                                </div>
+                                <div class="ms-auto">
+                                    <button class="btn btn-primary" type="submit">ذخیره وضعیت <span class="fa fa-save ms-2"></span></button>
+                                </div>
+                            </div>
+                        </form>
+                    </li>
+                    <li class="list-group-item">
+                        @if (Model.IsLocked)
+                        {
+                            <form asp-action="Unlock" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="UserId" value="@Model.UserId" />
+                                <div class="d-flex">
+                                    <div class="form-group mt-2 mb-0">
+                                        <label class="custom-switch form-switch mb-0">
+                                            <span class="form-check-label text-danger ms-2">کاربر در وضعیت قفل قرار دارد</span>
+                                        </label>
+                                    </div>
+                                    <div class="ms-auto">
+                                        <button class="btn btn-success">باز کردن قفل کاربر<span class="fa fa-unlock ms-2"></span></button>
+                                    </div>
+                                </div>
+                            </form>
+                        }
+                        else
+                        {
+                            <form asp-action="Lock" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="UserId" value="@Model.UserId" />
+                                <div class="d-flex">
+                                    <div class="form-group mt-2 mb-0">
+                                        <label class="custom-switch form-switch mb-0">
+                                            <span class="form-check-label text-success ms-2">کاربر مجوز ورود به سامانه را دارد</span>
+                                        </label>
+                                    </div>
+                                    <div class="ms-auto">
+                                        <button class="btn btn-danger ">قفل کاربر<span class="fa fa-lock ms-2"></span></button>
+                                    </div>
+                                </div>
+                            </form>
+                        }
+                    </li>
+                    <li class="list-group-item">
+                        <form asp-action="ResetPassword" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="UserId" value="@Model.UserId" />
+                            <div class="d-flex align-items-center">
+                                <div class="d-flex align-items-center flex-grow-1">
+                                    <span class="text-red">*</span>
+                                    <label class="form-label ms-1 mb-0 text-nowrap">کلمه عبور جدید</label>
+                                    <input class="form-control ms-3 flex-grow-1" name="NewPassword" placeholder="کلمه عبور جدید" />
+                                </div>
+                                <div class="ms-3">
+                                    <button class="btn btn-primary" type="submit">ریست کردن کلمه عبور<span class="fa fa-key ms-2"></span></button>
+                                </div>
+                            </div>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>
