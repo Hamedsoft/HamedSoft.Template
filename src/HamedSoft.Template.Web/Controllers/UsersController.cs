@@ -1,5 +1,4 @@
 ﻿using HamedSoft.Template.Application.Common.Paging;
-using HamedSoft.Template.Application.Contracts.Roles;
 using HamedSoft.Template.Application.Contracts.Security;
 using HamedSoft.Template.Application.Contracts.Users;
 using HamedSoft.Template.Application.Features.Commands.Users.AssignRoles;
@@ -34,86 +33,30 @@ public class UsersController : Controller
 
     [HttpGet]
     [Permission(PermissionConstants.Users.View)]
-    public async Task<IActionResult> Index(
-    int activePageNumber = 1,
-    int inactivePageNumber = 1,
-    int lockedPageNumber = 1,
-    int pageSize = 10,
-    string? search = null,
-    string activeTab = "active",
-    CancellationToken cancellationToken = default)
+    public async Task<IActionResult> Index(int activePageNumber = 1, int inactivePageNumber = 1, int lockedPageNumber = 1, int pageSize = 10, string? search = null, string activeTab = "active", CancellationToken cancellationToken = default)
     {
         pageSize = Math.Clamp(pageSize, 1, 100);
-
         activeTab = activeTab.ToLowerInvariant();
 
         if (activeTab is not ("active" or "deactive" or "locked"))
-        {
             activeTab = "active";
-        }
 
-        var activeResult = await _mediator.Send(
-            new GetUsersQuery(
-                activePageNumber,
-                pageSize,
-                search,
-                UserStatus.Active),
-            cancellationToken);
-
-        var inactiveResult = await _mediator.Send(
-            new GetUsersQuery(
-                inactivePageNumber,
-                pageSize,
-                search,
-                UserStatus.Inactive),
-            cancellationToken);
-
-        var lockedResult = await _mediator.Send(
-            new GetUsersQuery(
-                lockedPageNumber,
-                pageSize,
-                search,
-                UserStatus.Locked),
-            cancellationToken);
+        var activeResult = await _mediator.Send(new GetUsersQuery(activePageNumber, pageSize, search, UserStatus.Active), cancellationToken);
+        var inactiveResult = await _mediator.Send(new GetUsersQuery(inactivePageNumber, pageSize, search, UserStatus.Inactive),cancellationToken);
+        var lockedResult = await _mediator.Send(new GetUsersQuery(lockedPageNumber, pageSize, search, UserStatus.Locked), cancellationToken);
 
         if (!activeResult.Succeeded)
-        {
             TempData["Error"] = activeResult.Error;
-        }
 
         if (!inactiveResult.Succeeded)
-        {
             TempData["Error"] = inactiveResult.Error;
-        }
 
         if (!lockedResult.Succeeded)
-        {
             TempData["Error"] = lockedResult.Error;
-        }
 
-        var activeUsers =
-            activeResult.Value
-            ?? new PagedResult<UserListItem>(
-                Array.Empty<UserListItem>(),
-                activePageNumber,
-                pageSize,
-                0);
-
-        var inactiveUsers =
-            inactiveResult.Value
-            ?? new PagedResult<UserListItem>(
-                Array.Empty<UserListItem>(),
-                inactivePageNumber,
-                pageSize,
-                0);
-
-        var lockedUsers =
-            lockedResult.Value
-            ?? new PagedResult<UserListItem>(
-                Array.Empty<UserListItem>(),
-                lockedPageNumber,
-                pageSize,
-                0);
+        var activeUsers = activeResult.Value ?? new PagedResult<UserListItem>(Array.Empty<UserListItem>(), activePageNumber, pageSize, 0);
+        var inactiveUsers = inactiveResult.Value ?? new PagedResult<UserListItem>(Array.Empty<UserListItem>(), inactivePageNumber, pageSize, 0);
+        var lockedUsers = lockedResult.Value ?? new PagedResult<UserListItem>(Array.Empty<UserListItem>(), lockedPageNumber, pageSize, 0);
 
         var model = new UsersIndexViewModel
         {
@@ -138,11 +81,8 @@ public class UsersController : Controller
 
                 AdditionalParameters = new Dictionary<string, string?>
                 {
-                    ["inactivePageNumber"] =
-                        inactiveUsers.PageNumber.ToString(),
-
-                    ["lockedPageNumber"] =
-                        lockedUsers.PageNumber.ToString()
+                    ["inactivePageNumber"] = inactiveUsers.PageNumber.ToString(),
+                    ["lockedPageNumber"] = lockedUsers.PageNumber.ToString()
                 }
             },
 
@@ -159,11 +99,8 @@ public class UsersController : Controller
 
                 AdditionalParameters = new Dictionary<string, string?>
                 {
-                    ["activePageNumber"] =
-                        activeUsers.PageNumber.ToString(),
-
-                    ["lockedPageNumber"] =
-                        lockedUsers.PageNumber.ToString()
+                    ["activePageNumber"] = activeUsers.PageNumber.ToString(),
+                    ["lockedPageNumber"] = lockedUsers.PageNumber.ToString()
                 }
             },
 
@@ -180,11 +117,9 @@ public class UsersController : Controller
 
                 AdditionalParameters = new Dictionary<string, string?>
                 {
-                    ["activePageNumber"] =
-                        activeUsers.PageNumber.ToString(),
+                    ["activePageNumber"] = activeUsers.PageNumber.ToString(),
 
-                    ["inactivePageNumber"] =
-                        inactiveUsers.PageNumber.ToString()
+                    ["inactivePageNumber"] = inactiveUsers.PageNumber.ToString()
                 }
             }
         };

@@ -12,26 +12,11 @@ public sealed class UsersIndexViewModel
 
     public PaginationViewModel LockedPagination { get; init; } = default!;
 
-    public PagedResult<UserListItem> ActiveUsers { get; init; } =
-        new(
-            Array.Empty<UserListItem>(),
-            1,
-            10,
-            0);
+    public PagedResult<UserListItem> ActiveUsers { get; init; } = new(Array.Empty<UserListItem>(), 1, 10, 0);
 
-    public PagedResult<UserListItem> InactiveUsers { get; init; } =
-        new(
-            Array.Empty<UserListItem>(),
-            1,
-            10,
-            0);
+    public PagedResult<UserListItem> InactiveUsers { get; init; } = new(Array.Empty<UserListItem>(), 1, 10, 0);
 
-    public PagedResult<UserListItem> LockedUsers { get; init; } =
-        new(
-            Array.Empty<UserListItem>(),
-            1,
-            10,
-            0);
+    public PagedResult<UserListItem> LockedUsers { get; init; } = new(Array.Empty<UserListItem>(), 1, 10, 0);
 
     public string? Search { get; init; }
 
