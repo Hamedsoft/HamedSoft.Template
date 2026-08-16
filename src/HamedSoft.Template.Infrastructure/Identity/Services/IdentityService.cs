@@ -28,32 +28,65 @@ public sealed class IdentityService : IAuthenticationService
         _context = context;
     }
 
-    public async Task<Result<AuthenticatedUser>> LoginAsync(string userName, string password, CancellationToken cancellationToken = default)
-    {
-        var user = await _userManager.FindByNameAsync(userName);
+public async Task<Result<AuthenticatedUser>> LoginAsync(
+    string userName,
+    string password,
+    CancellationToken cancellationToken = default)
+{
+    var user = await _userManager.FindByNameAsync(userName);
 
-        if (user is null)
-            return Result<AuthenticatedUser>.Failure("نام کاربری یا رمز عبور اشتباه است.");
+    if (user is null)
+        return Result<AuthenticatedUser>.Failure(
+            "نام کاربری یا رمز عبور اشتباه است.");
 
-        var signInResult = await _signInManager.CheckPasswordSignInAsync(user, password, lockoutOnFailure: true);
+    if (!user.IsActive)
+        return Result<AuthenticatedUser>.Failure(
+            "حساب کاربری شما غیرفعال است.");
 
-        if (!signInResult.Succeeded)
-            return Result<AuthenticatedUser>.Failure("نام کاربری یا رمز عبور اشتباه است.");
+    if (await _userManager.IsLockedOutAsync(user))
+        return Result<AuthenticatedUser>.Failure(
+            "حساب کاربری شما به دلیل ورود ناموفق متعدد موقتاً مسدود شده است.");
 
-        var roles = await _userManager.GetRolesAsync(user);
-        var permissions = await (
-    from userRole in _context.UserRoles
-    join rolePermission in _context.RolePermissions
-        on userRole.RoleId equals rolePermission.RoleId
-    join permission in _context.Permissions
-        on rolePermission.PermissionId equals permission.Id
-    where userRole.UserId == user.Id
-    select permission.Name
-)
-.Distinct()
-.ToListAsync(cancellationToken);
-        return Result<AuthenticatedUser>.Success(new AuthenticatedUser( user.Id, user.UserName ?? string.Empty, user.UserName ?? string.Empty, roles.ToArray(), permissions));
-    }
+    var signInResult =
+        await _signInManager.CheckPasswordSignInAsync(
+            user,
+            password,
+            lockoutOnFailure: true);
+
+    if (signInResult.IsLockedOut)
+        return Result<AuthenticatedUser>.Failure(
+            "حساب کاربری شما به دلیل ورود ناموفق متعدد موقتاً مسدود شد.");
+
+    if (signInResult.IsNotAllowed)
+        return Result<AuthenticatedUser>.Failure(
+            "ورود به این حساب کاربری مجاز نیست.");
+
+    if (!signInResult.Succeeded)
+        return Result<AuthenticatedUser>.Failure(
+            "نام کاربری یا رمز عبور اشتباه است.");
+
+    var roles = await _userManager.GetRolesAsync(user);
+
+    var permissions = await (
+        from userRole in _context.UserRoles
+        join rolePermission in _context.RolePermissions
+            on userRole.RoleId equals rolePermission.RoleId
+        join permission in _context.Permissions
+            on rolePermission.PermissionId equals permission.Id
+        where userRole.UserId == user.Id
+        select permission.Name
+    )
+    .Distinct()
+    .ToListAsync(cancellationToken);
+
+    return Result<AuthenticatedUser>.Success(
+        new AuthenticatedUser(
+            user.Id,
+            user.UserName ?? string.Empty,
+            user.UserName ?? string.Empty,
+            roles.ToArray(),
+            permissions));
+}
 
     public async Task<Result<RegisteredUser>> RegisterAsync(
         string userName,

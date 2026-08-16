@@ -4,7 +4,6 @@
     Layout = "_Login";
     ViewData["Title"] = "ورود";
 }
-
 <div class="wrap-login100 col-md-4 pt-7">
     <form asp-action="Login" method="post">
         <span class="login100-form-title pb-5">
@@ -38,7 +37,7 @@
                                     <a href="javascript:void(0)" class="input-group-text bg-white text-muted">
                                         <i class="zmdi zmdi-eye text-muted" aria-hidden="true"></i>
                                     </a>
-                                    <input asp-for="Password" class="input100 border-start-0 form-control ms-0" type="password" placeholder="کلمه عبور" autocomplete="current-password" />
+                                    <input asp-for="Password" class="input100 border-start-0 form-control ms-0" type="password" placeholder="کلمه عبور" autocomplete="new-password" />
                                 </div>
                             </div>
                             <div class="bg-danger-transparent-2 text-danger mt-0">
@@ -50,7 +49,7 @@
                             <div class="form-group mb-0">
                                 <label class="custom-control custom-checkbox">
                                     <input asp-for="RememberMe" class="custom-control-input" />
-                                    <span asp-for="RememberMe" class="custom-control-label"><label asp-for="RememberMe" class="form-check-label"></label></span>
+                                    <span asp-for="RememberMe" class="custom-control-label">من را به خاطر بسپار</span>
                                 </label>
                             </div>
                         </div>
@@ -73,4 +72,7 @@
                 </div>
             </div>
     </form>
+    <div asp-validation-summary="ModelOnly"
+         class="alert alert-danger mt-6">
+    </div>
 </div>
