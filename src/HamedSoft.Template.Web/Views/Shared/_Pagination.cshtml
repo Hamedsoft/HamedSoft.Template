@@ -39,6 +39,61 @@
             url ?? string.Empty,
             query);
     }
+
+    IEnumerable<int> GetVisiblePages()
+    {
+        if (Model.TotalPages <= 7)
+        {
+            for (var page = 1; page <= Model.TotalPages; page++)
+            {
+                yield return page;
+            }
+
+            yield break;
+        }
+
+        // ابتدای Pagination
+        if (Model.PageNumber <= 4)
+        {
+            for (var page = 1; page <= 5; page++)
+            {
+                yield return page;
+            }
+
+            yield return -1; // Ellipsis
+            yield return Model.TotalPages;
+
+            yield break;
+        }
+
+        // انتهای Pagination
+        if (Model.PageNumber >= Model.TotalPages - 3)
+        {
+            yield return 1;
+            yield return -1; // Ellipsis
+
+            for (
+                var page = Model.TotalPages - 4;
+                page <= Model.TotalPages;
+                page++)
+            {
+                yield return page;
+            }
+
+            yield break;
+        }
+
+        // وسط Pagination
+        yield return 1;
+        yield return -1; // Ellipsis
+
+        yield return Model.PageNumber - 1;
+        yield return Model.PageNumber;
+        yield return Model.PageNumber + 1;
+
+        yield return -1; // Ellipsis
+        yield return Model.TotalPages;
+    }
 }
 
 @if (Model.TotalPages > 1)
@@ -50,8 +105,11 @@
             {
                 <li class="page-item">
                     <a class="page-link"
-                       href="@BuildUrl(Model.PageNumber - 1)">
-                        <i class="fa fa-angle-right"></i>
+                       href="@BuildUrl(Model.PageNumber - 1)"
+                       aria-label="صفحه قبل">
+
+                        <i class="fa fa-angle-left"></i>
+
                     </a>
                 </li>
             }
@@ -59,27 +117,54 @@
             {
                 <li class="page-item disabled">
                     <span class="page-link">
-                        <i class="fa fa-angle-right"></i>
+                        <i class="fa fa-angle-left"></i>
                     </span>
                 </li>
             }
 
-            @for (var spage = 1; spage <= Model.TotalPages; spage++)
+
+            @foreach (var spage in GetVisiblePages())
             {
-                <li class="page-item @(spage == Model.PageNumber ? "active" : "")">
-                    <a class="page-link"
-                       href="@BuildUrl(spage)">
-                        @spage
-                    </a>
-                </li>
+                @if (spage == -1)
+                {
+                    <li class="page-item disabled">
+                        <span class="page-link">
+                            ...
+                        </span>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item @(spage == Model.PageNumber ? "active" : "")">
+
+                        @if (spage == Model.PageNumber)
+                        {
+                            <span class="page-link">
+                                @spage
+                            </span>
+                        }
+                        else
+                        {
+                            <a class="page-link"
+                               href="@BuildUrl(spage)">
+                                @spage
+                            </a>
+                        }
+
+                    </li>
+                }
             }
+
 
             @if (Model.HasNextPage)
             {
                 <li class="page-item">
                     <a class="page-link"
-                       href="@BuildUrl(Model.PageNumber + 1)">
-                        <i class="fa fa-angle-left"></i>
+                       href="@BuildUrl(Model.PageNumber + 1)"
+                       aria-label="صفحه بعد">
+
+                        <i class="fa fa-angle-right"></i>
+
                     </a>
                 </li>
             }
@@ -87,7 +172,7 @@
             {
                 <li class="page-item disabled">
                     <span class="page-link">
-                        <i class="fa fa-angle-left"></i>
+                        <i class="fa fa-angle-right"></i>
                     </span>
                 </li>
             }
