@@ -12,53 +12,29 @@
             <h3 class="card-title">@ViewData["Title"]</h3>
         </div>
         <form asp-action="Index" method="get" class="mb-4">
-            <div class="row align-items-end">
+            <div class="row align-items-end pt-2">
 
                 <div class="col-md-5">
-                    <label class="form-label">جستجو</label>
-
-                    <input type="text"
-                           name="search"
-                           value="@Model.Search"
-                           class="form-control"
-                           placeholder="نام، نام خانوادگی، نام کاربری، موبایل یا ایمیل" />
+                    <a asp-action="Index" class="form-label text-decoration-none mb-1 ms-5" title="حذف فیلتر">جستجو</a>
+                    <div class="input-group ms-5 ">
+                        <input type="text"
+                               class="form-control"
+                               name="search"
+                               value="@Model.Search"
+                               placeholder="نام، نام خانوادگی، نام کاربری، موبایل یا ایمیل"
+                               autocomplete="off"
+                               data-bs-toggle="dropdown"
+                               aria-expanded="false">
+                        <button class="btn btn-light" type="submit" id="button-addon1"><i class="fe fe-search" aria-hidden="true"></i></button>
+                    </div>
                 </div>
-
-                <div class="col-md-3">
-                    <label class="form-label">تعداد در صفحه</label>
-
-                    <select name="pageSize" class="form-select">
-                        <option value="10" selected="@(Model.PageSize == 10)">10</option>
-                        <option value="20" selected="@(Model.PageSize == 20)">20</option>
-                        <option value="50" selected="@(Model.PageSize == 50)">50</option>
-                        <option value="100" selected="@(Model.PageSize == 100)">100</option>
-                    </select>
-                </div>
-
-                <div class="col-md-auto">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fa fa-search me-1"></i>
-                        جستجو
-                    </button>
-
-                    <a asp-action="Index"
-                       class="btn btn-default">
-                        <i class="fa fa-refresh me-1"></i>
-                        حذف فیلتر
-                    </a>
-                </div>
-
             </div>
         </form>
-        <div class="card-body">
-
+        <div class="card-body pt-0">
             <div class="panel panel-primary">
-
                 <div class="tab-menu-heading">
                     <div class="tabs-menu1">
-
                         <ul class="nav panel-tabs">
-
                             <li>
                                 <a href="#active"
                                    class="@(Model.ActiveTab == "active" ? "active" : "")"
@@ -163,3 +139,4 @@
             });
         });
     </script>
+</div>
