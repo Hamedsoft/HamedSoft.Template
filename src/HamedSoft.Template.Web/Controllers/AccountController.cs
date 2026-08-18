@@ -10,6 +10,7 @@ using HamedSoft.Template.Web.ViewModels.Auth;
 using HamedSoft.Template.Web.ViewModels.Users;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
@@ -27,6 +28,12 @@ public class AccountController : Controller
     {
         _mediator = mediator;
         _currentUser = currentUser;
+    }
+
+    [AllowAnonymous]
+    public IActionResult TestException()
+    {
+        throw new InvalidOperationException("TEST_EXCEPTION");
     }
 
     [HttpGet]

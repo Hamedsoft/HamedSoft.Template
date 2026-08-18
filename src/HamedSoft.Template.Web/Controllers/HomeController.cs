@@ -22,6 +22,7 @@ public class HomeController : Controller
     [Permission(PermissionConstants.Common.Home)]
     public async Task<IActionResult> IndexAsync(CancellationToken cancellationToken)
     {
+        throw new InvalidOperationException("TEST_EXCEPTION");
         var currentUserId = _currentUser.UserId;
         var authenticated = _currentUser.IsAuthenticated;
 

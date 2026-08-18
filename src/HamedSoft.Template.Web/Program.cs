@@ -2,52 +2,75 @@ using HamedSoft.Template.Application;
 using HamedSoft.Template.Application.Contracts.Security;
 using HamedSoft.Template.Infrastructure;
 using HamedSoft.Template.Infrastructure.Initialization;
+using HamedSoft.Template.Web.ErrorHandling;
+using HamedSoft.Template.Web.Middleware;
 using HamedSoft.Template.Web.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+
+builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration( context.Configuration));
+
 builder.Services.AddControllersWithViews();
+
 builder.Services.AddApplication();
 
-builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddInfrastructure(
+    builder.Configuration);
 
-//Authentication
-builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme);
+builder.Services.AddExceptionHandling();
 
-//Authorization
-builder.Services.AddAuthorization(); 
-builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
-builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
+builder.Services.AddAuthentication(
+    IdentityConstants.ApplicationScheme);
 
-//User Authentication
+builder.Services.AddAuthorization();
+
+builder.Services.AddSingleton<
+    IAuthorizationPolicyProvider,
+    PermissionPolicyProvider>();
+
+builder.Services.AddScoped<
+    IAuthorizationHandler,
+    PermissionAuthorizationHandler>();
+
 builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 
 var app = builder.Build();
 
+app.UseExceptionHandler();
+
 using (var scope = app.Services.CreateScope())
 {
-    var initializer = scope.ServiceProvider.GetRequiredService<InfrastructureInitializer>();
+    var initializer =
+        scope.ServiceProvider
+            .GetRequiredService<InfrastructureInitializer>();
+
     await initializer.InitializeAsync();
 }
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
+
 app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseCorrelationId();
+
+app.UseSerilogRequestLogging();
+
 app.UseAuthentication();
+
+app.UseMiddleware<RequestLoggingContextMiddleware>();
 
 app.UseAuthorization();
 
