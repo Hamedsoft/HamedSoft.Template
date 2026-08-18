@@ -1,6 +1,7 @@
 using HamedSoft.Template.Application.Contracts.Security;
 using HamedSoft.Template.Application.Security;
 using HamedSoft.Template.Web.Security;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading;
 

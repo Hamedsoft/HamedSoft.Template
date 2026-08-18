@@ -1,0 +1,51 @@
+﻿@model HamedSoft.Template.Web.ViewModels.Error.ErrorViewModel
+@{
+    Layout = "_Login";
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+
+            <div class="mb-4">
+                <h1 class="display-1 fw-bold">
+                    @Model.StatusCode
+                </h1>
+
+                <h2 class="mb-3">
+                    @Model.Title
+                </h2>
+
+                <p class="text-muted">
+                    @Model.Message
+                </p>
+            </div>
+
+            @if (Model.ShowCorrelationId)
+            {
+                <div class="alert alert-light">
+                    <strong>کد پیگیری:</strong>
+                    <code>@Model.CorrelationId</code>
+                </div>
+            }
+
+            @if (Model.ShowTraceId)
+            {
+                <div class="small text-muted">
+                    TraceId:
+                    <code>@Model.TraceId</code>
+                </div>
+            }
+
+            <div class="mt-4">
+                <a asp-controller="Home"
+                   asp-action="Index"
+                   class="btn btn-primary">
+                    بازگشت به صفحه اصلی
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>

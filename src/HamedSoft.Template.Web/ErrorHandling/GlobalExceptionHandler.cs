@@ -28,6 +28,28 @@ public sealed class GlobalExceptionHandler : IExceptionHandler
             exception,
             "Unhandled exception.");
 
+        if (IsApiRequest(httpContext) ||
+            IsAjaxRequest(httpContext))
+        {
+            await WriteProblemDetailsAsync(
+                httpContext,
+                correlationId,
+                cancellationToken);
+
+            return true;
+        }
+
+        // MVC request:
+        // اجازه می‌دهیم ExceptionHandlerMiddleware
+        // درخواست را به ErrorController بازاجرا کند.
+        return false;
+    }
+
+    private static async Task WriteProblemDetailsAsync(
+        HttpContext httpContext,
+        string correlationId,
+        CancellationToken cancellationToken)
+    {
         var problemDetails = new ProblemDetails
         {
             Status = StatusCodes.Status500InternalServerError,
@@ -45,7 +67,21 @@ public sealed class GlobalExceptionHandler : IExceptionHandler
         await httpContext.Response.WriteAsJsonAsync(
             problemDetails,
             cancellationToken);
+    }
 
-        return true;
+    private static bool IsApiRequest(
+        HttpContext context)
+    {
+        return context.Request.Path
+            .StartsWithSegments("/api");
+    }
+
+    private static bool IsAjaxRequest(
+        HttpContext context)
+    {
+        return string.Equals(
+            context.Request.Headers["X-Requested-With"],
+            "XMLHttpRequest",
+            StringComparison.OrdinalIgnoreCase);
     }
 }

@@ -42,7 +42,7 @@ builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 
 var app = builder.Build();
 
-app.UseExceptionHandler();
+app.UseExceptionHandler("/Error/500");
 
 using (var scope = app.Services.CreateScope())
 {
@@ -65,6 +65,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseCorrelationId();
+
+app.UseStatusCodePagesWithReExecute("/Error/{0}");
 
 app.UseSerilogRequestLogging();
 
