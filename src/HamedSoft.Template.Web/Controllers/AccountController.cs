@@ -30,12 +30,6 @@ public class AccountController : Controller
         _currentUser = currentUser;
     }
 
-    [AllowAnonymous]
-    public IActionResult TestException()
-    {
-        throw new InvalidOperationException("TEST_EXCEPTION");
-    }
-
     [HttpGet]
     [Permission(PermissionConstants.Users.Create)]
     public IActionResult Register()
