@@ -427,3 +427,5 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+/src/HamedSoft.Template.Web/Logs/application-20260818.log
+/src/HamedSoft.Template.Web/Logs/application-20260818.log
