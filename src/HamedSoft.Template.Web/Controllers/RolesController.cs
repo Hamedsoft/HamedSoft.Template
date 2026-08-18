@@ -1,7 +1,9 @@
-﻿using HamedSoft.Template.Application.Contracts.Roles;
+﻿using HamedSoft.Template.Application.Common.Paging;
+using HamedSoft.Template.Application.Contracts.Roles;
 using HamedSoft.Template.Application.Features.Commands.Roles.AssignPermissions;
 using HamedSoft.Template.Application.Security;
 using HamedSoft.Template.Web.Security;
+using HamedSoft.Template.Web.ViewModels.Common.Pagination;
 using HamedSoft.Template.Web.ViewModels.Roles;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -21,21 +23,51 @@ public class RolesController : Controller
 
     [HttpGet]
     [Permission(PermissionConstants.Roles.View)]
-    public async Task<IActionResult> Index(CancellationToken cancellationToken)
+    public async Task<IActionResult> Index(
+    int pageNumber = 1,
+    int pageSize = 10,
+    string? search = null,
+    CancellationToken cancellationToken = default)
     {
-        var result = await _roleManagementService
-            .GetAllAsync(false, cancellationToken);
+        pageSize = Math.Clamp(pageSize, 1, 100);
 
+        var result = await _roleManagementService.GetPagedAsync(
+            false,
+            pageNumber,
+            pageSize,
+            search,
+            cancellationToken);
 
         if (!result.Succeeded)
         {
             TempData["Error"] = result.Error;
 
-            return View(Array.Empty<RoleDto>());
+            return View(new RolesIndexViewModel());
         }
 
+        var pagedRoles = result.Value!;
 
-        return View(result.Value);
+        var model = new RolesIndexViewModel
+        {
+            Roles = pagedRoles,
+
+            Search = search,
+
+            PageSize = pageSize,
+
+            Pagination = new PaginationViewModel
+            {
+                PageNumber = pagedRoles.PageNumber,
+                PageSize = pagedRoles.PageSize,
+                TotalCount = pagedRoles.TotalCount,
+                TotalPages = pagedRoles.TotalPages,
+                Action = nameof(Index),
+                Controller = "Roles",
+                Search = search
+            }
+        };
+
+        return View(model);
     }
 
     [HttpGet]

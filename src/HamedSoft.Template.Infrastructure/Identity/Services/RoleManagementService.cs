@@ -1,4 +1,5 @@
-﻿using HamedSoft.Template.Application.Contracts.Repositories.Reads;
+﻿using HamedSoft.Template.Application.Common.Paging;
+using HamedSoft.Template.Application.Contracts.Repositories.Reads;
 using HamedSoft.Template.Application.Contracts.Repositories.Writes;
 using HamedSoft.Template.Application.Contracts.Roles;
 using HamedSoft.Template.Application.Contracts.UnitOfWork;
@@ -76,15 +77,11 @@ internal sealed class RoleManagementService : IRoleManagementService
         return Result.Success();
     }
 
-    public async Task<Result<IReadOnlyList<RoleDto>>> GetAllAsync(bool withAdmin,
-       CancellationToken cancellationToken = default)
+    public async Task<Result<PagedResult<RoleDto>>> GetPagedAsync(bool includeAdmin, int pageNumber, int pageSize, string? search, CancellationToken cancellationToken = default)
     {
-        var roles = await _roleReadRepository
-            .GetAllAsync(withAdmin, cancellationToken);
+        var roles = await _roleReadRepository.GetPagedAsync(includeAdmin, pageNumber, pageSize, search, cancellationToken);
 
-
-        return Result<IReadOnlyList<RoleDto>>
-            .Success(roles);
+        return Result<PagedResult<RoleDto>>.Success(roles);
     }
 
 

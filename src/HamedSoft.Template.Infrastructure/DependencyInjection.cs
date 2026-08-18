@@ -4,7 +4,6 @@ using HamedSoft.Template.Application.Contracts.Repositories.Reads;
 using HamedSoft.Template.Application.Contracts.Repositories.Writes;
 using HamedSoft.Template.Application.Contracts.Roles;
 using HamedSoft.Template.Application.Contracts.UnitOfWork;
-using HamedSoft.Template.Application.Security;
 using HamedSoft.Template.Infrastructure.Common;
 using HamedSoft.Template.Infrastructure.Identity.Extensions;
 using HamedSoft.Template.Infrastructure.Identity.Services;
@@ -14,7 +13,6 @@ using HamedSoft.Template.Infrastructure.Persistence.Interceptors;
 using HamedSoft.Template.Infrastructure.Persistence.Repositories.UserProfiles;
 using HamedSoft.Template.Infrastructure.Persistence.UnitOfWorks;
 using HamedSoft.Template.Infrastructure.Repositories.Users;
-using HamedSoft.Template.Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -44,10 +42,6 @@ public static class DependencyInjection
             options.AddInterceptors(softDeleteInterceptor, auditInterceptor);
         });
         
-        services.AddScoped<IAuthenticationService, IdentityService>();
-
-        services.AddScoped<IRoleManagementService, RoleManagementService>();
-
         services.AddScoped<IUserProfileWriteRepository, UserProfileWriteRepository>();
 
         services.AddScoped<IUserProfileReadRepository, UserProfileReadRepository>();
