@@ -23,4 +23,22 @@ public static class PermissionClaimsExtensions
             CustomClaimTypes.Permission,
             permission);
     }
+
+    public static bool HasAnyPermission(
+        this ClaimsPrincipal user,
+        params string[] permissions)
+    {
+        if (user.Identity?.IsAuthenticated != true)
+            return false;
+
+        if (user.HasClaim(
+                CustomClaimTypes.Permission,
+                SystemPermissions.All))
+        {
+            return true;
+        }
+
+        return permissions.Any(
+            user.HasPermission);
+    }
 }

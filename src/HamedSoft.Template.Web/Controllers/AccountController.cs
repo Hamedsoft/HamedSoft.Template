@@ -30,6 +30,7 @@ public class AccountController : Controller
     }
 
     [HttpGet]
+    [Permission(PermissionConstants.Users.Create)]
     public IActionResult Register()
     {
         return View();
@@ -37,6 +38,7 @@ public class AccountController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Permission(PermissionConstants.Users.Create)]
     public async Task<IActionResult> Register(RegisterViewModel model)
     {
         if (!ModelState.IsValid)
