@@ -12,7 +12,7 @@ using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration( context.Configuration));
+builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
 
 builder.Services.AddControllersWithViews();
 
@@ -46,10 +46,7 @@ app.UseExceptionHandler("/Error/500");
 
 using (var scope = app.Services.CreateScope())
 {
-    var initializer =
-        scope.ServiceProvider
-            .GetRequiredService<InfrastructureInitializer>();
-
+    var initializer = scope.ServiceProvider.GetRequiredService<InfrastructureInitializer>();
     await initializer.InitializeAsync();
 }
 

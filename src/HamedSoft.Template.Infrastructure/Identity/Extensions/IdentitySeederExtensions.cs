@@ -1,4 +1,5 @@
-﻿using HamedSoft.Template.Infrastructure.Identity.Models;
+﻿using HamedSoft.Template.Application.Security;
+using HamedSoft.Template.Infrastructure.Identity.Models;
 using HamedSoft.Template.Infrastructure.Identity.Options;
 using HamedSoft.Template.Infrastructure.Identity.Permissions;
 using HamedSoft.Template.Infrastructure.Identity.Seed;
@@ -11,42 +12,24 @@ namespace HamedSoft.Template.Infrastructure.Identity.Extensions;
 
 public static class IdentitySeederExtensions
 {
-    public static async Task SeedIdentityAsync(
-    this IServiceProvider services)
+    public static async Task SeedIdentityAsync(this IServiceProvider services)
     {
         using var scope = services.CreateScope();
 
-        var context = scope.ServiceProvider
-            .GetRequiredService<ApplicationDbContext>();
+        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+        await RoleSeeder.SeedAsync(context, roleManager);
 
-        var roleManager = scope.ServiceProvider
-            .GetRequiredService<RoleManager<ApplicationRole>>();
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        var adminOptions = scope.ServiceProvider.GetRequiredService<IOptions<AdminUserOptions>>();
+        var managerOptions = scope.ServiceProvider.GetRequiredService<IOptions<ManagerUserOptions>>();
+        await SystemUserSeeder.SeedAsync(userManager, adminOptions, managerOptions);
 
-        var userManager = scope.ServiceProvider
-            .GetRequiredService<UserManager<ApplicationUser>>();
-
-
-        await RoleSeeder.SeedAsync(
-            context,
-            roleManager);
-
-
-        var options = scope.ServiceProvider
-            .GetRequiredService<IOptions<AdminUserOptions>>();
-
-
-        await AdminUserSeeder.SeedAsync(
-            userManager,
-            options);
-
-
-        var permissionSynchronizer = scope.ServiceProvider
-            .GetRequiredService<PermissionSynchronizer>();
-
-
+        var permissionSynchronizer = scope.ServiceProvider.GetRequiredService<PermissionSynchronizer>();
         await permissionSynchronizer.SyncAsync();
 
-        await AdminRolePermissionSeeder.SeedAsync(context);
+        await SystemPermissionSeeder.SeedAsync(context, SystemRoles.Admin);
+        await SystemPermissionSeeder.SeedAsync(context, SystemRoles.Manager);
     }
 
 }

@@ -30,9 +30,9 @@ public static class DependencyInjection
         services.AddSingleton<IDateTimeProvider, SystemDateTimeProvider>();
 
         services.AddScoped<AuditableEntityInterceptor>();
-        
+
         services.AddScoped<SoftDeleteInterceptor>();
-        
+
         services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =>
         {
             var auditInterceptor = serviceProvider.GetRequiredService<AuditableEntityInterceptor>();
@@ -41,7 +41,7 @@ public static class DependencyInjection
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             options.AddInterceptors(softDeleteInterceptor, auditInterceptor);
         });
-        
+
         services.AddScoped<IUserProfileWriteRepository, UserProfileWriteRepository>();
 
         services.AddScoped<IUserProfileReadRepository, UserProfileReadRepository>();
@@ -54,8 +54,8 @@ public static class DependencyInjection
 
         services.AddScoped<IInitializer, RoleInitializer>();
         services.AddScoped<IInitializer, PermissionInitializer>();
-        services.AddScoped<IInitializer, AdminPermissionInitializer>();
-        services.AddScoped<IInitializer, AdminUserInitializer>();
+        services.AddScoped<IInitializer, SystemUserInitializer>();
+        services.AddScoped<IInitializer, SystemPermissionInitializer>();
 
         services.AddScoped<InfrastructureInitializer>();
 

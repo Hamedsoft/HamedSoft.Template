@@ -22,7 +22,6 @@ public sealed class UserManagementService : IUserManagementService
     private readonly IUserProfileReadRepository _userProfileReadRepository;
     private readonly IUserProfileWriteRepository _userProfileWriteRepository;
     private readonly IApplicationUnitOfWork _unitOfWork;
-    private readonly IUserReadRepository _userReadRepository;
     private readonly ApplicationDbContext _context;
 
     public UserManagementService(

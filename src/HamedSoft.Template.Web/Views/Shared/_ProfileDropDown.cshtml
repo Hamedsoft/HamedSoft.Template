@@ -11,7 +11,7 @@
     </div>
     <div class="dropdown-divider m-0"></div>
     <permission require="@PermissionConstants.Users.Profile">
-        <a class="dropdown-item" asp-controller="Users" asp-action="UserProfile">
+        <a class="dropdown-item" asp-controller="Users" asp-action="UserProfile" asp-route-id="@_CurrentUser.UserId">
             <i class="dropdown-icon fe fe-user"></i> پروفایل
         </a>
     </permission>

@@ -42,7 +42,7 @@ public class UsersController : Controller
             activeTab = "active";
 
         var activeResult = await _mediator.Send(new GetUsersQuery(activePageNumber, pageSize, search, UserStatus.Active), cancellationToken);
-        var inactiveResult = await _mediator.Send(new GetUsersQuery(inactivePageNumber, pageSize, search, UserStatus.Inactive),cancellationToken);
+        var inactiveResult = await _mediator.Send(new GetUsersQuery(inactivePageNumber, pageSize, search, UserStatus.Inactive), cancellationToken);
         var lockedResult = await _mediator.Send(new GetUsersQuery(lockedPageNumber, pageSize, search, UserStatus.Locked), cancellationToken);
 
         if (!activeResult.Succeeded)
@@ -247,12 +247,15 @@ public class UsersController : Controller
 
     [HttpGet]
     [Permission(PermissionConstants.Users.Profile)]
-    public async Task<IActionResult> UserProfile(CancellationToken cancellationToken)
+    public async Task<IActionResult> UserProfile(Guid? id, CancellationToken cancellationToken)
     {
-        if (_currentUser.UserId is not Guid currentUserId)
+        id = id ?? _currentUser.UserId;
+        if (id is not Guid currentUserId)
             return RedirectToAction("index", "Home");
 
         var profileResult = await _mediator.Send(new GetUserProfileQuery(currentUserId), cancellationToken);
+        var userRoledto = await _mediator.Send(new GetUserRolesQuery(currentUserId), cancellationToken);
+        IReadOnlyCollection<string> roles = userRoledto?.Value?.Roles?.Select(r => r.roleDto.RoleName).ToArray() ?? Array.Empty<string>();
         var model = new UserProfileViewModel
         {
             UserId = currentUserId,
@@ -261,21 +264,20 @@ public class UsersController : Controller
             Email = profileResult.Value?.Email ?? "",
             PhoneNumber = profileResult?.Value?.PhoneNumber ?? "",
             UserName = profileResult?.Value?.UserName ?? "",
-            DisplayName = string.Concat(profileResult?.Value?.FirstName ?? "" , profileResult?.Value?.LastName ?? ""),
-            Roles = _currentUser.Roles
+            DisplayName = string.Concat(profileResult?.Value?.FirstName ?? "", " ", profileResult?.Value?.LastName ?? ""),
+            Roles = roles
         };
         return View(model);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    [Permission(PermissionConstants.Users.Profile)]
     public async Task<IActionResult> UpdateProfile(UserProfileViewModel model, CancellationToken cancellationToken)
     {
         if (model?.UserId is not Guid userId)
         {
             TempData["Error"] = "کاربری با مشخصات داده شده یافت نشد";
-            return RedirectToAction(nameof(Edit), new { id = model.UserId });
+            return RedirectToAction(nameof(Edit), new { id = model?.UserId });
         }
 
         var result = await _mediator.Send(new UpdateUserProfileCommand(userId, model.FirstName, model.LastName, model.Email, model.PhoneNumber), cancellationToken);
@@ -289,7 +291,7 @@ public class UsersController : Controller
 
         TempData["Success"] = "اطلاعات کاربر با موفقیت بروزرسانی شد.";
 
-        return RedirectToAction(nameof(Edit), new { id = model.UserId });
+        return RedirectToAction("index", "Home");
     }
 
     [HttpPost]

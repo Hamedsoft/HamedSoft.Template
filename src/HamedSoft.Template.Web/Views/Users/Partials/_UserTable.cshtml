@@ -58,6 +58,15 @@
 
                 <td>
 
+                    <a asp-action="UserProfile"
+                       asp-route-id="@user.UserId"
+                       class="btn btn-sm btn-info">
+
+                        <i class="fa fa-user me-2"></i>
+                        پروفایل
+
+                    </a>
+
                     <a asp-action="Edit"
                        asp-route-id="@user.UserId"
                        class="btn btn-sm btn-warning">

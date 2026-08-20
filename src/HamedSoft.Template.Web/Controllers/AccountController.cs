@@ -85,7 +85,7 @@ public class AccountController : Controller
             UserName = loginResult.UserName,
             FirstName = profileResult?.Value?.FirstName ?? "",
             LastName = profileResult?.Value?.LastName ?? "",
-            DisplayName = profileResult == null ? "" : profileResult.Succeeded ? $"{profileResult.Value!.FirstName} {profileResult.Value.LastName}".Trim() : string.Empty,
+            DisplayName = profileResult == null ? "" : profileResult.Succeeded ? $"{profileResult.Value!.FirstName} {profileResult.Value.LastName}" : string.Empty,
             Email = profileResult?.Value?.Email ?? "",
             PhoneNumber = profileResult?.Value?.PhoneNumber ?? "",
             Roles = loginResult.Roles
@@ -139,7 +139,7 @@ public class AccountController : Controller
 
         return RedirectToAction("Index", "Home");
     }
-    
+
     [HttpPost]
     public async Task<IActionResult> Logout()
     {

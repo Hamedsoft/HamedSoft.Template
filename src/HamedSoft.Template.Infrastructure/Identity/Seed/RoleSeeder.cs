@@ -1,4 +1,5 @@
-﻿using HamedSoft.Template.Infrastructure.Identity.Models;
+﻿using HamedSoft.Template.Application.Security;
+using HamedSoft.Template.Infrastructure.Identity.Models;
 using HamedSoft.Template.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -7,48 +8,28 @@ namespace HamedSoft.Template.Infrastructure.Identity.Seed;
 
 internal static class RoleSeeder
 {
-    private const string AdminRoleName = "Admin";
+    private const string AdminRoleName = SystemRoles.Admin;
+    private const string ManagerRoleName = SystemRoles.Manager;
 
-
-    public static async Task SeedAsync(
-        ApplicationDbContext context,
-        RoleManager<ApplicationRole> roleManager)
+    public static async Task SeedAsync(ApplicationDbContext context, RoleManager<ApplicationRole> roleManager)
     {
-        var adminRole =
-            await roleManager.FindByNameAsync(AdminRoleName);
-
-
-        if (adminRole is null)
+        await SeedRole(roleManager, AdminRoleName);
+        await SeedRole(roleManager, ManagerRoleName);
+        await context.SaveChangesAsync();
+    }
+    private static async Task SeedRole(RoleManager<ApplicationRole> roleManager, string RoleName)
+    {
+        var role = await roleManager.FindByNameAsync(RoleName);
+        if (role is null)
         {
-            adminRole = new ApplicationRole
+            role = new ApplicationRole
             {
                 Id = Guid.NewGuid(),
-                Name = AdminRoleName,
-                NormalizedName =
-                    AdminRoleName.ToUpperInvariant()
+                Name = RoleName,
+                NormalizedName = RoleName.ToUpperInvariant()
             };
 
-
-            await roleManager.CreateAsync(adminRole);
+            await roleManager.CreateAsync(role);
         }
-
-
-        var permissionIds = await context.Permissions
-            .Select(x => x.Id)
-            .ToListAsync();
-
-
-        var existingPermissions =
-            await context.RolePermissions
-                .Where(x => x.RoleId == adminRole.Id)
-                .Select(x => x.PermissionId)
-                .ToListAsync();
-
-
-        var newPermissions = permissionIds
-            .Except(existingPermissions);
-
-
-        await context.SaveChangesAsync();
     }
 }

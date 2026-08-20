@@ -10,29 +10,21 @@ public sealed class PermissionSynchronizer
     private readonly ApplicationDbContext _context;
     private readonly IPermissionDiscoveryService _discoveryService;
 
-    public PermissionSynchronizer(
-        ApplicationDbContext context,
-        IPermissionDiscoveryService discoveryService)
+    public PermissionSynchronizer(ApplicationDbContext context, IPermissionDiscoveryService discoveryService)
     {
         _context = context;
         _discoveryService = discoveryService;
     }
 
-    public async Task SyncAsync(
-        CancellationToken cancellationToken = default)
+    public async Task SyncAsync(CancellationToken cancellationToken = default)
     {
-        var definitions =
-            _discoveryService.Discover();
+        var definitions = _discoveryService.Discover();
 
-        var existingPermissions =
-            await _context.Permissions
-                .ToListAsync(cancellationToken);
+        var existingPermissions = await _context.Permissions.ToListAsync(cancellationToken);
 
         foreach (var definition in definitions)
         {
-            var existing =
-                existingPermissions.FirstOrDefault(
-                    x => x.Name == definition.Name);
+            var existing = existingPermissions.FirstOrDefault(x => x.Name == definition.Name);
 
             if (existing is null)
             {
@@ -55,7 +47,6 @@ public sealed class PermissionSynchronizer
                 definition.Description);
         }
 
-        await _context.SaveChangesAsync(
-            cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
     }
 }

@@ -11,7 +11,7 @@ public sealed class UserProfileViewModel
     [Required(ErrorMessage = "{0} را وارد کنید")]
     public string UserName { get; set; } = string.Empty;
 
-    [Display(Name ="نام")]
+    [Display(Name = "نام")]
     [Required(ErrorMessage = "{0} را وارد کنید")]
     public string FirstName { get; set; } = string.Empty;
 
@@ -29,6 +29,6 @@ public sealed class UserProfileViewModel
     [Display(Name = "شماره موبایل")]
     public string? PhoneNumber { get; set; }
 
-    [Display(Name = "نفض")]
+    [Display(Name = "نفش")]
     public IReadOnlyCollection<string> Roles { get; init; } = Array.Empty<string>();
 }

@@ -14,7 +14,7 @@
                                     <div class="profile-cover__action bg-img"></div>
                                     <div class="profile-cover__img">
                                         <div class="profile-img-1">
-                                            <img src="../assets/images/users/profile.webp" alt="profileimg">
+                                            <img src="~/assets/images/users/profile.webp" alt="profileimg">
                                         </div>
                                         <div class="profile-img-content text-dark text-start">
                                             <div class="text-dark">
@@ -43,6 +43,11 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="tab-content">
+        <div class="tab-pane active" id="profile">
+            @await Html.PartialAsync("_ProfileTab", Model)
         </div>
     </div>
     <div asp-validation-summary="ModelOnly" class="alert alert-danger mt-6"> </div>

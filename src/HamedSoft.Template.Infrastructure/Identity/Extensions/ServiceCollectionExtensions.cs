@@ -50,6 +50,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IRoleWriteRepository, RoleWriteRepository>();
 
         services.Configure<AdminUserOptions>(configuration.GetSection(AdminUserOptions.SectionName));
+        services.Configure<ManagerUserOptions>(configuration.GetSection(ManagerUserOptions.SectionName));
 
         services.AddScoped<IUserManagementService, UserManagementService>();
 
