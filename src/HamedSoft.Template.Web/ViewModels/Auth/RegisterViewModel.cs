@@ -6,6 +6,8 @@ public class RegisterViewModel
 {
     [Required(ErrorMessage ="{0} را وارد کنید")]
     [Display(Name = "نام کاربری")]
+    [StringLength(50, MinimumLength = 3, ErrorMessage = "{0} باید بین {2} تا {1} کاراکتر باشد")]
+    [RegularExpression(@"^[a-zA-Z0-9\-\._@+]+$", ErrorMessage = "{0} فقط می‌تواند شامل حروف انگلیسی، اعداد و کاراکترهای - . _ @ + باشد")]
     public string UserName { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "{0} را وارد کنید")]
