@@ -1,11 +1,13 @@
-﻿using HamedSoft.Template.Domain.SeedWork;
+﻿using System.Linq.Expressions;
+using System.Reflection.Emit;
+using HamedSoft.Template.Domain.SeedWork;
+using HamedSoft.Template.Domain.Settings;
 using HamedSoft.Template.Domain.UserProfiles;
 using HamedSoft.Template.Infrastructure.Identity.Models;
+using HamedSoft.Template.Infrastructure.Persistence.Configurations;
 using HamedSoft.Template.Infrastructure.Persistence.Extensions;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
-using System.Reflection.Emit;
 
 namespace HamedSoft.Template.Infrastructure.Persistence;
 
@@ -19,6 +21,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<UserProfile> UserProfiles => Set<UserProfile>();
     public DbSet<Permission> Permissions => Set<Permission>();
     public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
+    public DbSet<Setting> Settings => Set<Setting>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

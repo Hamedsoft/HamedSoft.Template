@@ -1,4 +1,6 @@
 ﻿using FluentValidation;
+using HamedSoft.Template.Application.Contracts.Settings;
+using HamedSoft.Template.Application.Settings;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HamedSoft.Template.Application;
@@ -16,6 +18,10 @@ public static class DependencyInjection
         });
 
         services.AddValidatorsFromAssembly(typeof(AssemblyReference).Assembly);
+
+        services.AddScoped<ISettingService, SettingService>();
+
+        services.AddSingleton<ISettingDefinitionProvider, SettingDefinitionProvider>();
 
         return services;
     }

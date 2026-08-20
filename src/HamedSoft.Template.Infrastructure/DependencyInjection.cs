@@ -1,15 +1,18 @@
 ﻿using HamedSoft.Template.Application.Abstractions.Common;
 using HamedSoft.Template.Application.Contracts.Authentication;
+using HamedSoft.Template.Application.Contracts.Caching;
 using HamedSoft.Template.Application.Contracts.Repositories.Reads;
 using HamedSoft.Template.Application.Contracts.Repositories.Writes;
 using HamedSoft.Template.Application.Contracts.Roles;
 using HamedSoft.Template.Application.Contracts.UnitOfWork;
+using HamedSoft.Template.Infrastructure.Caching;
 using HamedSoft.Template.Infrastructure.Common;
 using HamedSoft.Template.Infrastructure.Identity.Extensions;
 using HamedSoft.Template.Infrastructure.Identity.Services;
 using HamedSoft.Template.Infrastructure.Initialization;
 using HamedSoft.Template.Infrastructure.Persistence;
 using HamedSoft.Template.Infrastructure.Persistence.Interceptors;
+using HamedSoft.Template.Infrastructure.Persistence.Repositories.Settings;
 using HamedSoft.Template.Infrastructure.Persistence.Repositories.UserProfiles;
 using HamedSoft.Template.Infrastructure.Persistence.UnitOfWorks;
 using HamedSoft.Template.Infrastructure.Repositories.Users;
@@ -52,12 +55,19 @@ public static class DependencyInjection
 
         services.AddIdentityServices(configuration);
 
+        services.AddScoped<InfrastructureInitializer>();
         services.AddScoped<IInitializer, RoleInitializer>();
         services.AddScoped<IInitializer, PermissionInitializer>();
         services.AddScoped<IInitializer, SystemUserInitializer>();
         services.AddScoped<IInitializer, SystemPermissionInitializer>();
+        services.AddScoped<IInitializer, SettingInitializer>();
 
-        services.AddScoped<InfrastructureInitializer>();
+        services.AddMemoryCache();
+        services.AddSingleton<IApplicationCache, MemoryApplicationCache>();
+
+        services.AddScoped<ISettingReadRepository, SettingReadRepository>();
+        services.AddScoped<ISettingWriteRepository, SettingWriteRepository>();
+
 
         return services;
     }
