@@ -32,8 +32,6 @@ internal sealed class SettingConfiguration : IEntityTypeConfiguration<Setting>
             .HasMaxLength(4000);
 
         builder.Property(x => x.ValueType)
-            .HasConversion<string>()
-            .HasMaxLength(50)
             .IsRequired();
 
         builder.Property(x => x.Description)

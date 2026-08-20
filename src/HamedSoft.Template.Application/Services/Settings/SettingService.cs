@@ -66,14 +66,11 @@ internal sealed class SettingService : ISettingService
     }
 
     public async Task SetAsync(
-        string key,
-        string value,
-        CancellationToken cancellationToken = default)
+    string key,
+    string value,
+    CancellationToken cancellationToken = default)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(key);
-        ArgumentNullException.ThrowIfNull(value);
-
-        var setting = await _readRepository.GetByKeyAsync(
+        var setting = await _writeRepository.GetByKeyAsync(
             key,
             cancellationToken);
 
@@ -81,26 +78,17 @@ internal sealed class SettingService : ISettingService
             throw new InvalidOperationException(
                 $"Setting '{key}' was not found.");
 
-        // Read repository returns DTO, therefore the write operation
-        // requires loading the domain entity through the write-side
-        // repository in the existing architecture.
-        var entity = await _writeRepository.GetByKeyAsync(
-            key,
-            cancellationToken);
-
-        if (entity is null)
-            throw new InvalidOperationException(
-                $"Setting '{key}' was not found.");
-
-        entity.ChangeValue(value);
+        setting.ChangeValue(value);
 
         await _writeRepository.UpdateAsync(
-            entity,
+            setting,
             cancellationToken);
 
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(
+            cancellationToken);
 
         _cache.Remove(BuildCacheKey(key));
+        _cache.Remove("settings:all");
     }
 
     public async Task RemoveAsync(

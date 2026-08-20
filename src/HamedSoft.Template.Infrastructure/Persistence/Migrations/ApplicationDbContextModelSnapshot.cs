@@ -96,10 +96,8 @@ namespace HamedSoft.Template.Infrastructure.Persistence.Migrations
                         .HasMaxLength(4000)
                         .HasColumnType("nvarchar(4000)");
 
-                    b.Property<string>("ValueType")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<int>("ValueType")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
