@@ -100,3 +100,49 @@
     </div>
 
 </div>
+
+<div id="settings-section-test">
+    <div class="text-muted">
+        Loading settings...
+    </div>
+</div>
+<script src="~/assets/js/settings/settings.js"></script>
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+
+            const container =
+                document.getElementById("settings-section-test");
+
+            const url =
+                '@Url.Action("Section", "Settings")'
+                + '?module=Treasury'
+                + '&feature=ElectronicTransfer'
+                + '&category=System';
+
+            try {
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    throw new Error(
+                        `HTTP ${response.status}`);
+                }
+
+                container.innerHTML =
+                    await response.text();
+            }
+            catch (error) {
+
+                console.error(error);
+
+                container.innerHTML = `
+                    <div class="alert alert-danger">
+                        خطا در بارگذاری تنظیمات
+                    </div>`;
+            }
+        });
+    </script>
+}

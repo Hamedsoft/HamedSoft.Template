@@ -1,4 +1,5 @@
-﻿using HamedSoft.Template.Application.Contracts.Repositories.Reads;
+﻿using System.Linq;
+using HamedSoft.Template.Application.Contracts.Repositories.Reads;
 using HamedSoft.Template.Application.Contracts.Settings;
 using Microsoft.EntityFrameworkCore;
 
@@ -45,6 +46,26 @@ internal sealed class SettingReadRepository : ISettingReadRepository
             .ThenBy(x => x.Feature)
             .ThenBy(x => x.Category)
             .ThenBy(x => x.Key)
+            .Select(x => new SettingDto(
+                x.Id,
+                x.Key,
+                x.Module,
+                x.Feature,
+                x.Category,
+                x.Value,
+                x.DefaultValue,
+                (int)x.ValueType,
+                x.IsRequired,
+                x.IsSensitive,
+                x.IsSecret,
+                x.Description))
+            .ToListAsync(cancellationToken);
+    }
+    public async Task<IReadOnlyCollection<SettingDto>> GetByContextAsync(string module, string feature, string category, CancellationToken cancellationToken = default)
+    {
+        return await _context.Settings
+            .AsNoTracking()
+            .Where(x => x.Module == module && x.Feature == feature && x.Category == category)
             .Select(x => new SettingDto(
                 x.Id,
                 x.Key,

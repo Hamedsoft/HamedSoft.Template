@@ -1,5 +1,12 @@
-﻿using HamedSoft.Template.Application.Contracts.Settings;
+﻿using System.Globalization;
+using System.Reflection;
+using HamedSoft.Template.Application.Contracts.Settings;
+using HamedSoft.Template.Application.Features.Queries.Settings.GetSettingsByContext;
+using HamedSoft.Template.Domain.Settings;
+using HamedSoft.Template.Web.Formatting;
+using HamedSoft.Template.Web.Models.Settings;
 using HamedSoft.Template.Web.ViewModels.Settings;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HamedSoft.Template.Web.Controllers;
@@ -7,10 +14,12 @@ namespace HamedSoft.Template.Web.Controllers;
 public sealed class SettingsController : Controller
 {
     private readonly ISettingService _settingService;
+    private readonly ISender _sender;
 
-    public SettingsController(ISettingService settingService)
+    public SettingsController(ISettingService settingService, ISender sender)
     {
         _settingService = settingService;
+        _sender = sender;
     }
 
     [HttpGet]
@@ -85,5 +94,82 @@ public sealed class SettingsController : Controller
             cancellationToken);
 
         return RedirectToAction(nameof(Index));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Section(
+        string module,
+        string feature,
+        string category,
+        CancellationToken cancellationToken)
+    {
+        var result = await _sender.Send(
+            new GetSettingsByContextQuery(
+                module,
+                feature,
+                category),
+            cancellationToken);
+
+        if (!result.Succeeded)
+            return BadRequest(result.Error);
+
+        var viewModel = new SettingSectionViewModel
+        {
+            Module = module,
+            Feature = feature,
+            Category = category,
+            Settings = result.Value!
+    .Select(x =>
+    {
+        var valueType =
+            (Domain.Settings.SettingValueType)x.ValueType;
+
+        var displayValue = valueType == Domain.Settings.SettingValueType.DateTime
+            && DateTime.TryParse(
+                x.Value,
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.RoundtripKind,
+                out var dateTime)
+                ? PersianDateTimeFormatter.Format(dateTime)
+                : x.Value;
+
+        return new SettingItemViewModel
+        {
+            Id = x.Id,
+            Key = x.Key,
+            Value = x.Value,
+            DisplayValue = displayValue,
+            InputValue = x.Value,
+            ValueType = valueType,
+            DefaultValue = x.DefaultValue,
+            IsRequired = x.IsRequired,
+            IsSensitive = x.IsSensitive,
+            IsSecret = x.IsSecret,
+            Description = x.Description
+        };
+    })
+    .ToList()
+        };
+
+        return PartialView(
+            "_SettingsPartial",
+            viewModel);
+    }
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Update(
+    string key,
+    string value,
+    CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(key))
+            return BadRequest();
+
+        await _settingService.SetAsync(
+            key,
+            value,
+            cancellationToken);
+
+        return Ok();
     }
 }

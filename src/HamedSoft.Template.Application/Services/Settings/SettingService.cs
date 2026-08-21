@@ -169,7 +169,7 @@ internal sealed class SettingService : ISettingService
             cacheKey,
             out var cached))
         {
-            return cached;
+            return cached ?? new List<SettingDto>();
         }
 
         var settings = await _readRepository.GetAllAsync(
