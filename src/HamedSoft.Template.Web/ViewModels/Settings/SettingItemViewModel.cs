@@ -26,6 +26,7 @@ public sealed class SettingItemViewModel
     public string? Description { get; init; }
 
     public string DisplayValue { get; init; } = string.Empty;
+    public string DisplayExValue { get; init; } = string.Empty;
 
     public string? InputValue { get; init; }
 }

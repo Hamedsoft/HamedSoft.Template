@@ -18,7 +18,7 @@
             </div>
         }
     </div>
-
+    
     @if (Model.Settings.Count == 0)
     {
         <div class="alert alert-light border">
@@ -136,24 +136,18 @@
                                             <div class="setting-datetime-wrapper">
 
                                                 <div class="row g-2">
-
                                                     <div class="col-md-8">
-                                                        <persian-datepicker-element class="setting-persian-datetime"
-                                                                                    placeholder="انتخاب تاریخ"
-                                                                                    format="YYYY/MM/DD"
-                                                                                    rtl
-                                                                                    show-today-button
-                                                                                    today-button-text="امروز"
-                                                                                    data-setting-key="@setting.Key"
-                                                                                    data-gregorian-value="@setting.InputValue">
-                                                        </persian-datepicker-element>
+
+                                                        <input type="text"
+                                                            class="form-control persian-date-picker"
+                                                               value="@setting.DisplayValue">
                                                     </div>
 
                                                     <div class="col-md-4">
                                                         <input type="time"
                                                                class="form-control setting-time-input"
                                                                step="1"
-                                                               data-setting-key="@setting.Key" />
+                                                               data-setting-key="@setting.DisplayExValue" />
                                                     </div>
 
                                                 </div>

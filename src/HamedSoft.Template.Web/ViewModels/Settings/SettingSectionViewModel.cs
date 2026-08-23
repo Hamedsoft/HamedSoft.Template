@@ -1,6 +1,4 @@
-﻿using HamedSoft.Template.Domain.Settings;
-
-namespace HamedSoft.Template.Web.Models.Settings;
+﻿namespace HamedSoft.Template.Web.Models.Settings;
 
 /// <summary>
 /// Represents the settings section rendered inside a feature page.

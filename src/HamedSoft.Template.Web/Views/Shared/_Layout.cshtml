@@ -36,6 +36,9 @@
     <!--- FONT-Context CSS -->
     <link href="~/assets/fonts/font.css" rel="stylesheet" />
 
+    <!-- Persian Calender -->
+    <link href="~/assets/persiancalender/css/persian-datepicker.min.css" rel="stylesheet" />
+
 </head>
 
 <body class="app sidebar-mini rtl light-mode">
@@ -255,9 +258,10 @@
     <!-- CUSTOM JS -->
     <script src="~/assets/js/custom.js"></script>
 	
-    <!-- persian-datepicker -->
-    <script type="module" src="~/assets/js/persian-datepicker-element/1.1.18/persian-datepicker-element.min.js"></script>
-	<script src="~/assets/js/persian-datepicker-element/1.1.18/setting-date-time.js"></script>
+    <!-- Persian Calender -->
+    <script src="~/assets/persiancalender/js/persian-date.min.js"></script>
+    <script src="~/assets/persiancalender/js/persian-datepicker.min.js"></script>
+    <script src="~/assets/persiancalender/js/persiandatepicker.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

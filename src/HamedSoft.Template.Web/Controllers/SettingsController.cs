@@ -124,14 +124,13 @@ public sealed class SettingsController : Controller
         var valueType =
             (Domain.Settings.SettingValueType)x.ValueType;
 
-        var displayValue = valueType == Domain.Settings.SettingValueType.DateTime
-            && DateTime.TryParse(
-                x.Value,
-                CultureInfo.InvariantCulture,
-                DateTimeStyles.RoundtripKind,
-                out var dateTime)
-                ? PersianDateTimeFormatter.Format(dateTime)
-                : x.Value;
+        var displayValue = valueType == SettingValueType.DateTime && DateTime.TryParse
+                                        (x.Value, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var dateTime)
+                                        ? PersianDateTimeFormatter.ToDate(dateTime) : x.Value;
+
+        var displayExValue = valueType == SettingValueType.DateTime && DateTime.TryParse
+                                        (x.Value, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var Time)
+                                        ? PersianDateTimeFormatter.ToTime(Time) : x.Value;
 
         return new SettingItemViewModel
         {
@@ -139,13 +138,14 @@ public sealed class SettingsController : Controller
             Key = x.Key,
             Value = x.Value,
             DisplayValue = displayValue,
+            DisplayExValue = displayExValue,
             InputValue = x.Value,
             ValueType = valueType,
             DefaultValue = x.DefaultValue,
             IsRequired = x.IsRequired,
             IsSensitive = x.IsSensitive,
             IsSecret = x.IsSecret,
-            Description = x.Description
+            Description = x.Description,
         };
     })
     .ToList()

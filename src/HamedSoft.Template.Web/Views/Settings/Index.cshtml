@@ -3,7 +3,6 @@
 @{
     ViewData["Title"] = "Settings";
 }
-
 <div class="container-fluid">
 
     <div class="card">
@@ -112,36 +111,26 @@
     <partial name="_ValidationScriptsPartial" />
 
     <script>
-        document.addEventListener("DOMContentLoaded", async () => {
-
-            const container =
-                document.getElementById("settings-section-test");
-
-            const url =
-                '@Url.Action("Section", "Settings")'
-                + '?module=Treasury'
-                + '&feature=ElectronicTransfer'
-                + '&category=System';
-
-            try {
+        document.addEventListener("DOMContentLoaded", async () => 
+        {
+            const container = document.getElementById("settings-section-test");
+            const url = '@Url.Action("Section", "Settings")' + '?module=Treasury' + '&feature=ElectronicTransfer' + '&category=System';
+            try 
+            {
                 const response = await fetch(url);
-
-                if (!response.ok) {
-                    throw new Error(
-                        `HTTP ${response.status}`);
+                if (!response.ok) 
+                {
+                    throw new Error(`HTTP ${response.status}`);
                 }
-
-                container.innerHTML =
-                    await response.text();
+                
+                const html = await response.text();
+                container.innerHTML = html;
+                initializePersianDatePickers(container);
             }
-            catch (error) {
-
+            catch (error) 
+            {
                 console.error(error);
-
-                container.innerHTML = `
-                    <div class="alert alert-danger">
-                        خطا در بارگذاری تنظیمات
-                    </div>`;
+                container.innerHTML = `<div class="alert alert-danger">خطا در بارگذاری تنظیمات</div>`;
             }
         });
     </script>
