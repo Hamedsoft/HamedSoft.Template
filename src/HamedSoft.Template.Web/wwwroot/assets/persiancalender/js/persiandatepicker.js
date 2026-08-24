@@ -93,7 +93,6 @@
             : $(document);
 
         $container.find('.setting-time-input').each(function () {
-            console.log('ssssssssssssss');
             const $input = $(this);
 
             if ($input.data('timepickerInitialized')) {
@@ -133,7 +132,7 @@
         model.view.reRender();
     });
     $(document).on('click', '.setting-set-time-button', function () {
-
+        console.log($(this));
         const $button = $(this);
 
         const $timeInput = $button

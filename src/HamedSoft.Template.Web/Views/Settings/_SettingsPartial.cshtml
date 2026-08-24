@@ -150,18 +150,20 @@
                                         break;
 
                                         case SettingValueType.TimeSpan:
-                                            <div class="input-group col-md-8">
-                                                <div class="d-flex">
-                                                    <div class="input-group wd-150">
-                                                        <div class="input-group-text setting-set-time-button">
-                                                            <i class="fa fa-clock-o tx-16 lh-0 op-6"></i>
-                                                        </div>
+                                            <div class="setting-datetime-wrapper">
+                                                <div class="input-group col-md-8">
+                                                    <div class="d-flex">
+                                                        <div class="input-group wd-150">
+                                                            <div class="input-group-text setting-set-time-button">
+                                                                <i class="fa fa-clock-o tx-16 lh-0 op-6"></i>
+                                                            </div>
 
-                                                        <input type="text" class="form-control br-0 setting-time-input" placeholder="ساعت" asp-for="@setting.DisplayExValue">
+                                                            <input type="text" class="form-control br-0 setting-time-input" placeholder="ساعت" asp-for="@setting.DisplayExValue">
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        break;
+                                            break;
 
                                         case SettingValueType.Json:
                                             <div class="input-group col-md-8">
