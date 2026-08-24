@@ -127,7 +127,7 @@ public sealed class SettingsController : Controller
                                         (x.Value, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var dateTime)
                                         ? PersianDateTimeFormatter.ToPersianDate(dateTime) : x.Value;
 
-        var displayExValue = valueType == SettingValueType.DateTime && DateTime.TryParse
+        var displayExValue = (valueType == SettingValueType.DateTime || valueType == SettingValueType.TimeSpan) && DateTime.TryParse
                                         (x.Value, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var Time)
                                         ? PersianDateTimeFormatter.ToTime(Time) : x.Value;
 

@@ -93,7 +93,7 @@
             : $(document);
 
         $container.find('.setting-time-input').each(function () {
-
+            console.log('ssssssssssssss');
             const $input = $(this);
 
             if ($input.data('timepickerInitialized')) {
@@ -105,13 +105,33 @@
             $input.data('timepickerInitialized', true);
         });
     }
-    /*
-     * Set current time for #tp3
-     *
-     * Delegated event:
-     * Works even when #setTimeButton is inside
-     * a Partial View loaded dynamically.
-     */
+
+    $(document).on('click', '.setting-today-button', function (event) {
+        event.preventDefault();
+        const $button = $(this);
+        const $input = $button
+            .closest('.input-group')
+            .find('.persian-date-picker')
+            .first();
+
+        if ($input.length === 0) {
+            return;
+        }
+
+        const datepicker = $input.data('datepicker');
+
+        if (!datepicker || !datepicker.model) {
+            return;
+        }
+
+        const model = datepicker.model;
+        const now = new Date().valueOf();
+
+        model.state.setSelectedDateTime('unix', now);
+        model.state.setViewDateTime('unix', now);
+
+        model.view.reRender();
+    });
     $(document).on('click', '.setting-set-time-button', function () {
 
         const $button = $(this);
@@ -128,24 +148,12 @@
         $timeInput.timepicker('setTime', new Date());
     });
 
-
-    /*
-     * Public Initializers
-     *
-     * These functions can be called after an Ajax
-     * Partial View is injected into the DOM.
-     */
     window.initializePersianDatePickers = initializePersianDatePickers;
     window.initializeTimePickers = initializeTimePickers;
 
-
-    /*
-     * Initial Page Load
-     */
     $(document).ready(function () {
 
         initializePersianDatePickers(document);
-
         initializeTimePickers(document);
     });
 

@@ -23,16 +23,18 @@
   }
 })(function($) {
   var _ONE_DAY = 86400;
-  var _lang = {
-    am: "am",
-    pm: "pm",
-    AM: "AM",
-    PM: "PM",
-    decimal: ".",
-    mins: "mins",
-    hr: "hr",
-    hrs: "hrs"
-  };
+    var _lang = {
+        am: " صبح",
+        pm: " عصر",
+        AM: " صبح",
+        PM: " عصر",
+        dawn: " بامداد",
+        night: " شب",
+        decimal: ".",
+        mins: "mins",
+        hr: "hr",
+        hrs: "hrs"
+    };
 
   var _DEFAULTS = {
     appendTo: "body",
@@ -1202,18 +1204,41 @@
     for (var i = 0; i < settings.timeFormat.length; i++) {
       code = settings.timeFormat.charAt(i);
       switch (code) {
-        case "a":
-          output += time.getHours() > 11 ? _lang.pm : _lang.am;
-          break;
+          case "a":
+              if (time.getHours() < 6) {
+                  output += _lang.dawn;
+              } else if (time.getHours() < 12) {
+                  output += _lang.am;
+              } else if (time.getHours() < 18) {
+                  output += _lang.pm;
+              } else {
+                  output += _lang.night;
+              }
+              break;
 
-        case "A":
-          output += time.getHours() > 11 ? _lang.PM : _lang.AM;
-          break;
+          case "A":
+              if (time.getHours() < 6) {
+                  output += _lang.dawn;
+              } else if (time.getHours() < 12) {
+                  output += _lang.AM;
+              } else if (time.getHours() < 18) {
+                  output += _lang.PM;
+              } else {
+                  output += _lang.night;
+              }
+              break;
 
-        case "g":
-          hour = time.getHours() % 12;
-          output += hour === 0 ? "12" : hour;
-          break;
+          case "g":
+              hour = time.getHours();
+
+              if (hour < 6) {
+                  output += _pad2(hour);
+              } else {
+                  hour = hour % 12;
+                  output += _pad2(hour === 0 ? 12 : hour);
+              }
+
+              break;
 
         case "G":
           hour = time.getHours();
@@ -1281,16 +1306,20 @@
       timeString += "m";
     }
 
-    var ampmRegex =
-      "(" +
-      _lang.am.replace(".", "") +
-      "|" +
-      _lang.pm.replace(".", "") +
-      "|" +
-      _lang.AM.replace(".", "") +
-      "|" +
-      _lang.PM.replace(".", "") +
-      ")?";
+      var ampmRegex =
+          "(" +
+          _lang.dawn.replace(".", "") +
+          "|" +
+          _lang.am.replace(".", "") +
+          "|" +
+          _lang.pm.replace(".", "") +
+          "|" +
+          _lang.AM.replace(".", "") +
+          "|" +
+          _lang.PM.replace(".", "") +
+          "|" +
+          _lang.night.replace(".", "") +
+          ")?";
 
     // try to parse time input
     var pattern = new RegExp(
@@ -1313,13 +1342,16 @@
     var seconds = time[4] * 1 || 0;
 
     if (hour <= 12 && ampm) {
-      var isPm = ampm == _lang.pm || ampm == _lang.PM;
+        var isPm =
+            ampm == _lang.pm ||
+            ampm == _lang.PM ||
+            ampm == _lang.night;
 
-      if (hour == 12) {
-        hours = isPm ? 12 : 0;
-      } else {
-        hours = hour + (isPm ? 12 : 0);
-      }
+        if (hour == 12) {
+            hours = isPm ? 12 : 0;
+        } else {
+            hours = hour + (isPm ? 12 : 0);
+        }
     } else if (settings) {
       var t = hour * 3600 + minutes * 60 + seconds;
       if (t >= _ONE_DAY + (settings.show2400 ? 1 : 0)) {
