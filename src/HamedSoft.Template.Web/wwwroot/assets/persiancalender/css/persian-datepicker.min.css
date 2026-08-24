@@ -587,3 +587,42 @@
 }
 
 /*# sourceMappingURL=persian-datepicker.min.css.map */
+.setting-time-input {
+	width: 100%;
+	height: 38px;
+	padding: 0.375rem 0.75rem;
+	font-family: inherit;
+	font-size: 0.875rem;
+	font-weight: 400;
+	line-height: 1.5;
+	color: #1d2129;
+	background-color: #fff;
+	border: 1px solid #e2e8f0;
+	border-radius: 0.375rem;
+	outline: none;
+	transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, background-color 0.15s ease-in-out;
+	direction: ltr;
+	text-align: left;
+}
+
+	.setting-time-input:hover {
+		border-color: #cbd5e1;
+	}
+
+	.setting-time-input:focus {
+		border-color: #845adf;
+		background-color: #fff;
+		box-shadow: 0 0 0 0.2rem rgba(132, 90, 223, 0.15);
+	}
+
+	.setting-time-input:disabled,
+	.setting-time-input[readonly] {
+		background-color: #f8f9fa;
+		color: #98a2b3;
+		cursor: not-allowed;
+	}
+
+	.setting-time-input::placeholder {
+		color: #98a2b3;
+		opacity: 1;
+	}

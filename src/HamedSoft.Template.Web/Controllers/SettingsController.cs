@@ -121,12 +121,11 @@ public sealed class SettingsController : Controller
             Settings = result.Value!
     .Select(x =>
     {
-        var valueType =
-            (Domain.Settings.SettingValueType)x.ValueType;
+        var valueType = (SettingValueType)x.ValueType;
 
         var displayValue = valueType == SettingValueType.DateTime && DateTime.TryParse
                                         (x.Value, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var dateTime)
-                                        ? PersianDateTimeFormatter.ToDate(dateTime) : x.Value;
+                                        ? PersianDateTimeFormatter.ToPersianDate(dateTime) : x.Value;
 
         var displayExValue = valueType == SettingValueType.DateTime && DateTime.TryParse
                                         (x.Value, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var Time)

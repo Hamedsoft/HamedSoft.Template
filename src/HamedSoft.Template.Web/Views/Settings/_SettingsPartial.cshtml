@@ -18,7 +18,7 @@
             </div>
         }
     </div>
-    
+
     @if (Model.Settings.Count == 0)
     {
         <div class="alert alert-light border">
@@ -139,15 +139,27 @@
                                                     <div class="col-md-8">
 
                                                         <input type="text"
-                                                            class="form-control persian-date-picker"
-                                                               value="@setting.DisplayValue">
+                                                               class="form-control persian-date-picker"
+                                                               asp-for="@setting.DisplayValue">
                                                     </div>
 
                                                     <div class="col-md-4">
-                                                        <input type="time"
-                                                               class="form-control setting-time-input"
-                                                               step="1"
-                                                               data-setting-key="@setting.DisplayExValue" />
+                                                        <div class="d-flex">
+                                                            <div class="input-group wd-150">
+                                                                <div class="input-group-text">
+                                                                    <i class="fa fa-clock-o tx-16 lh-0 op-6"></i>
+                                                                </div>
+
+                                                                <input class="form-control br-0 setting-time-input"
+                                                                       placeholder="Set time"
+                                                                       type="text">
+
+                                                                <button type="button"
+                                                                        class="btn btn-primary br-ts-0 br-bs-0 setting-set-time-button">
+                                                                    Set
+                                                                </button>
+                                                            </div>
+                                                        </div>
                                                     </div>
 
                                                 </div>
