@@ -1,13 +1,14 @@
-﻿using System.Globalization;
-using System.Reflection;
-using HamedSoft.Template.Application.Contracts.Settings;
+﻿using HamedSoft.Template.Application.Contracts.Settings;
 using HamedSoft.Template.Application.Features.Queries.Settings.GetSettingsByContext;
+using HamedSoft.Template.Application.Security;
 using HamedSoft.Template.Domain.Settings;
 using HamedSoft.Template.Web.Formatting;
 using HamedSoft.Template.Web.Models.Settings;
+using HamedSoft.Template.Web.Security;
 using HamedSoft.Template.Web.ViewModels.Settings;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 
 namespace HamedSoft.Template.Web.Controllers;
 
@@ -119,34 +120,49 @@ public sealed class SettingsController : Controller
             Feature = feature,
             Category = category,
             Settings = result.Value!
-    .Select(x =>
-    {
-        var valueType = (SettingValueType)x.ValueType;
+            .Select(x =>
+            {
+                var valueType = (SettingValueType)x.ValueType;
 
-        var displayValue = valueType == SettingValueType.DateTime && DateTime.TryParse
-                                        (x.Value, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var dateTime)
-                                        ? PersianDateTimeFormatter.ToPersianDate(dateTime) : x.Value;
+                var displayValue = x.Value;
+                var displayExValue = x.Value;
 
-        var displayExValue = (valueType == SettingValueType.DateTime || valueType == SettingValueType.TimeSpan) && DateTime.TryParse
-                                        (x.Value, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var Time)
-                                        ? PersianDateTimeFormatter.ToTime(Time) : x.Value;
+                switch (valueType)
+                {
+                    case SettingValueType.DateTime:
+                        if (DateTime.TryParse(x.Value, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var dateTime))
+                        {
+                            displayValue = PersianDateTimeFormatter.ToPersianDate(dateTime);
+                            displayExValue = PersianDateTimeFormatter.ToTime(dateTime, includeSeconds: false);
+                        }
 
-        return new SettingItemViewModel
-        {
-            Id = x.Id,
-            Key = x.Key,
-            Value = x.Value,
-            DisplayValue = displayValue,
-            DisplayExValue = displayExValue,
-            InputValue = x.Value,
-            ValueType = valueType,
-            DefaultValue = x.DefaultValue,
-            IsRequired = x.IsRequired,
-            IsSensitive = x.IsSensitive,
-            IsSecret = x.IsSecret,
-            Description = x.Description,
-        };
-    })
+                        break;
+
+                    case SettingValueType.TimeSpan:
+                        if (TimeSpan.TryParse(x.Value, CultureInfo.InvariantCulture, out var timeSpan))
+                        {
+                            displayExValue = PersianTimeSpanFormatter.ToTime(timeSpan, includeSeconds: false);
+                        }
+
+                        break;
+                }
+
+                return new SettingItemViewModel
+                {
+                    Id = x.Id,
+                    Key = x.Key,
+                    Value = x.Value,
+                    DisplayValue = displayValue,
+                    DisplayExValue = displayExValue,
+                    InputValue = x.Value,
+                    ValueType = valueType,
+                    DefaultValue = x.DefaultValue,
+                    IsRequired = x.IsRequired,
+                    IsSensitive = x.IsSensitive,
+                    IsSecret = x.IsSecret,
+                    Description = x.Description
+                };
+            })
     .ToList()
         };
 
@@ -156,19 +172,71 @@ public sealed class SettingsController : Controller
     }
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Permission(PermissionConstants.Settings.Edit)]
     public async Task<IActionResult> Update(
     string key,
     string value,
     CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(key))
-            return BadRequest();
+            return BadRequest(new
+            {
+                succeeded = false,
+                error = "کلید Setting نامعتبر است."
+            });
+
+        var setting = await _settingService.GetAsync(
+            key,
+            cancellationToken);
+
+        if (setting is null)
+            return NotFound(new
+            {
+                succeeded = false,
+                error = "Setting موردنظر پیدا نشد."
+            });
+
+        if (setting.IsSecret && string.IsNullOrEmpty(value))
+        {
+            return Ok(new
+            {
+                succeeded = true
+            });
+        }
+
+        var valueType = (SettingValueType)setting.ValueType;
+
+        if (!SettingValueNormalizer.TryNormalize(
+                valueType,
+                value,
+                out var normalizedValue,
+                out var error))
+        {
+            return BadRequest(new
+            {
+                succeeded = false,
+                error
+            });
+        }
+
+        if (setting.IsRequired &&
+            string.IsNullOrWhiteSpace(normalizedValue))
+        {
+            return BadRequest(new
+            {
+                succeeded = false,
+                error = "وارد کردن این مقدار الزامی است."
+            });
+        }
 
         await _settingService.SetAsync(
             key,
-            value,
+            normalizedValue,
             cancellationToken);
 
-        return Ok();
+        return Ok(new
+        {
+            succeeded = true
+        });
     }
 }

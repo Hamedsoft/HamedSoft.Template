@@ -3,137 +3,24 @@
 @{
     ViewData["Title"] = "Settings";
 }
-<div class="container-fluid">
 
-    <div class="card">
-        <div class="card-header">
-            <h4 class="mb-0">Application Settings</h4>
-        </div>
+<div id="settings-section-test"
+     class="settings-container"
+     data-settings-module="Treasury"
+     data-settings-feature="ElectronicTransfer"
+     data-settings-category="System"
+     data-settings-section-url="@Url.Action("Section", "Settings")"
+     data-settings-update-url="@Url.Action("Update", "Settings")">
 
-        <div class="card-body">
+    @Html.AntiForgeryToken()
 
-            @foreach (var moduleGroup in Model.Settings
-                        .GroupBy(x => x.Module))
-            {
-                <h5 class="mt-3">
-                    @moduleGroup.Key
-                </h5>
-
-                @foreach (var featureGroup in moduleGroup
-                            .GroupBy(x => x.Feature))
-                {
-                    <h6 class="mt-3 ms-3">
-                        @featureGroup.Key
-                    </h6>
-
-                    @foreach (var categoryGroup in featureGroup
-                                .GroupBy(x => x.Category))
-                    {
-                        <div class="ms-5 mt-3">
-
-                            <strong>
-                                @categoryGroup.Key
-                            </strong>
-
-                            <div class="table-responsive mt-2">
-
-                                <table class="table table-bordered table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>Key</th>
-                                            <th>Value</th>
-                                            <th>Type</th>
-                                            <th>Description</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-
-                                    <tbody>
-
-                                        @foreach (var item in categoryGroup)
-                                        {
-                                            <tr>
-                                                <td>
-                                                    @item.Key
-                                                </td>
-
-                                                <td>
-                                                    @if (item.IsSecret)
-                                                    {
-                                                        <span>••••••••</span>
-                                                    }
-                                                    else
-                                                    {
-                                                        @item.Value
-                                                    }
-                                                </td>
-
-                                                <td>
-                                                    @item.ValueType
-                                                </td>
-
-                                                <td>
-                                                    @item.Description
-                                                </td>
-
-                                                <td>
-                                                    <a asp-action="Edit"
-                                                       asp-route-key="@item.Key"
-                                                       class="btn btn-sm btn-primary">
-                                                        Edit
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        }
-
-                                    </tbody>
-                                </table>
-
-                            </div>
-                        </div>
-                    }
-                }
-            }
-
-        </div>
-    </div>
-
-</div>
-
-<div id="settings-section-test">
     <div class="text-muted">
         Loading settings...
     </div>
 </div>
-<script src="~/assets/js/settings/settings.js"></script>
+
 @section Scripts
 {
     <partial name="_ValidationScriptsPartial" />
-
-    <script>
-        document.addEventListener("DOMContentLoaded", async () => 
-        {
-            const container = document.getElementById("settings-section-test");
-            const url = '@Url.Action("Section", "Settings")' + '?module=Treasury' + '&feature=ElectronicTransfer' + '&category=System';
-            try 
-            {
-                const response = await fetch(url);
-                if (!response.ok) 
-                {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-                
-                const html = await response.text();
-                container.innerHTML = html;
-
-                initializePersianDatePickers(container);
-                initializeTimePickers(container);
-            }
-            catch (error) 
-            {
-                console.error(error);
-                container.innerHTML = `<div class="alert alert-danger">خطا در بارگذاری تنظیمات</div>`;
-            }
-        });
-    </script>
+    <script src="~/assets/js/settings/settings.js"></script>
 }

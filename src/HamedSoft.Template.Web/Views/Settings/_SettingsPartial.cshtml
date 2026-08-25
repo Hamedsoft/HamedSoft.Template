@@ -1,8 +1,8 @@
 ﻿@using HamedSoft.Template.Domain.Settings
 @model HamedSoft.Template.Web.Models.Settings.SettingSectionViewModel
-<form style="display:none">
-    @Html.AntiForgeryToken()
-</form>
+
+@Html.AntiForgeryToken()
+
 <div class="settings-section"
      data-module="@Model.Module"
      data-feature="@Model.Feature"
@@ -27,168 +27,211 @@
     }
     else
     {
-        <div class="row g-4">
+        <div class="row">
 
             @foreach (var setting in Model.Settings)
             {
-                <div class="col-12">
-                    <div class="card border shadow-none">
+                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                    <div class="card">
+                        <div class="card-header justify-content-center m-0 pb-0 pt-2">
+                            <p class="mb-2 ms-2">
+                                @if (setting.IsRequired)
+                                {
+                                    <span class="text-danger">*</span>
+                                }
+                                @setting.Key
+                            </p>
+                        </div>
                         <div class="card-body">
-                            <div class="row align-items-center">
-                                <div class="col-lg-4 mb-3 mb-lg-0">
-                                    <label class="form-label fw-semibold">
-                                        @if (setting.IsRequired)
-                                        {
-                                            <span class="text-danger">*</span>
-                                        }
-                                        @setting.Key
-                                    </label>
-                                    @if (!string.IsNullOrWhiteSpace(setting.Description))
-                                    {
-                                        <div class="text-muted small">@setting.Description</div>
-                                    }
-                                </div>
+                            <ul class="transfer-double-group-list-ul transfer-double-group-list-ul-1786416773614">
 
-                                <div class="col-lg-6">
-                                    @switch (setting.ValueType)
-                                    {
-                                        case SettingValueType.String:
-                                            if (setting.IsSecret)
-                                            {
-                                                <div class="input-group col-md-8">
-                                                    <input type="password"
-                                                           class="form-control setting-value"
-                                                           autocomplete="new-password"
-                                                           value="@setting.Value"
-                                                           data-setting-key="@setting.Key" />
+                                <li class="transfer-double-group-list-li transfer-double-group-list-li-1786416773614">
 
-                                                    <a href="javascript:void(0);"
-                                                       class="input-group-text bg-white text-muted showpassword">
-                                                        <i class="zmdi text-muted zmdi-eye-off"
-                                                           aria-hidden="true"></i>
-                                                    </a>
-                                                </div>
-                                            }
-                                            else
-                                            {
-                                                <div class="input-group col-md-8">
-                                                    <input type="text"
-                                                       class="form-control setting-value"
-                                                       value="@setting.Value"
-                                                       data-setting-key="@setting.Key" />
-                                                </div>
-                                            }
-                                            break;
+                                    <ul class="transfer-double-group-list-li-ul transfer-double-group-list-li-ul-1786416773614">
 
-                                        case SettingValueType.Int:
-                                            <div class="input-group col-md-8">
-                                                <input type="number"
-                                                       class="form-control"
-                                                       value="@setting.Value"
-                                                       data-setting-key="@setting.Key"
-                                                       step="1" />
-                                            </div>
-                                            break;
+                                        <li class="transfer-double-group-list-li-ul-li transfer-double-group-list-li-ul-li-1786416773614">
+                                            <div class="row custom-controls-stacked">
+                                                <label class="custom-switch form-switch mb-2 ms-5 mt-3">
+                                                    @if (!string.IsNullOrWhiteSpace(setting.Description))
+                                                    {
+                                                        @setting.Description
+                                                    }
+                                                </label>
+                                                <div class="col-lg-12">
+                                                    @switch (setting.ValueType)
+                                                    {
+                                                        case SettingValueType.String:
+                                                            if (setting.IsSecret)
+                                                            {
+                                                                <div class="input-group col-md-4">
+                                                                    <input type="password"
+                                                                           class="form-control setting-value-input"
+                                                                           autocomplete="new-password"
+                                                                           value="@setting.Value"
+                                                                           data-setting-key="@setting.Key" />
 
-                                        case SettingValueType.Long:
-                                            <div class="input-group col-md-8">
-                                                <input type="number"
-                                                       class="form-control"
-                                                       value="@setting.Value"
-                                                       data-setting-key="@setting.Key"
-                                                       step="1" />
-                                            </div>
-                                            break;
+                                                                    <a href="javascript:void(0);"
+                                                                       class="input-group-text bg-white text-muted showpassword">
+                                                                        <i class="zmdi text-muted zmdi-eye-off"
+                                                                           aria-hidden="true"></i>
+                                                                    </a>
+                                                                </div>
+                                                            }
+                                                            else
+                                                            {
+                                                                <div class="input-group col-md-4">
+                                                                    <input type="text"
+                                                                           class="form-control setting-value-input"
+                                                                           value="@setting.Value"
+                                                                           data-setting-key="@setting.Key" />
+                                                                </div>
+                                                            }
+                                                            break;
 
-                                        case SettingValueType.Decimal:
-                                            <div class="input-group col-md-8">
-                                                <input type="number"
-                                                       class="form-control"
-                                                       value="@setting.Value"
-                                                       data-setting-key="@setting.Key"
-                                                       step="any" />
-                                            </div>
-                                            break;
+                                                        case SettingValueType.Int:
+                                                            <div class="input-group col-md-3">
+                                                                <input type="number"
+                                                                       class="form-control setting-value-input"
+                                                                       value="@setting.Value"
+                                                                       data-setting-key="@setting.Key"
+                                                                       step="1" />
+                                                            </div>
+                                                            break;
 
-                                        case SettingValueType.Boolean:
-                                            <div class="form-group mt-2 mb-0">
-                                                <label class="custom-switch form-switch mb-0">
-                                                    <input type="checkbox" class="custom-switch-input" data-setting-key="@setting.Key" @(bool.TryParse(setting.Value, out var boolValue) && boolValue ? "checked" : null) />
+                                                        case SettingValueType.Long:
+                                                            <div class="input-group col-md-3">
+                                                                <input type="number"
+                                                                       class="form-control setting-value-input"
+                                                                       value="@setting.Value"
+                                                                       data-setting-key="@setting.Key"
+                                                                       step="1" />
+                                                            </div>
+                                                            break;
+
+                                                        case SettingValueType.Decimal:
+                                                            <div class="input-group col-md-3">
+                                                                <input type="number"
+                                                                       class="form-control setting-value-input"
+                                                                       value="@setting.Value"
+                                                                       data-setting-key="@setting.Key"
+                                                                       step="any" />
+                                                            </div>
+                                                            break;
+
+                                                        case SettingValueType.Boolean:
+                                                            <div class="form-group mt-2 mb-0">
+                                                                <label class="custom-switch form-switch mb-2 ms-2">
+                                                                    <input class="custom-switch-input setting-value-input"
+                                                                           type="checkbox"
+                                                                           data-setting-key="@setting.Key"
+                                                                           @(bool.TryParse(setting.Value, out var boolValue) && boolValue
+                                                                                                                                      ? "checked"
+                                                                                                                                      : null) />
+
                                                     <span class="custom-switch-indicator"></span>
                                                 </label>
                                             </div>
-                                        break;
+                                                                                        break;
 
-                                        case SettingValueType.DateTime:
-                                            <div class="setting-datetime-wrapper">
-                                                <div class="row g-2">
-                                                    <div class="col-md-4">
-                                                        <div class="input-group wd-150">
-                                                            <div class="input-group-text setting-today-button ">
-                                                                <i class="fa fa-calendar tx-16 lh-0 op-6"></i>
+                                                        case SettingValueType.DateTime:
+                                                            <div class="setting-datetime-wrapper">
+
+                                                                <div class="row g-2">
+
+                                                                    <div class="col-md-3">
+
+                                                                        <div class="input-group wd-150">
+
+                                                                            <div class="input-group-text setting-today-button">
+                                                                                <i class="fa fa-calendar tx-16 lh-0 op-6"></i>
+                                                                            </div>
+
+                                                                            <input type="text"
+                                                                                   class="form-control persian-date-picker"
+                                                                                   placeholder="تاریخ"
+                                                                                   asp-for="@setting.DisplayValue">
+
+                                                                        </div>
+
+                                                                    </div>
+
+                                                                    <div class="col-md-3">
+
+                                                                        <div class="input-group wd-150">
+
+                                                                            <div class="input-group-text setting-set-time-button">
+                                                                                <i class="fa fa-clock-o tx-16 lh-0 op-6"></i>
+                                                                            </div>
+                                                                            <input type="text"
+                                                                                   class="form-control br-0 setting-time-input"
+                                                                                   placeholder="ساعت"
+                                                                                   asp-for="@setting.DisplayExValue">
+
+                                                                        </div>
+
+                                                                    </div>
+
+                                                                </div>
+                                                                <input type="hidden"
+                                                                       name="settings[@setting.Key]"
+                                                                       class="setting-gregorian-value"
+                                                                       value="@setting.InputValue"
+                                                                       data-setting-key="@setting.Key" />
+
                                                             </div>
-                                                            <input type="text" class="form-control persian-date-picker" placeholder="تاریخ" asp-for="@setting.DisplayValue">
-                                                        </div>
-                                                    </div>
+                                                            break;
 
-                                                    <div class="col-md-4">
-                                                        <div class="d-flex">
-                                                            <div class="input-group wd-150">
-                                                                <div class="input-group-text setting-set-time-button">
-                                                                    <i class="fa fa-clock-o tx-16 lh-0 op-6"></i>
+                                                        case SettingValueType.TimeSpan:
+                                                            <div class="setting-datetime-wrapper">
+                                                                <div class="input-group col-md-3">
+                                                                    <div class="d-flex">
+                                                                        <div class="input-group wd-150">
+                                                                            <div class="input-group-text setting-set-time-button">
+                                                                                <i class="fa fa-clock-o tx-16 lh-0 op-6"></i>
+                                                                            </div>
+
+                                                                            <input type="text"
+                                                                                   class="form-control br-0 setting-time-input"
+                                                                                   placeholder="ساعت"
+                                                                                   asp-for="@setting.DisplayExValue">
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
 
-                                                                <input type="text" class="form-control br-0 setting-time-input" placeholder="ساعت" asp-for="@setting.DisplayExValue">
+                                                                <input type="hidden"
+                                                                       class="setting-timespan-value"
+                                                                       value="@setting.InputValue"
+                                                                       data-setting-key="@setting.Key" />
                                                             </div>
-                                                        </div>
-                                                    </div>
+                                                            break;
+
+                                                        case SettingValueType.Json:
+                                                            <div class="input-group col-md-12">
+                                                                <textarea class="form-control font-monospace setting-value-input" style="direction:ltr;" rows="6" data-setting-key="@setting.Key">@setting.Value</textarea>
+                                                            </div>
+                                                            break;
+
+                                                        default:
+                                                            <div class="input-group col-md-8">
+                                                                <input type="text"
+                                                                       class="form-control"
+                                                                       value="@setting.Value"
+                                                                       data-setting-key="@setting.Key" />
+                                                            </div>
+                                                            break;
+                                                    }
 
                                                 </div>
-
-                                                <input type="hidden" name="settings[@setting.Key]" class="setting-gregorian-value" value="@setting.InputValue" data-setting-key="@setting.Key" />
                                             </div>
-                                        break;
-
-                                        case SettingValueType.TimeSpan:
-                                            <div class="setting-datetime-wrapper">
-                                                <div class="input-group col-md-8">
-                                                    <div class="d-flex">
-                                                        <div class="input-group wd-150">
-                                                            <div class="input-group-text setting-set-time-button">
-                                                                <i class="fa fa-clock-o tx-16 lh-0 op-6"></i>
-                                                            </div>
-
-                                                            <input type="text" class="form-control br-0 setting-time-input" placeholder="ساعت" asp-for="@setting.DisplayExValue">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            break;
-
-                                        case SettingValueType.Json:
-                                            <div class="input-group col-md-8">
-                                                <textarea class="form-control font-monospace" style="direction:ltr;" rows = "6" data-setting-key="@setting.Key">@setting.Value</textarea>
-                                            </div>
-                                        break;
-
-                                        default:
-                                            <div class="input-group col-md-8">
-                                                <input type="text"
-                                                   class="form-control"
-                                                   value="@setting.Value"
-                                                   data-setting-key="@setting.Key" />
-                                            </div>
-                                            break;
-                                    }
-
-                                </div>
-
-                                <div class="col-lg-2 text-lg-end mt-3 mt-lg-0">
-                                    <button type="button" class="btn btn-primary btn-sm setting-save-btn" data-setting-key="@setting.Key">
-                                        ذخیره
-                                    </button>
-                                </div>
-                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-footer">
+                            <button type="button" class="btn btn-success btn-sm setting-save-btn" data-setting-key="@setting.Key">
+                                ذخیره
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -196,3 +239,4 @@
         </div>
     }
 </div>
+

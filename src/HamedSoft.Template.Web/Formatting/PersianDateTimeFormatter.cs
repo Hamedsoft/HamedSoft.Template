@@ -1,48 +1,79 @@
 ﻿using System.Globalization;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace HamedSoft.Template.Web.Formatting;
 
 /// <summary>
-/// Formats Gregorian DateTime values for Persian UI presentation.
+/// Provides formatting utilities for Gregorian DateTime values
+/// displayed in Persian UI.
 /// </summary>
 public static class PersianDateTimeFormatter
 {
     private static readonly PersianCalendar Calendar = new();
 
-    public static string ToDateTime(DateTime value, bool includeSeconds = true)
+    /// <summary>
+    /// Converts a Gregorian DateTime to a Persian date.
+    /// </summary>
+    public static string ToPersianDate(
+        DateTime value)
     {
-        var date = string.Create(CultureInfo.InvariantCulture, $"{Calendar.GetYear(value):0000}/{Calendar.GetMonth(value):00}/{Calendar.GetDayOfMonth(value):00}");
-        var time = includeSeconds ? value.ToString("HH:mm:ss", CultureInfo.InvariantCulture) : value.ToString("HH:mm", CultureInfo.InvariantCulture);
+        var date = string.Create(
+            CultureInfo.InvariantCulture,
+            $"{Calendar.GetYear(value):0000}/" +
+            $"{Calendar.GetMonth(value):00}/" +
+            $"{Calendar.GetDayOfMonth(value):00}");
 
-        return $"{date} {time}";
+        return ConvertToPersianNumbers(date);
     }
 
-    public static string ToDate(DateTime value)
+    /// <summary>
+    /// Formats the time portion of a DateTime value.
+    /// </summary>
+    public static string ToTime(
+        DateTime value,
+        bool includeSeconds = true)
     {
-        var date = string.Create(CultureInfo.InvariantCulture, $"{Calendar.GetYear(value):0000}/{Calendar.GetMonth(value):00}/{Calendar.GetDayOfMonth(value):00}");
-        return $"{date}";
-    }
-    public static string ToPersianDate(DateTime value)
-    {
-        var date = string.Create(CultureInfo.InvariantCulture, $"{Calendar.GetYear(value):0000}/{Calendar.GetMonth(value):00}/{Calendar.GetDayOfMonth(value):00}");
-        return $"{ConvertToPersianNumbers(date)}";
-    }
-    public static string ToTime(DateTime value, bool includeSeconds = true)
-    {
-        var time = includeSeconds
-            ? value.ToString("HH:mm:ss", CultureInfo.InvariantCulture)
-            : value.ToString("HH:mm", CultureInfo.InvariantCulture);
+        var hour = value.Hour;
 
-        return $"{time}";
-    }
-    public static string? ConvertToPersianNumbers(string? value)
-    {
-        if (string.IsNullOrEmpty(value))
+        var meridiem = hour switch
         {
-            return value;
-        }
+            0 => "بامداد",
+            < 12 => "صبح",
+            12 => "ظهر",
+            < 18 => "عصر",
+            _ => "شب"
+        };
 
+        var displayHour = hour switch
+        {
+            0 => 12,
+            > 12 => hour - 12,
+            _ => hour
+        };
+
+        var time = includeSeconds
+            ? $"{displayHour:00}:{value.Minute:00}:{value.Second:00}"
+            : $"{displayHour:00}:{value.Minute:00}";
+
+        return ConvertToPersianNumbers(
+            $"{time} {meridiem}");
+    }
+
+    /// <summary>
+    /// Formats a complete Gregorian DateTime for Persian UI.
+    /// </summary>
+    public static string ToDateTime(
+        DateTime value,
+        bool includeSeconds = true)
+    {
+        return $"{ToPersianDate(value)} {ToTime(value, includeSeconds)}";
+    }
+
+    /// <summary>
+    /// Converts Western digits to Persian digits.
+    /// </summary>
+    public static string ConvertToPersianNumbers(
+        string value)
+    {
         return value
             .Replace('0', '۰')
             .Replace('1', '۱')
