@@ -24,6 +24,7 @@ public sealed class SettingsController : Controller
     }
 
     [HttpGet]
+    [Permission(PermissionConstants.Settings.View)]
     public async Task<IActionResult> Index(CancellationToken cancellationToken)
     {
         var settings = await _settingService.GetAllAsync(cancellationToken);
@@ -35,53 +36,8 @@ public sealed class SettingsController : Controller
 
         return View(model);
     }
-
     [HttpGet]
-    public async Task<IActionResult> Edit(string key, CancellationToken cancellationToken)
-    {
-        if (string.IsNullOrWhiteSpace(key))
-            return BadRequest();
-
-        var setting = await _settingService.GetAsync(key, cancellationToken);
-
-        if (setting is null)
-            return NotFound();
-
-        var model = new SettingEditViewModel
-        {
-            Id = setting.Id,
-            Key = setting.Key,
-            Module = setting.Module,
-            Feature = setting.Feature,
-            Category = setting.Category,
-            Value = setting.IsSecret ? string.Empty : setting.Value,
-            ValueType = (Domain.Settings.SettingValueType)setting.ValueType,
-            DefaultValue = setting.DefaultValue,
-            IsRequired = setting.IsRequired,
-            IsSensitive = setting.IsSensitive,
-            IsSecret = setting.IsSecret,
-            Description = setting.Description
-        };
-
-        return View(model);
-    }
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(SettingEditViewModel model, CancellationToken cancellationToken)
-    {
-        if (!ModelState.IsValid)
-            return View(model);
-
-        if (model.IsSecret && string.IsNullOrEmpty(model.Value))
-            return RedirectToAction(nameof(Index));
-
-        await _settingService.SetAsync(model.Key, model.Value, cancellationToken);
-
-        return RedirectToAction(nameof(Index));
-    }
-
-    [HttpGet]
+    [Permission(PermissionConstants.Settings.View)]
     public async Task<IActionResult> Section(string? module, string? feature, string? category, CancellationToken cancellationToken)
     {
         var result = await _sender.Send(new GetSettingsByContextQuery(module, feature, category), cancellationToken);

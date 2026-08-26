@@ -54,25 +54,14 @@ public static class PermissionConstants
         public const string AssignPermissions = nameof(Roles) + "." + nameof(AssignPermissions);
     }
 
-    [PermissionModule("تنظیمات")]
+    [PermissionModule("سیستم")]
     [PermissionCategory("تنظیمات")]
     public static class Settings
     {
         [PermissionDefinition("مشاهده تنظیمات", "امکان مشاهده تنظیمات سیستم")]
         public const string View = nameof(Settings) + "." + nameof(View);
 
-        [PermissionDefinition("ویرایش تنظیمات", "امکان ویرایش تنظیمات سیستم")]
+        [PermissionDefinition("ویرایش تنظیمات", "امکان به روزرسانی تنظیمات سیستم")]
         public const string Edit = nameof(Settings) + "." + nameof(Edit);
-    }
-
-    [PermissionModule("ماژول تست")]
-    [PermissionCategory("تست")]
-    public static class Test
-    {
-        [PermissionDefinition("تست 1", "تست 1 1")]
-        public const string View = nameof(Test) + "." + nameof(View);
-
-        [PermissionDefinition("تست 2", "تست 2 2")]
-        public const string View2 = nameof(Test) + "." + nameof(View2);
     }
 }

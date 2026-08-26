@@ -184,8 +184,12 @@
                                 <li class="slide">
                                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fa fa-gears"></i><span class="side-menu__label">تنظیمات</span><i class="angle fe fe-chevron-right"></i></a>
                                     <ul class="slide-menu">
-                                        <li class="side-menu-label1"><a href="javascript:void(0)">تنظیمات 1</a></li>
-                                        <li><a asp-controller="Settings" asp-action="index" class="slide-item">تنظیمات</a></li>
+                                        <li class="side-menu-label1"><a href="javascript:void(0)">تنظیمات</a></li>
+                                        <permission require="@PermissionConstants.Settings.View">
+                                            <li>
+                                                <a asp-controller="Settings" asp-action="index" class="slide-item">تنظیمات نرم افزار</a>
+                                            </li>
+                                        </permission>
                                     </ul>
                                 </li>
                             </permission-any>
