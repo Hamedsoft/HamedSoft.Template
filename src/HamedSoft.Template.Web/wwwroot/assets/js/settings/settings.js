@@ -15,35 +15,47 @@
         }
     }
     async function loadSettingsSection(container) {
-        const module = container.dataset.settingsModule;
-        const feature = container.dataset.settingsFeature;
-        const category = container.dataset.settingsCategory;
+        const module = container.dataset.settingsModule || null;
+        const feature = container.dataset.settingsFeature || null;
+        const category = container.dataset.settingsCategory || null;
         const url = container.dataset.settingsSectionUrl;
-        if (!module || !feature || !category || !url) {
-            console.error('Settings section configuration is incomplete.', container);
-            return;
+
+        const params = new URLSearchParams();
+
+        if (module !== null) {
+            params.set('module', module);
         }
-        const params = new URLSearchParams({
-            module: module,
-            feature: feature,
-            category: category
-        });
+
+        if (feature !== null) {
+            params.set('feature', feature);
+        }
+
+        if (category !== null) {
+            params.set('category', category);
+        }
+
         try {
-            const response = await fetch(`${url}?${params.toString()}`, {
-                method: 'GET',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
+            const queryString = params.toString();
+            const requestUrl = queryString ? `${url}?${queryString}` : url;
+
+            const response = await fetch(requestUrl, {
+                method: 'GET', headers: {'X-Requested-With': 'XMLHttpRequest'}
             });
+
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}`);
             }
+
             const html = await response.text();
+
             container.innerHTML = html;
+
             initializeSettingControls(container);
         } catch (error) {
             console.error('Failed to load settings section.', error);
-            container.innerHTML = '<div class="alert alert-danger">' + 'خطا در بارگذاری تنظیمات' + '</div>';
+
+            container.innerHTML =
+                '<div class="alert alert-danger">خطا در بارگذاری تنظیمات</div>';
         }
     }
 
@@ -168,12 +180,20 @@
              * --------------------------------------------------------
              */
             button.innerHTML = 'ذخیره شد';
+
+            Toast.success('تنظیمات با موفقیت ذخیره شد.');
+
             setTimeout(function () {
                 button.innerHTML = originalText;
             }, 1500);
         } catch (error) {
-            console.error('Failed to save setting.', error);
+            console.error('Failed to save setting.', error
+            );
+
+            Toast.error('ذخیره تنظیمات با خطا مواجه شد.');
+
             button.innerHTML = 'خطا';
+
             setTimeout(function () {
                 button.innerHTML = originalText;
             }, 2000);

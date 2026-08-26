@@ -24,11 +24,9 @@ public sealed class SettingsController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index(
-        CancellationToken cancellationToken)
+    public async Task<IActionResult> Index(CancellationToken cancellationToken)
     {
-        var settings = await _settingService
-            .GetAllAsync(cancellationToken);
+        var settings = await _settingService.GetAllAsync(cancellationToken);
 
         var model = new SettingsIndexViewModel
         {
@@ -39,16 +37,12 @@ public sealed class SettingsController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Edit(
-        string key,
-        CancellationToken cancellationToken)
+    public async Task<IActionResult> Edit(string key, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(key))
             return BadRequest();
 
-        var setting = await _settingService.GetAsync(
-            key,
-            cancellationToken);
+        var setting = await _settingService.GetAsync(key, cancellationToken);
 
         if (setting is null)
             return NotFound();
@@ -60,9 +54,7 @@ public sealed class SettingsController : Controller
             Module = setting.Module,
             Feature = setting.Feature,
             Category = setting.Category,
-            Value = setting.IsSecret
-                ? string.Empty
-                : setting.Value,
+            Value = setting.IsSecret ? string.Empty : setting.Value,
             ValueType = (Domain.Settings.SettingValueType)setting.ValueType,
             DefaultValue = setting.DefaultValue,
             IsRequired = setting.IsRequired,
@@ -76,99 +68,103 @@ public sealed class SettingsController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(
-        SettingEditViewModel model,
-        CancellationToken cancellationToken)
+    public async Task<IActionResult> Edit(SettingEditViewModel model, CancellationToken cancellationToken)
     {
         if (!ModelState.IsValid)
             return View(model);
 
-        // Secret fields are not returned to the browser.
-        // Empty value means "keep the existing secret".
         if (model.IsSecret && string.IsNullOrEmpty(model.Value))
-            return RedirectToAction(
-                nameof(Index));
+            return RedirectToAction(nameof(Index));
 
-        await _settingService.SetAsync(
-            model.Key,
-            model.Value,
-            cancellationToken);
+        await _settingService.SetAsync(model.Key, model.Value, cancellationToken);
 
         return RedirectToAction(nameof(Index));
     }
 
     [HttpGet]
-    public async Task<IActionResult> Section(
-        string module,
-        string feature,
-        string category,
-        CancellationToken cancellationToken)
+    public async Task<IActionResult> Section(string? module, string? feature, string? category, CancellationToken cancellationToken)
     {
-        var result = await _sender.Send(
-            new GetSettingsByContextQuery(
-                module,
-                feature,
-                category),
-            cancellationToken);
+        var result = await _sender.Send(new GetSettingsByContextQuery(module, feature, category), cancellationToken);
 
         if (!result.Succeeded)
             return BadRequest(result.Error);
 
-        var viewModel = new SettingSectionViewModel
-        {
-            Module = module,
-            Feature = feature,
-            Category = category,
-            Settings = result.Value!
-            .Select(x =>
+        var viewModel = result.Value!
+            .GroupBy(x => new
             {
-                var valueType = (SettingValueType)x.ValueType;
-
-                var displayValue = x.Value;
-                var displayExValue = x.Value;
-
-                switch (valueType)
-                {
-                    case SettingValueType.DateTime:
-                        if (DateTime.TryParse(x.Value, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var dateTime))
-                        {
-                            displayValue = PersianDateTimeFormatter.ToPersianDate(dateTime);
-                            displayExValue = PersianDateTimeFormatter.ToTime(dateTime, includeSeconds: false);
-                        }
-
-                        break;
-
-                    case SettingValueType.TimeSpan:
-                        if (TimeSpan.TryParse(x.Value, CultureInfo.InvariantCulture, out var timeSpan))
-                        {
-                            displayExValue = PersianTimeSpanFormatter.ToTime(timeSpan, includeSeconds: false);
-                        }
-
-                        break;
-                }
-
-                return new SettingItemViewModel
-                {
-                    Id = x.Id,
-                    Key = x.Key,
-                    Value = x.Value,
-                    DisplayValue = displayValue,
-                    DisplayExValue = displayExValue,
-                    InputValue = x.Value,
-                    ValueType = valueType,
-                    DefaultValue = x.DefaultValue,
-                    IsRequired = x.IsRequired,
-                    IsSensitive = x.IsSensitive,
-                    IsSecret = x.IsSecret,
-                    Description = x.Description
-                };
+                x.Module,
+                x.Feature,
+                x.Category
             })
-    .ToList()
-        };
+            .Select(group => new SettingSectionViewModel
+            {
+                Module = group.Key.Module,
+                Feature = group.Key.Feature,
+                Category = group.Key.Category,
 
-        return PartialView(
-            "_SettingsPartial",
-            viewModel);
+                Settings = group
+                    .Select(x =>
+                    {
+                        var valueType = (SettingValueType)x.ValueType;
+                        var displayValue = x.Value;
+                        var displayExValue = x.Value;
+
+                        switch (valueType)
+                        {
+                            case SettingValueType.DateTime:
+                                if (DateTime.TryParse(
+                                    x.Value,
+                                    CultureInfo.InvariantCulture,
+                                    DateTimeStyles.RoundtripKind,
+                                    out var dateTime))
+                                {
+                                    displayValue =
+                                        PersianDateTimeFormatter.ToPersianDate(dateTime);
+
+                                    displayExValue =
+                                        PersianDateTimeFormatter.ToTime(
+                                            dateTime,
+                                            includeSeconds: false);
+                                }
+
+                                break;
+
+                            case SettingValueType.TimeSpan:
+                                if (TimeSpan.TryParse(
+                                    x.Value,
+                                    CultureInfo.InvariantCulture,
+                                    out var timeSpan))
+                                {
+                                    displayExValue =
+                                        PersianTimeSpanFormatter.ToTime(
+                                            timeSpan,
+                                            includeSeconds: false);
+                                }
+
+                                break;
+                        }
+
+                        return new SettingItemViewModel
+                        {
+                            Id = x.Id,
+                            Key = x.Key,
+                            Value = x.Value,
+                            DisplayValue = displayValue,
+                            DisplayExValue = displayExValue,
+                            InputValue = x.Value,
+                            ValueType = valueType,
+                            DefaultValue = x.DefaultValue,
+                            IsRequired = x.IsRequired,
+                            IsSensitive = x.IsSensitive,
+                            IsSecret = x.IsSecret,
+                            Description = x.Description
+                        };
+                    })
+                    .ToList()
+            })
+            .ToList();
+
+        return PartialView("_SettingsPartial", viewModel);
     }
     [HttpPost]
     [ValidateAntiForgeryToken]

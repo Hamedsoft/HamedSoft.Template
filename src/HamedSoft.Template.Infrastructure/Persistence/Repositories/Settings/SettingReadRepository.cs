@@ -37,8 +37,7 @@ internal sealed class SettingReadRepository : ISettingReadRepository
             .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<IReadOnlyCollection<SettingDto>> GetAllAsync(
-        CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyCollection<SettingDto>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         return await _context.Settings
             .AsNoTracking()
@@ -61,11 +60,19 @@ internal sealed class SettingReadRepository : ISettingReadRepository
                 x.Description))
             .ToListAsync(cancellationToken);
     }
-    public async Task<IReadOnlyCollection<SettingDto>> GetByContextAsync(string module, string feature, string category, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyCollection<SettingDto>> GetByContextAsync(string? module, string? feature, string? category, CancellationToken cancellationToken = default)
     {
-        return await _context.Settings
+        var result = 
+        await _context.Settings
             .AsNoTracking()
-            .Where(x => x.Module == module && x.Feature == feature && x.Category == category)
+            .OrderBy(x => x.Module)
+            .ThenBy(x => x.Feature)
+            .ThenBy(x => x.Category)
+            .ThenBy(x => x.Key)
+            .Where(x => 
+                  (x.Module == module || module == null) && 
+                  (x.Feature == feature || feature  == null) && 
+                  (x.Category == category || category == null))
             .Select(x => new SettingDto(
                 x.Id,
                 x.Key,
@@ -80,5 +87,6 @@ internal sealed class SettingReadRepository : ISettingReadRepository
                 x.IsSecret,
                 x.Description))
             .ToListAsync(cancellationToken);
+        return result;
     }
 }

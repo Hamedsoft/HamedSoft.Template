@@ -11,5 +11,5 @@ public interface ISettingReadRepository
 
     Task<IReadOnlyCollection<SettingDto>> GetAllAsync(CancellationToken cancellationToken = default);
 
-    Task<IReadOnlyCollection<SettingDto>> GetByContextAsync(string module, string feature, string category, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<SettingDto>> GetByContextAsync(string? module, string? feature, string? category, CancellationToken cancellationToken = default);
 }

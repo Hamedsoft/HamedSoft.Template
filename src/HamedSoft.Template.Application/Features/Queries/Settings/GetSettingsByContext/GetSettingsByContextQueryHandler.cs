@@ -21,20 +21,9 @@ public sealed class GetSettingsByContextQueryHandler
         _settingReadRepository = settingReadRepository;
     }
 
-    public async Task<Result<IReadOnlyCollection<SettingDto>>> Handle(
-        GetSettingsByContextQuery request,
-        CancellationToken cancellationToken)
+    public async Task<Result<IReadOnlyCollection<SettingDto>>> Handle(GetSettingsByContextQuery request, CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(request.Module);
-        ArgumentException.ThrowIfNullOrWhiteSpace(request.Feature);
-        ArgumentException.ThrowIfNullOrWhiteSpace(request.Category);
-
-        var settings = await _settingReadRepository.GetByContextAsync(
-            request.Module,
-            request.Feature,
-            request.Category,
-            cancellationToken);
-
+        var settings = await _settingReadRepository.GetByContextAsync(request.Module, request.Feature, request.Category, cancellationToken);
         return Result<IReadOnlyCollection<SettingDto>>.Success(settings);
     }
 }
