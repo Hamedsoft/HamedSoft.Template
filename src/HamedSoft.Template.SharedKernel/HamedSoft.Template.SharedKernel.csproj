@@ -1,6 +1,0 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-	<PropertyGroup>
-		<RootNamespace>HamedSoft.Template.SharedKernel</RootNamespace>
-	</PropertyGroup>
-
-</Project>
